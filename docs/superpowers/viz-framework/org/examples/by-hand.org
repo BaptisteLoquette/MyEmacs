@@ -1,0 +1,57 @@
+#+TITLE: "By Hand" Example — Attention Score Calculation
+
+* Self-Attention by Hand 🔹
+
+Tom Yeh style: color-coded computation grid, every intermediate value shown.
+
+#+begin_src python :results file :file attention_by_hand.png :exports both
+  import matplotlib
+  matplotlib.use('Agg')
+  import matplotlib.pyplot as plt
+  import numpy as np
+  from matplotlib.patches import FancyBboxPatch
+
+  fig, ax = plt.subplots(figsize=(12, 8), facecolor='#0d1117')
+  ax.set_facecolor('#161b22')
+  ax.set_xlim(0, 8); ax.set_ylim(0, 6); ax.axis('off')
+
+  # Color palette (Tom Yeh style)
+  C = {'input': '#58a6ff', 'weight': '#3fb950', 'intermediate': '#d2a8ff',
+       'attention': '#ffa657', 'output': '#f78166', 'text': '#e6edf3',
+       'header': '#8b949e'}
+
+  steps = [
+      ("[1] Given", "X = [[1,0,1], [0,2,0], [1,1,0]]", C['input']),
+      ("[2] Query weights", "W_Q = [[0.5,0.2],[0.1,0.6],[0.3,0.4]]", C['weight']),
+      ("[3] Q = X × W_Q", "Q = [[0.8,0.6],[0.2,1.2],[0.6,0.8]]", C['intermediate']),
+      ("[4] Attention scores", "A = Q × Q^T", C['attention']),
+      ("[5] Softmax(A)", "softmax(A)", C['attention']),
+      ("[6] Output", "Z = softmax(A) × V", C['output']),
+  ]
+
+  for i, (label, formula, color) in enumerate(steps):
+      y = 5.5 - i * 0.9
+      box = FancyBboxPatch((0.3, y-0.3), 7.4, 0.7,
+                            boxstyle='round,pad=0.05',
+                            facecolor=color, edgecolor=C['text'],
+                            linewidth=1.5, alpha=0.85)
+      ax.add_patch(box)
+      ax.text(0.5, y+0.05, label, fontsize=12, fontweight='bold',
+              color='#0d1117', va='center', fontfamily='monospace')
+      ax.text(2.5, y+0.05, formula, fontsize=11, color='#0d1117',
+              va='center', fontfamily='monospace')
+
+  ax.text(4, 0.1, 'Self-Attention by Hand ✍️', fontsize=16,
+          fontweight='bold', color=C['text'], ha='center',
+          fontfamily='monospace')
+  ax.text(4, -0.2, '↳ Every intermediate value is visible',
+          fontsize=10, color=C['header'], ha='center')
+
+  fig.savefig('attention_by_hand.png', dpi=150, bbox_inches='tight',
+              facecolor='#0d1117')
+  plt.close(fig)
+  'attention_by_hand.png'
+#+end_src
+
+#+RESULTS:
+[[file:attention_by_hand.png]]

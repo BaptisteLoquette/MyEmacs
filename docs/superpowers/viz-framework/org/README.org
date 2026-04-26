@@ -1,0 +1,66 @@
+#+TITLE: Org-Babel Visualization Pipeline Reference
+#+AUTHOR: AI Agentic R&D Engineer
+
+* Decision Matrix
+Choose which tool for which visualization need:
+
+| Topic                  | Tool                    | Source Block            | Output      |
+|------------------------+-------------------------+-------------------------+-------------|
+| Quick static plot      | ob-python + Matplotlib  | #+begin_src python      | inline PNG  |
+| Interactive 2D/3D      | Plotly                  | #+begin_src python      | HTML file   |
+| Math animation         | Manim CE                | #+begin_src python      | inline MP4  |
+| Motion graphics        | HyperFrames / Remotion  | #+begin_src js          | MP4 file    |
+| Flowchart / diagram    | Mermaid / Graphviz      | #+begin_src mermaid     | inline PNG  |
+| 3D scene               | Three.js                | #+begin_src js          | HTML file   |
+| "By Hand" computation  | Matplotlib tables       | #+begin_src python      | inline PNG  |
+| Circuit schematic      | Schemdraw               | #+begin_src python      | inline SVG  |
+| Scientific illustration| TikZ or drawsvg         | #+begin_src latex       | inline PDF  |
+
+* Emacs Configuration
+Add to =~/.doom.d/packages.el=:
+#+begin_src emacs-lisp
+(package! ob-mermaid)
+(package! graphviz-dot-mode)
+(package! org-inline-anim)
+#+end_src
+
+Add to =~/.doom.d/config.org=:
+#+begin_src emacs-lisp
+(after! org
+  (setq org-babel-default-header-args:python
+        '((:results . "file")
+          (:exports . "both")
+          (:prologue . "exec(open('C:/Users/Bapti/.emacs.d/header.py').read())")))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t) (R . t) (shell . t) (latex . t) (dot . t)
+     (gnuplot . t) (mermaid . t) (emacs-lisp . t))))
+
+(use-package! graphviz-dot-mode
+  :mode ("\\.dot\\'" "\\.gv\\'")
+  :config
+  (setq graphviz-dot-preview-extension "png"))
+#+end_src
+
+* Code Templates
+Load from =docs/superpowers/viz-framework/templates/code-patterns/=:
+- =scalarfield.py= — heatmaps, contours, isosurfaces
+- =vectorfield.py= — streamlines, quiver plots
+- =signalflow.py= — waveforms, Bode plots, spectrograms
+- =geom3d.py= — 3D meshes and surfaces
+- =graphnet.py= — network graphs, adjacency matrices
+- =processanim.py= — animation generation
+- =probdist.py= — distributions, histograms, KDE
+- =phasetraj.py= — phase space and trajectories
+- =decisionprocess.py= — flowcharts and decision trees
+
+* Agent Prompt Templates
+Load from =docs/superpowers/viz-framework/templates/agent-prompts/=:
+- =matplotlib.md=, =plotly.md=, =manim.md=, =schemdraw.md=, =pyvista.md=, =altair.md=, =tikz.md=, =graphviz.md=, =by-hand.md=
+
+* Running Examples
+See =examples/= directory:
+- =circuit.org= — Schemdraw differential pair schematic (SPICE-ready)
+- =animation.org= — Manim CE wave propagation with LaTeX labels
+- =diffusion.org= — Matplotlib FuncAnimation denoising progression
+- =by-hand.org= — "By Hand" attention score computation trace

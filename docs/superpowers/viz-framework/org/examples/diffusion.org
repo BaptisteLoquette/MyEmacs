@@ -1,0 +1,57 @@
+#+TITLE: Diffusion Example — Denoising Grid Animation
+
+* DDPM Denoising Trajectory
+
+#+begin_src python :results file :file diffusion.mp4 :exports both
+  import matplotlib
+  matplotlib.use('Agg')
+  import matplotlib.pyplot as plt
+  import numpy as np
+  from matplotlib.animation import FuncAnimation
+
+  # Simulate diffusion denoising: random noise → structured image
+  np.random.seed(42)
+  n_frames = 50
+  size = 8
+
+  # Generate a simple pattern (letter 'A') as target
+  target = np.zeros((8, 8))
+  target[1, 3:5] = 1; target[2, 2:6] = 1
+  target[3, 1:7] = 1; target[4, 1:7] = 1
+  target[5:7, 3:5] = 1; target[5:7, 1:7:6] = 1
+
+  noise = np.random.randn(size, size) * 2
+  frames = [noise * (1 - t/n_frames) + target * (t/n_frames)
+            for t in range(n_frames)]
+
+  fig, axes = plt.subplots(5, 10, figsize=(16, 8),
+                            facecolor='#0d1117')
+  fig.suptitle('DDPM Denoising Trajectory', color='#e6edf3', fontsize=14)
+  for i, ax in enumerate(axes.flat):
+      ax.imshow(frames[i], cmap='viridis', vmin=-2, vmax=2)
+      ax.set_xticks([]); ax.set_yticks([])
+      ax.set_title(f't={i}', color='#8b949e', fontsize=7)
+
+  fig.tight_layout()
+  fig.savefig('diffusion_grid.png', dpi=150,
+              facecolor='#0d1117')
+  plt.close(fig)
+
+  # Animation variant
+  fig2, ax2 = plt.subplots(facecolor='#0d1117')
+  ax2.set_facecolor('#161b22')
+
+  def animate(i):
+      ax2.clear()
+      ax2.imshow(frames[i], cmap='viridis', vmin=-2, vmax=2)
+      ax2.set_title(f'Step {i}/{n_frames}', color='#e6edf3')
+      ax2.set_xticks([]); ax2.set_yticks([])
+
+  ani = FuncAnimation(fig2, animate, frames=n_frames, interval=80)
+  ani.save('diffusion.mp4', writer='ffmpeg', fps=12, dpi=150)
+  plt.close(fig2)
+  'diffusion_grid.png'
+#+end_src
+
+#+RESULTS:
+[[file:diffusion_grid.png]]

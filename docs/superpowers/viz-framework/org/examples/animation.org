@@ -1,0 +1,47 @@
+#+TITLE: Animation Example — Wave Propagation (Manim CE)
+
+* Sine Wave Animation
+
+To render this, save the Org buffer and run:
+#+begin_src sh :exports code
+  manim -pql animation.py WaveScene
+#+end_src
+
+#+begin_src python :exports code :tangle animation.py
+  from manim import *
+  import numpy as np
+
+  class WaveScene(Scene):
+      def construct(self):
+          self.camera.background_color = '#0d1117'
+
+          axes = Axes(
+              x_range=[0, 2*PI, PI/2],
+              y_range=[-1.5, 1.5, 0.5],
+              x_length=10,
+              y_length=5,
+              axis_config={'color': '#8b949e'}
+          )
+          x_label = axes.get_x_axis_label(
+              MathTex('x', color='#e6edf3'), edge=RIGHT, direction=DOWN
+          )
+          y_label = axes.get_y_axis_label(
+              MathTex('f(x)', color='#e6edf3'), edge=UP, direction=LEFT
+          )
+
+          wave = axes.plot(
+              lambda x: np.sin(x),
+              color='#3fb950',
+              stroke_width=3
+          )
+
+          equation = MathTex(
+              r'f(x) = \sin(x)',
+              color='#e6edf3',
+              font_size=36
+          ).to_corner(UR)
+
+          self.play(Create(axes), Write(x_label), Write(y_label))
+          self.play(Create(wave), Write(equation))
+          self.wait(3)
+#+end_src

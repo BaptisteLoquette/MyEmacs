@@ -1,0 +1,37 @@
+#+TITLE: Circuit Example — Differential Pair
+#+STARTUP: inlineimages
+
+* Differential Pair Schematic
+
+#+begin_src python :results file :file diffpair.svg :exports both
+  import schemdraw
+  import schemdraw.elements as elm
+
+  with schemdraw.Drawing(file='diffpair.svg') as d:
+      d.config(fontsize=12)
+      # Tail current source
+      d += elm.SourceI().down().label('I_tail', loc='bottom')
+      d += elm.Line().right()
+      d += elm.Dot().label('  V_tail')
+      # Left branch
+      d.push()
+      d += elm.Line().up()
+      d += elm.BjtNpn(circle=True).anchor('emitter').label('Q1', loc='top')
+      d += elm.Resistor().up().label('R_C')
+      d += elm.Line()
+      d += elm.Dot(open=True).label('  V_out⁻')
+      d.pop()
+      # Right branch
+      d += elm.Line().right()
+      d += elm.BjtNpn(circle=True).anchor('emitter').label('Q2', loc='top')
+      d += elm.Resistor().up().label('R_C')
+      d += elm.Dot(open=True).label('  V_out⁺')
+      # Supply
+      d += elm.Line().right()
+      d += elm.SourceV().up().reverse().label('V_DD')
+
+  "diffpair.svg"
+#+end_src
+
+#+RESULTS:
+[[file:diffpair.svg]]
