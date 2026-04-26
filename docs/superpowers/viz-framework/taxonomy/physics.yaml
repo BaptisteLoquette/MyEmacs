@@ -1,0 +1,649 @@
+domain: physics
+sub_disciplines:
+  electromagnetism:
+    concepts:
+      - name: electrostatic_field
+        primary_pattern: vectorfield
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
+        alt_framework: pyvista
+        interaction_tiers: [t1, t2, t3]
+        ux_rules:
+          - "Equipotential contours must be orthogonal to E-field lines"
+          - "Arrow length proportional to |E|, adaptive sampling near charges"
+          - "Dipole field lines must close from + to - charge"
+          - "Contour spacing tighter near high-gradient regions"
+        gotchas:
+          - "Quiver scaling — normalize or users see nothing or chaos"
+          - "Colormap for E-field magnitude must diverge from zero, not sequential"
+          - "Near-point-charge singularities cause arrow explosion; clamp magnitude"
+      - name: magnetic_flux
+        primary_pattern: vectorfield
+        secondary_patterns: [scalarfield, signalflow]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3]
+        ux_rules:
+          - "B-field lines must close (div B = 0) — no broken lines"
+          - "Show induced EMF as time-series alongside field"
+          - "Color streamlines by |B| magnitude with viridis colormap"
+          - "Solenoid cross-section must show uniform interior field"
+        gotchas:
+          - "streamplot seed points must sample domain uniformly"
+          - "Magnetic vector potential A is gauge-dependent; fix a gauge before plotting"
+          - "Superposition of multiple sources requires correct Biot-Savart integration"
+      - name: faraday_induction
+        primary_pattern: signalflow
+        secondary_patterns: [vectorfield, processanim]
+        best_framework: manim
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t4]
+        ux_rules:
+          - "Show changing flux and induced EMF on synchronized subplots"
+          - "Arrow direction on loop must follow Lenz's law (opposes change)"
+          - "Time axis shared between flux and EMF plots"
+          - "Annotate dB/dt = 0 crossings where EMF inverts"
+        gotchas:
+          - "Sign convention: EMF = -dPhi/dt, must use consistent right-hand rule"
+          - "Animated flux change needs frame-level synchronization"
+          - "Moving conductor vs changing B-field have different flux origins"
+      - name: maxwell_equations
+        primary_pattern: decisionprocess
+        secondary_patterns: [vectorfield, scalarfield]
+        best_framework: tikz
+        alt_framework: matplotlib
+        interaction_tiers: [t1]
+        ux_rules:
+          - "Display all four equations in integral and differential form side by side"
+          - "Use LaTeX rendering for equation fidelity"
+          - "Color-code each equation: Gauss (red), Gauss-mag (blue), Faraday (green), Ampere-Maxwell (orange)"
+          - "Show physical interpretation annotations below each equation"
+        gotchas:
+          - "Displacement current term often omitted; must include for completeness"
+          - "Vacuum vs matter forms differ — specify which is shown"
+          - "Symbol collision: epsilon is permittivity, not emissivity"
+      - name: gauss_law
+        primary_pattern: scalarfield
+        secondary_patterns: [vectorfield, geom3d]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3]
+        ux_rules:
+          - "Gaussian surface drawn as transparent shell, E-field arrows piercing it"
+          - "Flux density coded as arrow color at surface intersections"
+          - "Symmetry must be visually apparent (spherical, cylindrical, planar)"
+          - "Show charge enclosed as filled sphere at center"
+        gotchas:
+          - "Integral of E·dA over closed surface is zero unless net charge enclosed"
+          - "Spherical symmetry requires radial field only — no tangential components"
+          - "Discrete surface sampling can miss flux contributions; use high-res mesh"
+      - name: ampere_law
+        primary_pattern: vectorfield
+        secondary_patterns: [scalarfield]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Circular Amperian loop must enclose current-carrying wire"
+          - "Right-hand rule: thumb along current, fingers curl with B-field"
+          - "Show current direction with labeled arrow through loop center"
+          - "Magnetic field strength decays as 1/r — use log-scale radial axis"
+        gotchas:
+          - "Biot-Savart law integration required for non-symmetric current paths"
+          - "Don't confuse magnetic field B with H (magnetizing field) — different units"
+          - "Infinite wire approximation breaks at large distances"
+      - name: electromagnetic_wave
+        primary_pattern: processanim
+        secondary_patterns: [vectorfield, signalflow]
+        best_framework: manim
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3, t4, t5]
+        ux_rules:
+          - "E and B fields orthogonal to each other and propagation direction (k)"
+          - "Show sinusoidal oscillation with 90-degree phase between E and B peaks"
+          - "Animate wave propagation along k-vector with advancing frame"
+          - "Label wavelength, amplitude, and Poynting vector direction"
+        gotchas:
+          - "E and B are in-phase (not 90°) for plane waves in vacuum"
+          - "Polarization state (linear, circular, elliptical) must be specified"
+          - "Wave speed c = 1/sqrt(mu*epsilon) — dispersion in media changes speed"
+
+  mechanics:
+    concepts:
+      - name: harmonic_oscillator
+        primary_pattern: phasetraj
+        secondary_patterns: [signalflow, probdist]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Phase portrait must show position vs velocity with closed elliptical orbits"
+          - "Underdamped: spiral into origin; overdamped: straight-line approach; critically damped: fastest decay"
+          - "Energy annotation: color map from total E (red) to dissipated (blue)"
+          - "Natural frequency omega_0 marked on frequency-response plot"
+        gotchas:
+          - "Damping ratio zeta < 1 for oscillation; zeta >= 1 gives no oscillation"
+          - "Driven oscillator has transient + steady-state regimes — show both"
+          - "Resonance: maximum amplitude occurs at omega = omega_0 * sqrt(1 - 2*zeta^2), not exactly omega_0"
+      - name: pendulum_phase
+        primary_pattern: phasetraj
+        secondary_patterns: [scalarfield, processanim]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t4, t5]
+        ux_rules:
+          - "Phase portrait: angular position (theta) vs angular velocity (omega)"
+          - "Separatrix at E = 2mgl divides oscillation (closed) from rotation (open) trajectories"
+          - "Small-angle approximation (sin theta ~ theta) marked as shaded region"
+          - "Show fixed points: stable (0,0) center, unstable (pi,0) saddle"
+        gotchas:
+          - "Nonlinear pendulum has anharmonic period — don't use small-angle approximation for large swings"
+          - "Phase space is cylindrical (theta mod 2pi) — 2D projection can be misleading"
+          - "Damping spirals into origin but period remains ~constant for light damping"
+      - name: projectile_motion
+        primary_pattern: signalflow
+        secondary_patterns: [vectorfield, probdist]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Superimpose trajectory with velocity vectors at key points"
+          - "Show range, max height, and time-of-flight annotated on plot"
+          - "Drag parameter slider for variable air resistance coefficient"
+          - "Multicolor traces for different launch angles on same plot"
+        gotchas:
+          - "With air resistance, horizontal and vertical motions are coupled — no simple parabola"
+          - "Maximum range at 45° only holds for level ground in vacuum"
+          - "Velocity components must be plotted in consistent physical units (m/s)"
+      - name: orbital_mechanics
+        primary_pattern: geom3d
+        secondary_patterns: [vectorfield, phasetraj]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3, t4, t5]
+        ux_rules:
+          - "3D ellipse with central body at focus, not center"
+          - "Show velocity vector (tangent to orbit) and acceleration vector (toward focus)"
+          - "Eccentricity slider: 0 = circle, 0<e<1 = ellipse, e=1 = parabola, e>1 = hyperbola"
+          - "Equal-area-in-equal-time: shade swept areas for visual proof of Kepler's 2nd law"
+        gotchas:
+          - "Two-body problem has analytic solution; N>2 requires numerical integration"
+          - "Orbital elements (a, e, i, Omega, omega, nu) define orientation in 3D – show reference plane"
+          - "Precession of periapsis requires general relativistic corrections for Mercury"
+      - name: rigid_body_rotation
+        primary_pattern: geom3d
+        secondary_patterns: [vectorfield, phasetraj]
+        best_framework: pyvista
+        alt_framework: manim
+        interaction_tiers: [t1, t2, t3, t4]
+        ux_rules:
+          - "Inertia ellipsoid shown as transparent surface; angular velocity vector from center"
+          - "Poinsot construction: ellipsoid rolls without slipping on invariable plane"
+          - "Angular momentum L and angular velocity omega NOT parallel unless principal axis"
+          - "Color-code kinetic energy on ellipsoid surface"
+        gotchas:
+          - "Torque-free precession (Euler's equations) — stable about min and max axes, unstable about intermediate"
+          - "Moment of inertia tensor is 3x3 symmetric; diagonalize to find principal axes"
+          - "Dzhanibekov effect (tennis racket theorem) is counterintuitive — show animation"
+      - name: lagrangian_mechanics
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow, decisionprocess]
+        best_framework: tikz
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Show generalized coordinates q_i with arrows on system diagram"
+          - "Lagrangian L = T - V displayed with color-coded kinetic (green) and potential (red) terms"
+          - "Euler-Lagrange equation d/dt(dL/dq_dot) - dL/dq = 0 annotated step by step"
+          - "Constraints shown as geometric restrictions with Lagrange multipliers"
+        gotchas:
+          - "Generalized coordinates must be independent — check for constraint redundancy"
+          - "Kinetic energy must be expressed in terms of q_dot, not velocities in Cartesian frame"
+          - "Ignorable (cyclic) coordinates yield conserved conjugate momenta"
+      - name: coupled_oscillators
+        primary_pattern: processanim
+        secondary_patterns: [signalflow, phasetraj]
+        best_framework: manim
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t4, t5]
+        ux_rules:
+          - "Show individual mass displacements with different colors on same time axis"
+          - "Normal mode frequencies marked as vertical dashed lines on spectrum"
+          - "In-phase mode: same color sync; Out-of-phase mode: contrasting color sync"
+          - "Energy sloshing visualized as bar chart of kinetic energy per oscillator"
+        gotchas:
+          - "N coupled oscillators have N normal modes — diagonalize mass-weighted Hessian"
+          - "Weak coupling gives slow beat frequency between near-degenerate modes"
+          - "Anharmonic coupling introduces frequency mixing and chaos at high energy"
+
+  thermodynamics:
+    concepts:
+      - name: heat_distribution
+        primary_pattern: scalarfield
+        secondary_patterns: [vectorfield, processanim]
+        best_framework: matplotlib
+        alt_framework: pyvista
+        interaction_tiers: [t1, t2, t3, t4]
+        ux_rules:
+          - "Heat map with perceptually uniform colormap (plasma or inferno)"
+          - "Temperature gradient vector (heat flux direction) overlaid as quiver"
+          - "Boundary conditions explicitly labeled: Dirichlet (fixed T), Neumann (fixed flux)"
+          - "Animate thermal equilibration with temperature range locked across frames"
+        gotchas:
+          - "Don't use jet colormap — plasma or inferno are perceptually uniform"
+          - "Heat equation is diffusive (parabolic); sharp features smooth over time"
+          - "Steady-state solution is Laplace equation (elliptic); no time dependence"
+      - name: carnot_cycle
+        primary_pattern: decisionprocess
+        secondary_patterns: [scalarfield, signalflow]
+        best_framework: tikz
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3]
+        ux_rules:
+          - "P-V diagram with clear state labels (1-2-3-4) and arrow direction"
+          - "Isothermal legs colored red (hot) and blue (cold); adiabatic legs colored green"
+          - "Area of loop shaded to represent net work output"
+          - "Efficiency = 1 - T_c/T_h annotated as equation"
+        gotchas:
+          - "Ideal gas assumption may not hold for real working fluids (steam, refrigerant)"
+          - "Isothermal expansion requires heat bath contact — not adiabatic"
+          - "Real engines have irreversibilities; Carnot is the theoretical upper bound"
+      - name: entropy_gradient
+        primary_pattern: scalarfield
+        secondary_patterns: [vectorfield, probdist]
+        best_framework: plotly
+        alt_framework: pyvista
+        interaction_tiers: [t1, t2, t3]
+        ux_rules:
+          - "Entropy S as scalar field; gradient dS points toward equilibrium"
+          - "Second law: total entropy increases — show as upward drift in bar chart"
+          - "Reversible path vs irreversible path: shaded area shows entropy generation"
+          - "Colorbar must show zero as neutral gray, positive as warm, negative as cool"
+        gotchas:
+          - "Entropy is a state function — path-independent for reversible processes"
+          - "dS = dQ_rev/T, not dQ/T (denominator must use reversible path)"
+          - "Statistical entropy S = k ln W gives same value as thermodynamic entropy"
+      - name: phase_transition
+        primary_pattern: scalarfield
+        secondary_patterns: [decisionprocess, signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "P-T phase diagram with labeled triple point and critical point"
+          - "Coexistence curves (melting, vaporization, sublimation) in distinct colors"
+          - "Latent heat shown as horizontal plateau on T-Q diagram"
+          - "Gibbs free energy G(P,T) surface in 3D with common-tangent construction"
+        gotchas:
+          - "Triple point is a single invariant point — no degrees of freedom (Gibbs phase rule F=0)"
+          - "Critical point: liquid-gas distinction vanishes; no latent heat above T_c"
+          - "First-order (discontinuous dG) vs second-order (continuous G, discontinuous d^2G)"
+      - name: brownian_motion
+        primary_pattern: processanim
+        secondary_patterns: [probdist, phasetraj]
+        best_framework: manim
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t4]
+        ux_rules:
+          - "Particle trajectory as continuous path with successive position dots"
+          - "MSD (mean squared displacement) overlay: <x^2> = 2Dt linear slope"
+          - "Multiple independent trajectories overlaid with partial transparency"
+          - "Temperature slider adjusts diffusion coefficient D in real-time"
+        gotchas:
+          - "Einstein relation D = kT/(6*pi*eta*r) — valid for spherical particles in viscous fluid"
+          - "Fractal dimension of Brownian path is 2 (space-filling in 2D)"
+          - "Individual steps are uncorrelated; ensemble average yields smooth diffusion"
+      - name: maxwell_boltzmann
+        primary_pattern: probdist
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Probability density f(v) = (m/2pi*kT)^(3/2) * 4pi*v^2 * exp(-mv^2/2kT)"
+          - "Most probable speed, mean speed, RMS speed annotated as vertical lines"
+          - "Temperature slider shifts distribution peak rightward and flattens"
+          - "Fill area under curve corresponding to fraction of molecules above threshold"
+        gotchas:
+          - "f(v) is NOT Gaussian: v^2 factor from 3D spherical shell volume element"
+          - "2D and 3D distributions differ — specify dimensionality"
+          - "Molecular mass in kg (not amu) for correct numerical evaluation"
+      - name: pv_diagram
+        primary_pattern: signalflow
+        secondary_patterns: [scalarfield, decisionprocess]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3]
+        ux_rules:
+          - "Pressure vs Volume with cycle path arrow indicators"
+          - "Isotherms shown as dashed hyperbolas (PV = constant)"
+          - "Work = area enclosed, numerically integrated and annotated"
+          - "State points labeled with (P,V,T) triplets"
+        gotchas:
+          - "Semi-log or log-log scales for large compression ratios"
+          - "Ideal gas law PV = nRT; real gases use van der Waals or other EOS"
+          - "Work is path-dependent; area under curve depends on process type"
+
+  quantum_mechanics:
+    concepts:
+      - name: wavefunction_probability
+        primary_pattern: probdist
+        secondary_patterns: [scalarfield, phasetraj]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "|psi|^2 as probability density with filled area under curve"
+          - "Real and imaginary parts plotted separately as thin lines"
+          - "Normalization integral = 1 annotated as verification"
+          - "Phase as color hue on complex plane inset"
+        gotchas:
+          - "psi is complex; |psi|^2 is real and positive — never plot psi alone without context"
+          - "Normalization of free-particle states requires delta-function or wave-packet"
+          - "Probability current J = (hbar/m) Im(psi* grad psi) for flux visualization"
+      - name: hydrogen_atom
+        primary_pattern: geom3d
+        secondary_patterns: [probdist, scalarfield]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3]
+        ux_rules:
+          - "Orbital shapes (s: sphere, p: dumbbell, d: cloverleaf) as 3D isosurfaces"
+          - "Radial probability density r^2|R_nl|^2 vs r with labeled principal quantum numbers"
+          - "Energy level diagram: n=1,2,3,... with allowed transitions as arrows"
+          - "Color-code by |psi|^2 value; use diverging colormap for signed wavefunction"
+        gotchas:
+          - "Angular momentum l values: s=0, p=1, d=2, f=3 — don't confuse with spin"
+          - "Degeneracy of energy levels broken by fine-structure and Lamb shift"
+          - "Hydrogenic wavefunctions depend on r/a_0 with Bohr radius a_0 = 0.529 Angstrom"
+      - name: double_slit
+        primary_pattern: processanim
+        secondary_patterns: [probdist, scalarfield]
+        best_framework: manim
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t4, t5]
+        ux_rules:
+          - "Wave interference pattern builds as cumulative particle hits on screen"
+          - "Single-particle regime: one dot per frame, build statistics over time"
+          - "Show both slits open simultaneously — must sum probability amplitudes, not probabilities"
+          - "Slit separation and wavelength sliders for real-time fringe spacing adjustment"
+        gotchas:
+          - "Which-path information destroys interference — don't draw paths explicitly"
+          - "Fringe spacing = lambda*D/d; verify with actual geometry"
+          - "Electron double-slit requires de Broglie wavelength lambda = h/p"
+      - name: potential_well
+        primary_pattern: signalflow
+        secondary_patterns: [probdist, scalarfield]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Potential V(x) drawn as solid line; eigenenergies as horizontal dashed lines"
+          - "Wavefunctions plotted at their eigenenergy level, zero baseline aligned to energy"
+          - "Finite vs infinite well: tunneling tails visible for finite well"
+          - "Square well, harmonic, and double-well as selectable potentials"
+        gotchas:
+          - "Infinite well: psi(0)=psi(L)=0; finite well: psi continuous and differentiable at boundaries"
+          - "Number of bound states depends on well depth and width — not always infinite"
+          - "Parity of wavefunctions (even/odd) depends on potential symmetry"
+      - name: quantum_harmonic_oscillator
+        primary_pattern: probdist
+        secondary_patterns: [phasetraj, signalflow]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3]
+        ux_rules:
+          - "Equally spaced energy levels E_n = (n + 1/2)hbar*omega shown as horizontal lines"
+          - "Hermite polynomial wavefunctions with n nodes plotted over parabolic potential"
+          - "Probability density extends into classically forbidden region (tunneling)"
+          - "Coherent state: Gaussian wavepacket oscillating without spreading"
+        gotchas:
+          - "Zero-point energy hbar*omega/2 is non-zero — ground state not at bottom of well"
+          - "Ladder operators a and a_dagger raise/lower n by 1 — not same as classical amplitude"
+          - "Classical turning points where E = V(x) — beyond these P(x) decays exponentially"
+      - name: uncertainty_principle
+        primary_pattern: probdist
+        secondary_patterns: [scalarfield, signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Dual distributions: position dx and momentum dp simultaneously displayed"
+          - "Minimum uncertainty product (Gaussian) shown as dashed line at hbar/2"
+          - "As position spread narrows (slider), momentum spread widens and vice versa"
+          - "Shaded region shows dx*dp >= hbar/2 — never dips below"
+        gotchas:
+          - "dx*dp can be arbitrarily large — only lower bound is constrained"
+          - "Heisenberg limit applies to any pair of conjugate observables (E-t, L_z-phi)"
+          - "Not a measurement disturbance principle — intrinsic property of quantum states"
+      - name: bloch_sphere
+        primary_pattern: geom3d
+        secondary_patterns: [phasetraj, graphnet]
+        best_framework: plotly
+        alt_framework: pyvista
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Unit sphere with |0> at north pole, |1> at south pole"
+          - "State vector as arrow from origin to point on sphere surface"
+          - "Theta (polar) and phi (azimuthal) angles labeled with values"
+          - "Hadamard, Pauli-X/Y/Z gates as rotation animations on the sphere"
+        gotchas:
+          - "Global phase is unobservable: states |psi> and e^(i*alpha)|psi> are physically identical"
+          - "Bloch sphere only valid for pure single-qubit states — mixed states are interior points"
+          - "Theta in [0,pi], phi in [0,2pi) — standard convention, not arbitrary"
+
+  optics:
+    concepts:
+      - name: ray_tracing
+        primary_pattern: decisionprocess
+        secondary_patterns: [signalflow]
+        best_framework: matplotlib
+        alt_framework: tikz
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Rays drawn as colored lines with arrowheads indicating direction"
+          - "Focal points marked with f and 2f on optical axis"
+          - "Three principal rays: parallel-to-axis, through-center, through-focus"
+          - "Virtual rays (dashed) for virtual images behind lens/mirror"
+        gotchas:
+          - "Sign convention (Cartesian): object distance positive if real, negative if virtual"
+          - "Lens maker's formula uses refractive index and curvature radii — not just focal length"
+          - "Thin lens approximation breaks for large aperture or thick lenses"
+      - name: interference_pattern
+        primary_pattern: scalarfield
+        secondary_patterns: [signalflow, probdist]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Intensity pattern I = I_0 * cos^2(delta/2) with constructive/destructive labels"
+          - "Colormap centered at zero for optical path difference"
+          - "Michelson interferometer: show beam paths and fringe pattern simultaneously"
+          - "Phase shift on reflection: pi shift at higher-n boundary annotated"
+        gotchas:
+          - "Coherence length limits fringe visibility — incoherent sources add intensities, not amplitudes"
+          - "Thin-film interference includes 180° phase flip at one interface for n_film > n_air"
+          - "Fringe order m: constructive when OPD = m*lambda, destructive when (m+1/2)*lambda"
+      - name: diffraction_grating
+        primary_pattern: signalflow
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Grating equation m*lambda = d(sin theta_i + sin theta_m) labeled with m=0,±1,±2"
+          - "Intensity vs angle plot with sinc^2 envelope from single-slit and comb from N-slit"
+          - "Resolving power R = lambda/delta_lambda = m*N annotated"
+          - "Blaze angle shown geometrically: tilt of groove facet"
+        gotchas:
+          - "Free spectral range limits grating orders without overlap"
+          - "Efficiency peaks at blaze wavelength — drops off away from design wavelength"
+          - "Polarization matters: TE and TM have different grating efficiencies"
+      - name: lens_system
+        primary_pattern: decisionprocess
+        secondary_patterns: [geom3d]
+        best_framework: tikz
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Principal planes (H, H') for thick lenses, not just thin-lens center"
+          - "ABCD matrix displayed next to each optical element"
+          - "Pupil locations (entrance/exit) marked with labeled apertures"
+          - "Aberrations listed: spherical, coma, astigmatism, field curvature, distortion"
+        gotchas:
+          - "Principal planes may be outside the lens for telephoto/retrofocus designs"
+          - "Nodal points coincide with principal points only when n_in = n_out"
+          - "Paraxial approximation fails for large NA (>0.5) — need ray-fan or wavefront analysis"
+      - name: polarization_state
+        primary_pattern: phasetraj
+        secondary_patterns: [geom3d]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Jones vector [E_x; E_y*exp(i*phi)] displayed alongside polarization ellipse"
+          - "Poincaré sphere: Stokes parameters (S0,S1,S2,S3) as 3D point"
+          - "Linear, circular (L/R), and elliptical states as distinct icons"
+          - "Retardance slider: quarter-wave plate at 0 gives linear, at 45° gives circular"
+        gotchas:
+          - "Stokes parameters for fully polarized light: S0^2 = S1^2 + S2^2 + S3^2"
+          - "Jones calculus only works for fully polarized light — use Mueller for partial"
+          - "Quarter-wave plate at 45° to linear input yields circular — not true at other angles"
+      - name: gaussian_beam
+        primary_pattern: scalarfield
+        secondary_patterns: [signalflow, geom3d]
+        best_framework: pyvista
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Beam waist w_0 at z=0 with hyperbolic divergence envelope w(z)"
+          - "Rayleigh range z_R = pi*w_0^2/lambda marked as shaded zone"
+          - "Intensity cross-section: Gaussian profile at multiple z positions"
+          - "Gouy phase shift: pi/2 from -inf to +inf annotated on phase plot"
+        gotchas:
+          - "Far-field divergence angle theta = lambda/(pi*w_0) — smaller waist = larger divergence"
+          - "M^2 factor quantifies beam quality: M^2=1 ideal Gaussian, M^2>1 for real lasers"
+          - "Confocal parameter b = 2*z_R — beam stays approximately collimated within +-z_R"
+      - name: waveguide_mode
+        primary_pattern: scalarfield
+        secondary_patterns: [vectorfield]
+        best_framework: matplotlib
+        alt_framework: pyvista
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Mode field profile across waveguide cross-section (E-field intensity)"
+          - "Effective index n_eff plotted vs wavelength — between core and cladding indices"
+          - "Single-mode cutoff: V = (2*pi/lambda)*a*NA < 2.405 marked as vertical line"
+          - "TE and TM modes distinguished by field component orientation labels"
+        gotchas:
+          - "Single-mode condition depends on wavelength — same fiber multi-mode at shorter lambda"
+          - "Mode field diameter (MFD) != core diameter (for single-mode fiber)"
+          - "Bend loss increases exponentially for large bend radius beyond cutoff"
+
+  fluid_dynamics:
+    concepts:
+      - name: navier_stokes_field
+        primary_pattern: vectorfield
+        secondary_patterns: [scalarfield, geom3d]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3, t4]
+        ux_rules:
+          - "Velocity field u(x,t) as streamlines colored by speed magnitude"
+          - "Pressure field p(x,t) as background scalar colormap"
+          - "Vorticity omega = curl(u) shown as separate field with distinct colormap"
+          - "Incompressibility condition div(u) = 0 verified numerically on plot"
+        gotchas:
+          - "Reynolds number Re determines laminar (Re<2300) vs turbulent (Re>4000) regime"
+          - "Incompressible NS requires solving pressure Poisson equation — not explicit in time"
+          - "Boundary layer thickness grows as sqrt(nu*t) — resolve with fine mesh near walls"
+      - name: bernoulli_flow
+        primary_pattern: signalflow
+        secondary_patterns: [vectorfield]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3]
+        ux_rules:
+          - "Streamline with labeled sampling points showing P + 1/2*rho*v^2 + rho*g*h = constant"
+          - "Pressure, velocity, and elevation contributions as stacked bar chart along streamline"
+          - "Venturi effect: velocity up, pressure down at constriction — annotated clearly"
+          - "Stagnation point where v=0, P = P_total marked with bullseye"
+        gotchas:
+          - "Bernoulli only valid along same streamline for rotational flow"
+          - "Unsteady flow: add term d(phi)/dt or use unsteady Bernoulli"
+          - "Compressibility corrections needed for Mach > 0.3"
+      - name: turbulence_vorticity
+        primary_pattern: geom3d
+        secondary_patterns: [vectorfield, signalflow]
+        best_framework: pyvista
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t4]
+        ux_rules:
+          - "Vortex tubes rendered as 3D isosurfaces of |omega|"
+          - "Energy spectrum E(k) ~ k^(-5/3) in inertial range shown on log-log plot"
+          - "Kolmogorov scales (eta, tau_eta, u_eta) annotated as vertical lines"
+          - "Velocity fluctuation RMS plotted vs distance from wall (wall units y+)"
+        gotchas:
+          - "Direct Numerical Simulation (DNS) requires N^3 ~ Re^(9/4) grid points — intractable above moderate Re"
+          - "Energy cascade assumes local isotropy — not valid near walls or for stratified flows"
+          - "k^(-5/3) law holds only in inertial subrange between integral and Kolmogorov scales"
+      - name: boundary_layer
+        primary_pattern: signalflow
+        secondary_patterns: [vectorfield, scalarfield]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Velocity profile u(y) from wall (y=0) to freestream with boundary layer thickness delta"
+          - "Laminar, transitional, and turbulent velocity profiles overlaid with distinct styles"
+          - "Wall shear stress tau_w as slope at y=0 annotated tangentially"
+          - "Displacement thickness delta* and momentum thickness theta as shaded areas"
+        gotchas:
+          - "Blasius solution (laminar) self-similar in eta = y*sqrt(U/(nu*x)) — similarity variable"
+          - "Transition Reynolds number Re_x ~ 5e5 for flat plate — depends on free-stream turbulence"
+          - "Turbulent BL thicker than laminar — skin friction higher but separation resistance better"
+      - name: shockwave
+        primary_pattern: scalarfield
+        secondary_patterns: [vectorfield, signalflow]
+        best_framework: pyvista
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2, t3, t5]
+        ux_rules:
+          - "Schlieren-style density gradient visualization (|grad rho| magnitude)"
+          - "Upstream (supersonic) and downstream (subsonic) labeled with Mach numbers"
+          - "Oblique shock angle beta vs deflection angle theta plotted on theta-beta-M diagram"
+          - "Normal shock relations: P2/P1, rho2/rho1, T2/T1 annotated across discontinuity"
+        gotchas:
+          - "Rankine-Hugoniot jump conditions conserve mass, momentum, energy across shock"
+          - "Oblique shock detaches beyond maximum deflection angle for given Mach"
+          - "Expansion fans (Prandtl-Meyer) are smooth, not discontinuous — opposite of compression"
+      - name: streamlines_potential
+        primary_pattern: vectorfield
+        secondary_patterns: [scalarfield]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3]
+        ux_rules:
+          - "Streamlines (psi = const) and equipotential lines (phi = const) form orthogonal grid"
+          - "Source/sink: radial streamlines; vortex: circular streamlines; doublet: cardioid pattern"
+          - "Superposition: show how combining elementary flows creates flow past cylinder"
+          - "Stagnation points circled where velocity magnitude drops to zero"
+        gotchas:
+          - "Potential flow: irrotational (curl(u)=0) and incompressible (div(u)=0) — no viscosity"
+          - "D'Alembert's paradox: zero drag for potential flow past body — no boundary layer separation"
+          - "Kutta-Joukowski theorem: lift = rho*U*Gamma — circulation Gamma due to sharp trailing edge"
+      - name: convection_cell
+        primary_pattern: processanim
+        secondary_patterns: [scalarfield, vectorfield]
+        best_framework: manim
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t3, t4, t5]
+        ux_rules:
+          - "Rayleigh-Benard rolls: hot fluid rises (center), cold fluid sinks (edges)"
+          - "Temperature field T(x,y,t) as background colormap with velocity vectors overlaid"
+          - "Rayleigh number Ra = g*alpha*deltaT*H^3/(nu*kappa) displayed with threshold"
+          - "Nusselt number Nu = heat_transfer_with_convection / conductive_only shown vs Ra"
+        gotchas:
+          - "Critical Rayleigh number Ra_c ~ 1708 for onset of convection between rigid plates"
+          - "At high Ra, rolls become unsteady then turbulent — period-doubling route to chaos"
+          - "Boussinesq approximation: density variation only in buoyancy term — fails for large deltaT"
