@@ -64,7 +64,7 @@ const DOMAINS = [
       "eigenvalue", "eigenvector", "matrix", "determinant", "integral",
       "derivative", "differential", "laplacian", "fourier", "laplace",
       "category theory", "functor", "commutative diagram", "homology",
-      "cohomology", "probability", "statistic", "distribution", "random",
+      "cohomology", "probability", "statistic", "distribution",
       "stochastic", "markov", "bayesian", "optimization", "convex",
       "linear programming", "graph theory", "number theory", "set theory",
       "logic", "combinatorics", "knot theory", "dynamical system",
@@ -87,7 +87,7 @@ const DOMAINS = [
     id: "concept-map",
     label: "Concept Map",
     keywords: [
-      "flowchart", "mind map", "system diagram", "architecture",
+      "flowchart", "mind map", "system diagram",
       "pipeline", "workflow", "process", "lifecycle", "taxonomy",
       "hierarchy", "comparison", "timeline", "roadmap", "framework",
       "overview", "structure", "relationship", "dependency"
