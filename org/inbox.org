@@ -1,0 +1,7 @@
+#+TITLE: Inbox
+#+FILETAGS: :inbox:
+
+* Fleeting ideas go here
+  :PROPERTIES:
+  :ID: inbox-root
+  :END:
