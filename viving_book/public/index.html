@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drill-Down Explainer</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f0eb;
+    --surface: #ffffff;
+    --text: #2c2c2c;
+    --text-muted: #777;
+    --accent: #4a6fa5;
+    --accent-hover: #3b5a8a;
+    --border: #ddd;
+    --error: #c0392b;
+    --radius: 8px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Top bar ── */
+  #topbar {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    gap: 16px;
+  }
+
+  #app-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  #nav-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #page-counter {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .btn {
+    padding: 7px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn:hover:not(:disabled) {
+    background: #f0f0f0;
+    border-color: #bbb;
+  }
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .btn.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .btn.primary:hover:not(:disabled) {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+
+  /* ── Topic input area ── */
+  #input-area {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    gap: 10px;
+    padding: 0 20px 16px;
+    align-items: center;
+  }
+
+  #topic-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  #topic-input:focus {
+    border-color: var(--accent);
+  }
+  #topic-input:disabled {
+    opacity: 0.5;
+  }
+
+  /* ── Domain tag ── */
+  #domain-tag {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--accent);
+    transition: all 0.15s;
+  }
+  #domain-tag.visible { display: flex; }
+  #domain-tag:hover { background: #eef3f9; border-color: var(--accent); }
+  #domain-tag select {
+    border: none;
+    background: transparent;
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* ── Canvas area ── */
+  #canvas-container {
+    width: 100%;
+    max-width: 1100px;
+    position: relative;
+    padding: 0 20px;
+  }
+
+  #canvas-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    cursor: default;
+  }
+  #canvas-wrapper.has-image {
+    cursor: pointer;
+  }
+  #canvas-wrapper.loading {
+    cursor: wait;
+  }
+
+  #main-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #fafaf8;
+  }
+
+  #placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+  #canvas-wrapper.has-image #placeholder { display: none; }
+
+  /* Loading overlay */
+  #loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--text-muted);
+    z-index: 10;
+  }
+  #loading-overlay.active { display: flex; }
+
+  /* Ripple */
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(200,60,60,0.6);
+    background: rgba(200,60,60,0.15);
+    pointer-events: none;
+    animation: ripple-anim 0.5s ease-out forwards;
+  }
+
+  @keyframes ripple-anim {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+  }
+
+  /* ── Error banner ── */
+  #error-banner {
+    width: 100%;
+    max-width: 1100px;
+    padding: 0 20px;
+    margin-top: 8px;
+    display: none;
+  }
+  #error-banner.active {
+    display: block;
+  }
+  #error-banner span {
+    color: var(--error);
+    font-size: 0.875rem;
+  }
+
+  /* ── Thumbnail strip ── */
+  #thumbnail-area {
+    width: 100%;
+    max-width: 1100px;
+    padding: 16px 20px 24px;
+  }
+
+  #thumbnail-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    user-select: none;
+    padding: 4px 0;
+  }
+  #thumbnail-toggle:hover { color: var(--text); }
+
+  #thumbnail-strip {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 8px 0;
+    scroll-behavior: smooth;
+  }
+  #thumbnail-strip.collapsed { display: none; }
+
+  .thumb {
+    flex: 0 0 auto;
+    width: 100px;
+    height: 56px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    background: #e0ddd8;
+    position: relative;
+  }
+  .thumb:hover { border-color: var(--accent); }
+  .thumb.current { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .thumb .idx {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+
+  /* ── Responsive tweaks ── */
+  @media (max-width: 600px) {
+    #topbar { padding: 10px 12px; }
+    #input-area { padding: 0 12px 12px; }
+    #canvas-container { padding: 0 12px; }
+    #thumbnail-area { padding: 12px 12px 20px; }
+    .thumb { width: 70px; height: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div id="topbar">
+  <span id="app-title">Drill-Down Explainer</span>
+  <div id="nav-group">
+    <span id="page-counter"></span>
+    <button class="btn" id="btn-back" disabled>Back</button>
+    <button class="btn" id="btn-reset" disabled>Reset</button>
+  </div>
+</div>
+
+<!-- Topic input -->
+<div id="input-area">
+  <input type="text" id="topic-input" placeholder="Type a scientific topic (e.g. transformer architecture, RLC circuit, quantum tunneling)…" maxlength="300" autofocus>
+  <button class="btn primary" id="btn-generate">Generate</button>
+  <div id="domain-tag">
+    Domain: <select id="domain-select"></select>
+  </div>
+</div>
+
+<!-- Canvas -->
+<div id="canvas-container">
+  <div id="canvas-wrapper">
+    <img id="main-image" src="" alt="" style="display:none">
+    <div id="placeholder">Type a topic and press Generate to begin</div>
+    <div id="loading-overlay">Generating the next page…</div>
+  </div>
+</div>
+
+<!-- Error -->
+<div id="error-banner"><span></span></div>
+
+<!-- Thumbnails -->
+<div id="thumbnail-area">
+  <div id="thumbnail-toggle">
+    <span id="toggle-arrow">&#9654;</span> Pages
+  </div>
+  <div id="thumbnail-strip" class="collapsed"></div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+const pages = [];        // ordered array of page objects
+let currentIndex = -1;   // pointer into pages
+let loading = false;
+
+// ── DOM refs ───────────────────────────────────────────────────────────────
+const $topicInput = document.getElementById("topic-input");
+const $btnGenerate = document.getElementById("btn-generate");
+const $btnBack = document.getElementById("btn-back");
+const $btnReset = document.getElementById("btn-reset");
+const $pageCounter = document.getElementById("page-counter");
+const $canvasWrapper = document.getElementById("canvas-wrapper");
+const $mainImage = document.getElementById("main-image");
+const $placeholder = document.getElementById("placeholder");
+const $loadingOverlay = document.getElementById("loading-overlay");
+const $errorBanner = document.getElementById("error-banner");
+const $errorText = $errorBanner.querySelector("span");
+const $thumbnailStrip = document.getElementById("thumbnail-strip");
+const $toggleArrow = document.getElementById("toggle-arrow");
+const $domainTag = document.getElementById("domain-tag");
+const $domainSelect = document.getElementById("domain-select");
+let availableDomains = [];
+let selectedDomain = null;
+
+(async () => {
+  try {
+    const res = await fetch("/api/domains");
+    const data = await res.json();
+    availableDomains = data.domains;
+    $domainSelect.innerHTML = availableDomains
+      .map((d) => `<option value="${d.id}">${d.label}</option>`)
+      .join("");
+    selectedDomain = null;
+  } catch (_) {
+    // If endpoint fails, domain tag stays hidden
+  }
+})();
+
+// ── UI helpers ─────────────────────────────────────────────────────────────
+
+function setLoading(on) {
+  loading = on;
+  $topicInput.disabled = on;
+  $btnGenerate.disabled = on;
+  if (on) {
+    $loadingOverlay.classList.add("active");
+    $canvasWrapper.classList.add("loading");
+  } else {
+    $loadingOverlay.classList.remove("active");
+    $canvasWrapper.classList.remove("loading");
+  }
+}
+
+function showError(msg) {
+  $errorText.textContent = msg;
+  $errorBanner.classList.add("active");
+}
+
+function clearError() {
+  $errorBanner.classList.remove("active");
+}
+
+function renderView() {
+  const hasPages = pages.length > 0;
+  const isFirst = currentIndex === 0;
+  const isLast = currentIndex === pages.length - 1;
+
+  $btnGenerate.disabled = loading;
+  $btnBack.disabled = isFirst || !hasPages;
+  $btnReset.disabled = !hasPages;
+
+  if (hasPages && currentIndex >= 0) {
+    const page = pages[currentIndex];
+    $pageCounter.textContent = `${currentIndex + 1} / ${pages.length}`;
+    $mainImage.src = page.imageUrl;
+    $mainImage.style.display = "block";
+    $canvasWrapper.classList.add("has-image");
+    $placeholder.style.display = "none";
+    $topicInput.disabled = loading;
+  } else {
+    $pageCounter.textContent = "";
+    $mainImage.src = "";
+    $mainImage.style.display = "none";
+    $canvasWrapper.classList.remove("has-image");
+    $placeholder.style.display = "flex";
+    $topicInput.disabled = loading;
+  }
+
+  // Thumbnails
+  $thumbnailStrip.innerHTML = "";
+  pages.forEach((p, i) => {
+    const div = document.createElement("div");
+    div.className = "thumb" + (i === currentIndex ? " current" : "");
+    div.innerHTML = `<span class="idx">${i + 1}</span><img src="${p.imageUrl}" alt="Page ${i + 1}">`;
+    div.addEventListener("click", () => jumpTo(i));
+    $thumbnailStrip.appendChild(div);
+  });
+}
+
+// ── API call ───────────────────────────────────────────────────────────────
+
+async function apiCall(body) {
+  const res = await fetch("/api/page", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || `Request failed (${res.status})`);
+  }
+  return data.page;
+}
+
+// ── Page navigation ────────────────────────────────────────────────────────
+
+async function startQuery(query) {
+  if (loading) return;
+  clearError();
+  setLoading(true);
+  try {
+    const body = { query };
+    if (selectedDomain) {
+      body.domain = selectedDomain;
+    }
+    const page = await apiCall(body);
+    pages.length = 0;
+    pages.push(page);
+    currentIndex = 0;
+    updateDomainTag(page.domain);
+  } catch (err) {
+    showError("Generation failed: " + err.message);
+  } finally {
+    setLoading(false);
+    renderView();
+  }
+}
+
+function updateDomainTag(detectedDomain) {
+  if (availableDomains.length === 0) return;
+  if (!selectedDomain) {
+    $domainSelect.value = detectedDomain;
+  }
+  $domainTag.classList.add("visible");
+}
+
+$domainSelect.addEventListener("change", () => {
+  selectedDomain = $domainSelect.value;
+});
+
+async function drillAt(nx, ny) {
+  if (loading || currentIndex < 0) return;
+  const parent = pages[currentIndex];
+  clearError();
+  setLoading(true);
+  try {
+    const page = await apiCall({
+      parentId: parent.id,
+      parentClick: { x: nx, y: ny },
+    });
+    // Truncate pages after current and append new
+    pages.splice(currentIndex + 1);
+    pages.push(page);
+    currentIndex = pages.length - 1;
+  } catch (err) {
+    showError("Generation failed, try clicking elsewhere.");
+  } finally {
+    setLoading(false);
+    renderView();
+  }
+}
+
+function jumpTo(index) {
+  if (index < 0 || index >= pages.length) return;
+  currentIndex = index;
+  renderView();
+}
+
+function goBack() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderView();
+  }
+}
+
+function reset() {
+  pages.length = 0;
+  currentIndex = -1;
+  $topicInput.value = "";
+  clearError();
+  renderView();
+}
+
+// ── Event listeners ────────────────────────────────────────────────────────
+
+$btnGenerate.addEventListener("click", () => {
+  const q = $topicInput.value.trim();
+  if (!q) return;
+  startQuery(q);
+});
+
+$topicInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    const q = $topicInput.value.trim();
+    if (!q) return;
+    startQuery(q);
+  }
+});
+
+$btnBack.addEventListener("click", goBack);
+$btnReset.addEventListener("click", reset);
+
+// Click on image to drill
+$canvasWrapper.addEventListener("click", (e) => {
+  if (loading || currentIndex < 0) return;
+
+  const rect = $canvasWrapper.getBoundingClientRect();
+  const nx = (e.clientX - rect.left) / rect.width;
+  const ny = (e.clientY - rect.top) / rect.height;
+
+  if (nx < 0 || nx > 1 || ny < 0 || ny > 1) return;
+
+  // Ripple animation
+  const ripple = document.createElement("div");
+  ripple.className = "ripple";
+  const size = Math.max(rect.width * 0.08, 30);
+  ripple.style.width = size + "px";
+  ripple.style.height = size + "px";
+  ripple.style.left = (nx * 100) + "%";
+  ripple.style.top = (ny * 100) + "%";
+  $canvasWrapper.appendChild(ripple);
+  ripple.addEventListener("animationend", () => ripple.remove());
+
+  drillAt(nx, ny);
+});
+
+// Thumbnail toggle
+document.getElementById("thumbnail-toggle").addEventListener("click", () => {
+  const strip = $thumbnailStrip;
+  strip.classList.toggle("collapsed");
+  $toggleArrow.textContent = strip.classList.contains("collapsed") ? "\u25B6" : "\u25BC";
+});
+
+// ── Init ───────────────────────────────────────────────────────────────────
+renderView();
+</script>
+
+</body>
+</html>
