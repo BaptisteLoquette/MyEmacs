@@ -1,0 +1,175 @@
+#+TITLE: Doom Emacs Configuration
+#+STARTUP: overview
+
+* UI / Visual
+** Theme
+(setq doom-theme 'doom-one)
+;; Fallback high-accessibility:
+;; (setq doom-theme 'modus-vivendi)
+
+** Fonts
+(setq doom-font (font-spec :family "JetBrains Mono" :size 14 :weight 'regular))
+(setq doom-unicode-font (font-spec :family "Iosevka" :size 14))
+(setq doom-big-font (font-spec :family "JetBrains Mono" :size 20))
+
+** Chrome
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(menu-bar-mode -1)
+(global-hl-line-mode +1)
+(display-line-numbers-mode +1)
+(setq display-line-numbers-type 'relative)
+(setq scroll-conservatively 101)
+(pixel-scroll-precision-mode +1)
+
+** Line wrap
+(global-visual-line-mode +1)
+
+** All-the-icons everywhere
+(use-package! all-the-icons-completion
+  :after marginalia
+  :config
+  (all-the-icons-completion-mode +1))
+(add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
+
+* Keybindings — Hybrid Evil/Emacs
+** Evil only in editing buffers
+(after! evil
+  (add-hook 'dired-mode-hook #'evil-emacs-state)
+  (add-hook 'org-agenda-mode-hook #'evil-emacs-state)
+  (add-hook 'magit-mode-hook #'evil-emacs-state)
+  (add-hook 'treemacs-mode-hook #'evil-emacs-state)
+  (add-hook 'vterm-mode-hook #'evil-emacs-state)
+  (add-hook 'help-mode-hook #'evil-emacs-state)
+  (add-hook 'elfeed-show-mode-hook #'evil-emacs-state)
+  (add-hook 'pdf-view-mode-hook #'evil-emacs-state))
+
+** Escape hatch: toggle evil in current buffer
+(map! :leader
+      (:prefix ("t" . "toggle")
+       :desc "Toggle evil-mode" "e" #'evil-mode))
+
+** Evil-collection for consistency
+(after! evil-collection
+  (evil-collection-init '(dired magit vterm)))
+
+* Org-Babel
+** Shared style header
+(after! org
+  (setq org-babel-default-header-args:python
+        '((:results . "file")
+          (:exports . "both")
+          (:prologue . "exec(open('C:/Users/Bapti/.emacs.d/header.py').read())")))
+
+  (setq org-startup-with-inline-images t)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (julia . t)
+     (R . t)
+     (shell . t)
+     (latex . t)
+     (emacs-lisp . t)
+     (dot . t)
+     (gnuplot . t)
+     (mermaid . t))))
+
+* Org-Roam
+(after! org-roam
+  (setq org-roam-directory (file-truename "~/org"))
+  (setq org-roam-dailies-directory "daily/")
+  (setq org-roam-capture-templates
+        '(("d" "default" plain "%?"
+           :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n#+filetags: :draft:\n")
+           :unnarrowed t)
+          ("l" "literature" plain "%?"
+           :target (file+head "literature/%<%Y%m%d%H%M%S>-${slug}.org"
+                              "#+title: ${title}\n#+filetags: :paper:\n")
+           :unnarrowed t)))
+  (org-roam-db-autosync-mode +1))
+
+** Org-roam bindings
+(map! :leader
+      (:prefix ("n" . "notes")
+       :desc "Find node" "f" #'org-roam-node-find
+       :desc "Insert link" "i" #'org-roam-node-insert
+       :desc "Capture" "c" #'org-roam-capture
+       :desc "Show backlinks" "b" #'org-roam-buffer-toggle
+       :desc "Today's daily" "d" #'org-roam-dailies-capture-today))
+
+* Literature & Research
+** Org-ref
+(setq reftex-default-bibliography '("~/org/references.bib"))
+(setq org-ref-default-bibliography '("~/org/references.bib"))
+(setq org-ref-pdf-directory "~/org/literature/")
+
+** Org-noter
+(after! org-noter
+  (setq org-noter-notes-search-path '("~/org/literature/")))
+
+** Org-roam-bibtex
+(after! org-roam-bibtex
+  (require 'org-roam-bibtex))
+
+** Org-ql
+(after! org-ql
+  (setq org-ql-search-directories-files-recursive t))
+
+** Elfeed
+(after! elfeed
+  (setq elfeed-feeds
+        '(("https://arxiv.org/rss/cs.AI" ai)
+          ("https://arxiv.org/rss/cs.LG" ml)
+          ("https://arxiv.org/rss/eess.SP" signal))))
+
+* Diagramming
+** Graphviz
+(use-package! graphviz-dot-mode
+  :mode ("\\.dot\\'" "\\.gv\\'")
+  :config
+  (setq graphviz-dot-preview-extension "png")
+  (setq graphviz-dot-save-before-view t))
+
+** Org-inline-anim
+(after! org-inline-anim
+  (setq org-inline-anim-max-size 10485760))  ; 10 MB
+
+* AI Assistants
+** gptel
+(setq gptel-model "claude-sonnet-4-20250514"
+      gptel-backend (gptel-make-openai "Anthropic"
+                      :host "api.anthropic.com"
+                      :endpoint "/v1/messages"
+                      :stream t
+                      :key (lambda () (auth-source-pick-first-password
+                                       :host "api.anthropic.com"))))
+
+** Keybindings
+(map! :leader
+      (:prefix ("a" . "ai")
+       :desc "GPTel chat" "c" #'gptel
+       :desc "GPTel send region" "s" #'gptel-send
+       :desc "GPTel menu" "m" #'gptel-menu))
+
+** org-ai
+(after! org-ai
+  (setq org-ai-default-model "claude-sonnet-4-20250514")
+  (setq org-ai-openai-api-token
+        (lambda () (auth-source-pick-first-password
+                    :host "api.anthropic.com"))))
+
+(map! :leader
+      (:prefix ("a" . "ai")
+       :desc "org-ai block" "b" #'org-ai-block
+       :desc "org-ai ask" "q" #'org-ai-prompt
+       :desc "org-ai summarize" "u" #'org-ai-summarize))
+
+* Agent-Driven Visualization
+** Helper: run agent skill from Org
+(defun my/agent-generate-viz (prompt skill)
+  "Send PROMPT to AGENT SKILL, insert result link."
+  (interactive "sPrompt: \nsSkill: ")
+  (let ((cmd (format "npx skills run %s --prompt \"%s\"" skill prompt)))
+    (shell-command cmd)))
