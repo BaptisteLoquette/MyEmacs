@@ -504,10 +504,13 @@ async function drillAt(nx, ny) {
   clearError();
   setLoading(true);
   try {
-    const page = await apiCall({
+    const body = {
       parentId: parent.id,
       parentClick: { x: nx, y: ny },
-    });
+      domain: parent.domain,
+      initialQuery: parent.initialQuery,
+    };
+    const page = await apiCall(body);
     // Truncate pages after current and append new
     pages.splice(currentIndex + 1);
     pages.push(page);

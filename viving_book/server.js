@@ -222,15 +222,19 @@ app.post("/api/page", async (req, res) => {
         ? body.domain
         : prompts.detectDomain(body.initialQuery || "general");
       const provider = getProvider();
-      let contextDescription;
-      try {
-        contextDescription = await provider.generateText(
-          prompts.buildVisionDescribePrompt(),
-          referenceImageBase64,
-          new AbortController().signal
-        );
-      } catch (_) {
-        contextDescription = "the area the reader pointed at";
+      let contextDescription = "the area the reader pointed at";
+      if (typeof provider.generateText === "function") {
+        try {
+          contextDescription = await provider.generateText(
+            prompts.buildVisionDescribePrompt(),
+            referenceImageBase64,
+            new AbortController().signal
+          );
+        } catch (err) {
+          console.log(`  Vision-describe failed: ${err.message}. Using generic fallback.`);
+        }
+      } else {
+        console.log(`  Vision-describe skipped: provider does not support text generation`);
       }
 
       prompt = prompts.buildChildPagePrompt(domainId, contextDescription);

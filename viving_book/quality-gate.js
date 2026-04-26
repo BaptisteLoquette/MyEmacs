@@ -4,6 +4,12 @@
 const fs = require("fs");
 
 async function evaluateImage(provider, imagePath, topic, signal) {
+  // Skip evaluation if provider does not support text generation (e.g. MiniMax)
+  if (typeof provider.generateText !== "function") {
+    console.log(`  Quality gate skipped: provider does not support text evaluation`);
+    return { pass: true, issues: [] };
+  }
+
   const imageBuffer = fs.readFileSync(imagePath);
   const imageBase64 = imageBuffer.toString("base64");
 
