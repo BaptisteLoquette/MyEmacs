@@ -1,5 +1,5 @@
 #!/bin/bash
-# Tier 2 — Install when needed (dashboards, motion graphics)
+# Tier 2 — Install when needed
 set -e
 
 pip install pyqtgraph PyQt5 bokeh
