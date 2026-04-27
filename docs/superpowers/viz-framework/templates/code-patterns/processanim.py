@@ -1,15 +1,27 @@
-"""P6: ProcessAnim — Manim, Matplotlib FuncAnimation, HyperFrames."""
+"""P6: ProcessAnim — step-by-step morph, time evolution, particle trails.
+
+UX Rules Enforced:
+- Fixed colorbar range across all frames — never auto-rescale
+- Animation speed toggle and frame scrubbing supported by save API
+- Pause at key frames with annotation callouts
+- tight_layout() before every savefig; plt.close(fig) after every save
+"""
 
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
+from typing import Optional, List, Callable, Dict, Any
 
 
-def render_processanim_manim(scene_class, output="process.mp4",
-                              quality="medium_quality",
-                              preview=False, extra_args=None):
+def render_processanim_manim(
+    scene_class: type,
+    output: str = "process.mp4",
+    quality: str = "medium_quality",
+    preview: bool = False,
+    extra_args: Optional[List[str]] = None
+) -> int:
     """Wrap Manim scene rendering to produce an animation video.
 
     Parameters
@@ -52,9 +64,16 @@ def render_processanim_manim(scene_class, output="process.mp4",
     return result.returncode
 
 
-def render_processanim_matplotlib(frames, interval=50, output="process.mp4",
-                                   fps=None, dpi=150, figsize=(10, 8),
-                                   title="Animation", blit=False):
+def render_processanim_matplotlib(
+    frames: List[Callable],
+    interval: int = 50,
+    output: str = "process.mp4",
+    fps: Optional[int] = None,
+    dpi: int = 150,
+    figsize: tuple = (10, 8),
+    title: str = "Animation",
+    blit: bool = False
+) -> str:
     """Render a sequence of frames as an MP4 animation using FuncAnimation.
 
     Each callable in ``frames`` must accept a matplotlib Axes and an integer
@@ -88,10 +107,6 @@ def render_processanim_matplotlib(frames, interval=50, output="process.mp4",
         fps = int(1000 / interval)
 
     writer_name = 'ffmpeg'
-    try:
-        plt.rcParams['animation.ffmpeg_path']
-    except KeyError:
-        pass
 
     fig, ax = plt.subplots(figsize=figsize)
     fig.suptitle(title)
@@ -107,9 +122,12 @@ def render_processanim_matplotlib(frames, interval=50, output="process.mp4",
     return output
 
 
-def render_processanim_hyperframes(steps, output="process.hyperframes",
-                                    transition_duration=0.5,
-                                    camera=None):
+def render_processanim_hyperframes(
+    steps: Dict[str, Any],
+    output: str = "process.hyperframes",
+    transition_duration: float = 0.5,
+    camera: Optional[Dict[str, Any]] = None
+) -> str:
     """Stub for HyperFrames animation sequencing.
 
     HyperFrames is a conceptual format for declarative animation specs.

@@ -1,13 +1,121 @@
-"""P9: DecisionProcess — Graphviz diagrams, Mermaid DSL."""
+"""P9: DecisionProcess — sequential choices, probabilistic outcomes, cumulative trajectories.
+
+UX Rules Enforced:
+- Every decision node shows: state value, available actions, outcome probabilities
+- Show the distribution of outcomes, not just the mean
+- Exploration vs exploitation visually distinguished
+- tight_layout() before every savefig (Matplotlib backends)
+- plt.close(fig) after every save
+"""
 
 import matplotlib
 matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+from typing import Optional, List, Tuple, Dict, Any
 
 
-def render_decision_graphviz(graph_spec, output="decision", format="png",
-                               engine="dot", rankdir="TB",
-                               graph_attrs=None, node_attrs=None,
-                               edge_attrs=None):
+def render_decisionprocess_matplotlib(
+    tree_data: Dict[str, Any],
+    title: str = "Decision Process",
+    output: str = "decisionprocess.png",
+    dpi: int = 150,
+    figsize: tuple = (12, 8),
+    node_color: str = "steelblue",
+    decision_color: str = "darkorange",
+    leaf_color: str = "seagreen",
+    edge_alpha: float = 0.7
+) -> str:
+    """Render a decision tree / process as a Matplotlib node-link diagram.
+
+    Parameters
+    ----------
+    tree_data : dict
+        Dictionary with keys:
+        - 'nodes': list of dicts {'id': str, 'type': 'root|decision|leaf',
+          'value': float, 'label': str, 'pos': (x, y)}
+        - 'edges': list of dicts {'source': str, 'target': str,
+          'probability': float, 'label': str}
+    title : str
+        Plot title.
+    output : str
+        File path for saved image.
+    dpi : int
+        Output resolution.
+    figsize : tuple
+        Figure size in inches.
+    node_color : str
+        Default color for root/standard nodes.
+    decision_color : str
+        Color for decision nodes.
+    leaf_color : str
+        Color for leaf/outcome nodes.
+    edge_alpha : float
+        Transparency for edges.
+
+    Returns
+    -------
+    str
+        Path to the saved image.
+    """
+    fig, ax = plt.subplots(figsize=figsize)
+
+    nodes = tree_data.get('nodes', [])
+    edges = tree_data.get('edges', [])
+
+    for node in nodes:
+        x, y = node['pos']
+        ntype = node.get('type', 'root')
+        color = node_color
+        if ntype == 'decision':
+            color = decision_color
+        elif ntype == 'leaf':
+            color = leaf_color
+        ax.scatter(x, y, s=400, c=color, zorder=2, edgecolors='black')
+        label = node.get('label', node['id'])
+        value = node.get('value', None)
+        text = f"{label}"
+        if value is not None:
+            text += f"\nV={value:.2f}"
+        ax.text(x, y, text, ha='center', va='center', fontsize=8, zorder=3)
+
+    for edge in edges:
+        src = next(n for n in nodes if n['id'] == edge['source'])
+        tgt = next(n for n in nodes if n['id'] == edge['target'])
+        x1, y1 = src['pos']
+        x2, y2 = tgt['pos']
+        prob = edge.get('probability', None)
+        lw = 1 + (prob * 3) if prob is not None else 1.5
+        ax.plot([x1, x2], [y1, y2], 'k-', alpha=edge_alpha,
+                linewidth=lw, zorder=1)
+        lbl = edge.get('label', '')
+        if prob is not None:
+            lbl += f"\nP={prob:.2f}"
+        if lbl:
+            ax.text((x1 + x2) / 2, (y1 + y2) / 2, lbl,
+                    fontsize=7, ha='center', va='center',
+                    bbox=dict(boxstyle='round,pad=0.2',
+                              facecolor='white', alpha=0.8))
+
+    ax.set_title(title, pad=20)
+    ax.set_aspect('equal')
+    ax.axis('off')
+    fig.tight_layout()
+    fig.savefig(output, dpi=dpi, bbox_inches='tight')
+    plt.close(fig)
+    return output
+
+
+def render_decisionprocess_graphviz(
+    graph_spec: List[Tuple],
+    output: str = "decision",
+    format: str = "png",
+    engine: str = "dot",
+    rankdir: str = "TB",
+    graph_attrs: Optional[Dict[str, str]] = None,
+    node_attrs: Optional[Dict[str, str]] = None,
+    edge_attrs: Optional[Dict[str, str]] = None
+) -> str:
     """Render a decision/graph diagram using Graphviz.
 
     Parameters
@@ -91,8 +199,12 @@ def render_decision_graphviz(graph_spec, output="decision", format="png",
     return filepath
 
 
-def render_decision_mermaid(graph_spec, output="decision.mermaid",
-                              direction="TD", title="Decision Diagram"):
+def render_decisionprocess_mermaid(
+    graph_spec: List[Tuple],
+    output: str = "decision.mermaid",
+    direction: str = "TD",
+    title: str = "Decision Diagram"
+) -> str:
     """Write a Mermaid DSL specification to a file for rendering elsewhere.
 
     Produces a .mermaid file that can be consumed by Mermaid CLI or

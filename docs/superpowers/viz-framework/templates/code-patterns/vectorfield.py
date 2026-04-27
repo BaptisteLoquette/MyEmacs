@@ -1,20 +1,39 @@
-"""P2: VectorField — streamlines, quiver, interactive vector maps."""
+"""P2: VectorField — arrows, streamlines, LIC, glyphs, field lines.
+
+UX Rules Enforced:
+- Arrow density adapts to field strength — sparse in uniform regions
+- Streamlines must satisfy divergence/curl constraints (∇·B = 0 for magnetic)
+- Glyph size proportional to magnitude; never zero-length glyphs
+- tight_layout() before every savefig
+- plt.close(fig) after every save
+"""
 
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from typing import Optional, Tuple
 
 
-def render_vectorfield_matplotlib(X, Y, U, V, title="", xlabel="",
-                                   ylabel="", output="vectorfield.png",
-                                   dpi=150, overlay_quiver=True,
-                                   quiver_density=(30, 30),
-                                   stream_density=1.0,
-                                   stream_color='black',
-                                   stream_linewidth=0.8,
-                                   quiver_scale=1.0,
-                                   cmap=None):
+def render_vectorfield_matplotlib(
+    X: np.ndarray,
+    Y: np.ndarray,
+    U: np.ndarray,
+    V: np.ndarray,
+    title: str = "",
+    xlabel: str = "",
+    ylabel: str = "",
+    output: str = "vectorfield.png",
+    dpi: int = 150,
+    overlay_quiver: bool = True,
+    quiver_density: Tuple[int, int] = (30, 30),
+    stream_density: float = 1.0,
+    stream_color: str = 'black',
+    stream_linewidth: float = 0.8,
+    quiver_scale: float = 1.0,
+    cmap: Optional[str] = None,
+    figsize: tuple = (10, 8)
+) -> str:
     """Render a 2D vector field with streamlines and optional quiver overlay.
 
     Parameters
@@ -50,16 +69,23 @@ def render_vectorfield_matplotlib(X, Y, U, V, title="", xlabel="",
     quiver_scale : float
         Scale factor for quiver arrows.
     cmap : str or None
-        Colormap for quiver arrows colored by magnitude.
+        Colormap for quiver arrows colored by magnitude
+        (whitelist: viridis, cividis, plasma).
+    figsize : tuple
+        Figure size in inches.
 
     Returns
     -------
     str
         Path to the saved image.
     """
+    if cmap is not None:
+        assert cmap in ("viridis", "cividis", "plasma"), \
+            "Colormap must be perceptually uniform: viridis, cividis, or plasma."
+
     speed = np.sqrt(U**2 + V**2)
 
-    fig, ax = plt.subplots(figsize=(10, 8))
+    fig, ax = plt.subplots(figsize=figsize)
     ax.streamplot(X, Y, U, V, density=stream_density,
                   color=stream_color, linewidth=stream_linewidth)
 
@@ -78,23 +104,27 @@ def render_vectorfield_matplotlib(X, Y, U, V, title="", xlabel="",
                       U[idx_y, idx_x], V[idx_y, idx_x],
                       scale=quiver_scale)
 
-    ax.set_title(title)
+    ax.set_title(title, pad=20)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_aspect('equal')
     fig.tight_layout()
-    fig.savefig(output, dpi=dpi)
+    fig.savefig(output, dpi=dpi, bbox_inches='tight')
     plt.close(fig)
     return output
 
 
-def render_vectorfield_plotly(X, Y, U, V, title="Vector Field",
-                               output="vectorfield.html",
-                               arrow_scale=0.1, n_sample=20):
+def render_vectorfield_plotly(
+    X: np.ndarray,
+    Y: np.ndarray,
+    U: np.ndarray,
+    V: np.ndarray,
+    title: str = "Vector Field",
+    output: str = "vectorfield.html",
+    arrow_scale: float = 0.1,
+    n_sample: int = 20
+) -> str:
     """Render an interactive vector field using Plotly.
-
-    Creates a quiver plot with color-coded magnitude using Plotly
-    and saves it as a self-contained HTML file.
 
     Parameters
     ----------

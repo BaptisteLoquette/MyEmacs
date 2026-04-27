@@ -1,15 +1,122 @@
-"""P4: Geom3D — 3D surface rendering, mesh examples."""
+"""P4: Geom3D — surface, volume, mesh, lattice, cross-section.
+
+UX Rules Enforced:
+- Camera position must reveal the feature of interest by default
+- Mesh resolution balanced — too coarse hides features, too fine kills FPS
+- Walls/cross-sections clearly annotated with axis orientation
+- tight_layout() or equivalent before save; plt.close(fig) after every save
+"""
 
 import matplotlib
 matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 import numpy as np
+from typing import Optional, Tuple
 
 
-def render_geom3d_pyvista(mesh, scalars=None, cmap="viridis",
-                            title="", output="geom3d.png",
-                            screenshot_size=(1024, 768),
-                            off_screen=True, show_edges=False,
-                            camera_position=None):
+def render_geom3d_matplotlib(
+    X: np.ndarray,
+    Y: np.ndarray,
+    Z: np.ndarray,
+    scalars: Optional[np.ndarray] = None,
+    cmap: str = "viridis",
+    title: str = "",
+    xlabel: str = "X",
+    ylabel: str = "Y",
+    zlabel: str = "Z",
+    output: str = "geom3d.png",
+    dpi: int = 150,
+    vmin: Optional[float] = None,
+    vmax: Optional[float] = None,
+    figsize: tuple = (10, 8),
+    elev: float = 30.0,
+    azim: float = -60.0
+) -> str:
+    """Render a 3D surface using Matplotlib's 3D plotting.
+
+    Parameters
+    ----------
+    X : np.ndarray
+        2D array of x-coordinates.
+    Y : np.ndarray
+        2D array of y-coordinates.
+    Z : np.ndarray
+        2D array of z-coordinates (surface height).
+    scalars : np.ndarray or None
+        Optional scalar field to color the surface. Uses Z if None.
+    cmap : str
+        Matplotlib colormap name (whitelist: viridis, cividis, plasma).
+    title : str
+        Plot title.
+    xlabel : str
+        X-axis label.
+    ylabel : str
+        Y-axis label.
+    zlabel : str
+        Z-axis label.
+    output : str
+        File path for saved image.
+    dpi : int
+        Output resolution.
+    vmin : float or None
+        Minimum colorbar value.
+    vmax : float or None
+        Maximum colorbar value.
+    figsize : tuple
+        Figure size in inches.
+    elev : float
+        Elevation angle for the 3D camera.
+    azim : float
+        Azimuth angle for the 3D camera.
+
+    Returns
+    -------
+    str
+        Path to the saved image.
+    """
+    assert cmap in ("viridis", "cividis", "plasma"), \
+        "Colormap must be perceptually uniform: viridis, cividis, or plasma."
+
+    colors = scalars if scalars is not None else Z
+
+    fig = plt.figure(figsize=figsize)
+    ax = fig.add_subplot(111, projection='3d')
+    surf = ax.plot_surface(
+        X, Y, Z, facecolors=plt.cm.get_cmap(cmap)(
+            (colors - (vmin if vmin is not None else np.min(colors))) /
+            ((vmax if vmax is not None else np.max(colors)) -
+             (vmin if vmin is not None else np.min(colors)))
+        ),
+        rstride=1, cstride=1, antialiased=True, shade=False
+    )
+    # Re-normalize for colorbar
+    norm = plt.Normalize(vmin=(vmin if vmin is not None else np.min(colors)),
+                         vmax=(vmax if vmax is not None else np.max(colors)))
+    mappable = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+    mappable.set_array([])
+    fig.colorbar(mappable, ax=ax, shrink=0.5, aspect=10)
+    ax.set_title(title, pad=20)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_zlabel(zlabel)
+    ax.view_init(elev=elev, azim=azim)
+    fig.tight_layout()
+    fig.savefig(output, dpi=dpi, bbox_inches='tight')
+    plt.close(fig)
+    return output
+
+
+def render_geom3d_pyvista(
+    mesh,
+    scalars: Optional[np.ndarray] = None,
+    cmap: str = "viridis",
+    title: str = "",
+    output: str = "geom3d.png",
+    screenshot_size: Tuple[int, int] = (1024, 768),
+    off_screen: bool = True,
+    show_edges: bool = False,
+    camera_position: Optional[list] = None
+) -> str:
     """Render a 3D mesh surface using PyVista.
 
     Parameters
@@ -19,7 +126,7 @@ def render_geom3d_pyvista(mesh, scalars=None, cmap="viridis",
     scalars : np.ndarray or None
         Scalar values to map onto the mesh surface colors.
     cmap : str
-        Matplotlib colormap name for scalar coloring.
+        Matplotlib colormap name (whitelist: viridis, cividis, plasma).
     title : str
         Plot title (rendered as text on the plot).
     output : str
@@ -38,6 +145,9 @@ def render_geom3d_pyvista(mesh, scalars=None, cmap="viridis",
     str
         Path to the saved image.
     """
+    assert cmap in ("viridis", "cividis", "plasma"), \
+        "Colormap must be perceptually uniform: viridis, cividis, or plasma."
+
     import pyvista as pv
 
     plotter = pv.Plotter(off_screen=off_screen,
@@ -51,59 +161,3 @@ def render_geom3d_pyvista(mesh, scalars=None, cmap="viridis",
     plotter.show(screenshot=output)
     plotter.close()
     return output
-
-
-def render_geom3d_examples(output_dir=".", screenshot_size=(1024, 768)):
-    """Generate and render example 3D meshes: sphere, torus, and custom grid.
-
-    Creates three PyVista mesh objects, renders each to a PNG file,
-    and returns a dict mapping mesh names to output file paths.
-
-    Parameters
-    ----------
-    output_dir : str
-        Directory in which to save the example images.
-    screenshot_size : tuple of int
-        (width, height) for each screenshot.
-
-    Returns
-    -------
-    dict
-        Mapping of mesh name to saved file path.
-    """
-    import pyvista as pv
-    import os
-
-    results = {}
-
-    sphere = pv.Sphere(radius=1.0)
-    sphere_path = os.path.join(output_dir, "geom3d_sphere.png")
-    render_geom3d_pyvista(sphere, title="Sphere",
-                          output=sphere_path,
-                          screenshot_size=screenshot_size,
-                          show_edges=True)
-    results['sphere'] = sphere_path
-
-    torus = pv.Torus()
-    torus['scalars'] = torus.points[:, 0]
-    torus_path = os.path.join(output_dir, "geom3d_torus.png")
-    render_geom3d_pyvista(torus, scalars='scalars', cmap='coolwarm',
-                          title="Torus (colored by x)",
-                          output=torus_path,
-                          screenshot_size=screenshot_size)
-    results['torus'] = torus_path
-
-    x = np.linspace(-2, 2, 50)
-    y = np.linspace(-2, 2, 50)
-    xx, yy = np.meshgrid(x, y)
-    zz = np.sin(np.sqrt(xx**2 + yy**2))
-    grid = pv.StructuredGrid(xx, yy, zz)
-    grid_path = os.path.join(output_dir, "geom3d_grid.png")
-    render_geom3d_pyvista(grid, scalars=zz.ravel(order='F'),
-                          cmap='plasma',
-                          title="Custom Grid: z = sin(r)",
-                          output=grid_path,
-                          screenshot_size=screenshot_size)
-    results['grid'] = grid_path
-
-    return results

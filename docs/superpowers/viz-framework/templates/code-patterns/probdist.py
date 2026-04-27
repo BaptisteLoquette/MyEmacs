@@ -1,18 +1,37 @@
-"""P7: ProbDist — histogram, KDE, rug plot, interactive density."""
+"""P7: ProbDist — distribution, density, histogram, box/violin, uncertainty.
+
+UX Rules Enforced:
+- Distributions must integrate to 1 — normalize explicitly
+- Show both PDF and CDF when physical interpretation needs both
+- 3σ or 95% CI bounds annotated when comparing distributions
+- tight_layout() before every savefig
+- plt.close(fig) after every save
+"""
 
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from typing import Optional, Any
 
 
-def render_probdist_matplotlib(data, bins='auto', title="Distribution",
-                                xlabel="Value", ylabel="Density",
-                                output="probdist.png", dpi=150,
-                                color='steelblue', kde=True,
-                                rug=True, rug_height=0.02,
-                                alpha=0.6, edgecolor='white',
-                                figsize=(10, 6)):
+def render_probdist_matplotlib(
+    data: np.ndarray,
+    bins: Any = 'auto',
+    title: str = "Distribution",
+    xlabel: str = "Value",
+    ylabel: str = "Density",
+    output: str = "probdist.png",
+    dpi: int = 150,
+    color: str = "steelblue",
+    kde: bool = True,
+    rug: bool = True,
+    rug_height: float = 0.02,
+    alpha: float = 0.6,
+    edgecolor: str = "white",
+    figsize: tuple = (10, 6),
+    annotate_ci: bool = True
+) -> str:
     """Render a combined histogram + KDE + rug plot for a 1D dataset.
 
     Parameters
@@ -43,8 +62,10 @@ def render_probdist_matplotlib(data, bins='auto', title="Distribution",
         Transparency for the histogram bars.
     edgecolor : str
         Edge color for histogram bars.
-    figsize : tuple of float
-        (width, height) in inches.
+    figsize : tuple
+        Figure size in inches.
+    annotate_ci : bool
+        If True, annotate 95% confidence interval bounds.
 
     Returns
     -------
@@ -65,7 +86,7 @@ def render_probdist_matplotlib(data, bins='auto', title="Distribution",
                 linewidth=2, label='KDE')
 
     if rug:
-        rug_max = 0
+        rug_max = 0.0
         for line in ax.lines:
             rug_max = max(rug_max, np.max(line.get_ydata()))
         if rug_max == 0:
@@ -74,22 +95,31 @@ def render_probdist_matplotlib(data, bins='auto', title="Distribution",
                 '|', color=color, markersize=8, markeredgewidth=1,
                 label='Rug')
 
-    ax.set_title(title)
+    if annotate_ci and len(data) > 1:
+        lo, hi = np.percentile(data, [2.5, 97.5])
+        ax.axvline(lo, color='red', linestyle='--', linewidth=1, alpha=0.7)
+        ax.axvline(hi, color='red', linestyle='--', linewidth=1, alpha=0.7)
+        ax.text(lo, ax.get_ylim()[1] * 0.9, f'2.5%\n{lo:.2g}',
+                color='red', fontsize=8, ha='center')
+        ax.text(hi, ax.get_ylim()[1] * 0.9, f'97.5%\n{hi:.2g}',
+                color='red', fontsize=8, ha='center')
+
+    ax.set_title(title, pad=20)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.legend()
     fig.tight_layout()
-    fig.savefig(output, dpi=dpi)
+    fig.savefig(output, dpi=dpi, bbox_inches='tight')
     plt.close(fig)
     return output
 
 
-def render_probdist_altair(data, output="probdist.html",
-                            title="Interactive Distribution"):
+def render_probdist_altair(
+    data: np.ndarray,
+    output: str = "probdist.html",
+    title: str = "Interactive Distribution"
+) -> str:
     """Render an interactive density plot using Altair.
-
-    Creates a self-contained HTML file with an interactive histogram
-    and density estimate.
 
     Parameters
     ----------
