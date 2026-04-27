@@ -1,348 +1,224 @@
-# Nine Visualization Patterns (P1-P9) — Definitions, Composition Rules, and Quality Framework
-# Reference: docs/superpowers/specs/2026-04-26-emacs-org-setup-design.md section 6.5
-
 patterns:
-  - id: P1
-    name: ScalarField
+  scalarfield:
+    id: P1
     visual_essence: "Heatmap, contour, isosurface, colormap on geometry"
-    best_for:
-      - electrostatic_potential
-      - temperature_distribution
-      - probability_density
-      - heat_distribution
-      - entropy_gradient
-      - concentration_field
-    composes_with: [P2, P3, P4, P7]
-    frameworks:
-      primary: matplotlib
-      secondary: [plotly, altair, pyvista, datashader]
+    composes_with: [vectorfield, geom3d, processanim]
+    frameworks: [matplotlib, plotly, pyvista, altair]
     ux_rules:
-      - "Use perceptually uniform colormaps: viridis, cividis, plasma, inferno, magma"
-      - "Include colorbar with physical units — never omit the label"
-      - "Annotate zero crossings for signed fields (white dashed contour at 0)"
-      - "Fix colorbar range explicitly (vmin/vmax) — never auto-scale between frames"
-      - "Diverging colormap for signed data; sequential for positive-only data"
-    code_template: "templates/code-patterns/scalarfield.py"
+      - "Axes match physical units; colormaps centered on meaningful zero"
+      - "Use Viridis/Cividis/Plasma for scalars; no rainbow colormaps"
+      - "Label key features (maxima, minima, zero-crossings, boundaries)"
+    code_template: templates/code-patterns/scalarfield.py
     gotchas:
-      - "Rainbow (jet) colormap is physically misleading — uses non-monotonic luminance"
-      - "Auto-scaled colorbar hides quantitative meaning across plots"
-      - "Too many contour levels create visual noise; too few miss structure"
-      - "Log-scale colormaps need explicit tick labels with exponential notation"
+      - "Isosurface extraction can produce topological artifacts at saddle points"
+      - "Colormap interpolation may hide genuine discontinuities in the data"
+      - "Log scale is required for multi-decade field magnitude spans"
 
-  - id: P2
-    name: VectorField
-    visual_essence: "Arrows, streamlines, field lines, glyphs, flow lines"
-    best_for:
-      - electrostatic_field
-      - magnetic_flux
-      - velocity_field
-      - navier_stokes_field
-      - gradient_field
-      - force_field
-    composes_with: [P1, P3, P4]
-    frameworks:
-      primary: matplotlib
-      secondary: [plotly, pyvista, altair]
+  vectorfield:
+    id: P2
+    visual_essence: "Arrows, streamlines, LIC, glyphs, field lines"
+    composes_with: [processanim, scalarfield, signalflow]
+    frameworks: [matplotlib, plotly, pyvista, datashader]
     ux_rules:
-      - "Arrow length must be proportional to field magnitude — normalize or cap divergences"
-      - "Streamline seed points must sample domain uniformly — use density or grid seeding"
-      - "Color arrows/streamlines by magnitude using perceptually uniform colormap"
-      - "Include reference scale arrow with physical units"
-      - "Equipotential contours must be orthogonal to vector field lines"
-    code_template: "templates/code-patterns/vectorfield.py"
+      - "Adaptive glyph decimation for dense fields to prevent overlap"
+      - "Vector fields must obey div/curl constraints (e.g., ∇·B = 0)"
+      - "EM fields must satisfy E⊥B⊥k and correct phase relationships"
+    code_template: templates/code-patterns/vectorfield.py
     gotchas:
-      - "Quiver scaling without normalization: users see nothing or chaos near singularities"
-      - "Too many arrows create visual clutter; too few miss field structure"
-      - "Streamplot seed points can miss features — verify domain coverage"
-      - "3D arrow fields suffer from perspective ambiguity — use 2D slices or interactive views"
+      - "Arrow density causes visual clutter; seeding strategy changes perception"
+      - "Streamline integration fails near null points without special handling"
+      - "LIC texture resolution must match data resolution to avoid aliasing"
 
-  - id: P3
-    name: SignalFlow
-    visual_essence: "Waveform, spectrogram, eye diagram, Bode plot, time series"
-    best_for:
-      - faraday_induction
-      - mosfet_iv_curve
-      - bode_plot
-      - clock_jitter
-      - serdes_eye
-      - harmonic_oscillator
-      - spectrum_analysis
-    composes_with: [P1, P2, P6, P7]
-    frameworks:
-      primary: matplotlib
-      secondary: [plotly, altair, manim, bokeh]
+  signalflow:
+    id: P3
+    visual_essence: "Waveform, spectrogram, eye diagram, Bode plot"
+    composes_with: [probdist, phasetraj, scalarfield]
+    frameworks: [matplotlib, plotly, bokeh, pyqtgraph]
     ux_rules:
-      - "Always label axes with physical units (time in s, frequency in Hz, amplitude in V)"
-      - "Log-scale frequency axis when spanning more than 2 decades"
-      - "Grid lines at major tick intervals with partial transparency"
-      - "Phase and magnitude must share frequency axis in Bode plots"
-      - "Multiple signals distinguished by color AND line style — not color alone"
-    code_template: "templates/code-patterns/signalflow.py"
+      - "Axes match physical units; log scale for multi-decade spans"
+      - "Label maxima, minima, zero-crossings, and critical frequencies"
+      - "Use tight_layout() or constrained_layout; autorange with margins"
+    code_template: templates/code-patterns/signalflow.py
     gotchas:
-      - "Linear frequency axis hides behavior when span exceeds 2-3 decades"
-      - "dB vs linear magnitude — specify which; 20*log10(V) for voltage, 10*log10(P) for power"
-      - "Spectrogram colormap choice drastically changes perceived features"
+      - "Spectral leakage in spectrograms requires windowing tradeoffs"
+      - "Sampling rate must exceed Nyquist to avoid aliased representation"
+      - "Eye diagram folding assumes periodicity that may not hold for burst signals"
 
-  - id: P4
-    name: Geom3D
-    visual_essence: "3D mesh, surface, volume rendering, point cloud"
-    best_for:
-      - hydrogen_atom
-      - gaussian_beam
-      - rigid_body_rotation
-      - orbital_mechanics
-      - mems_accel
-      - bloch_sphere
-      - geom_construction
-    composes_with: [P1, P2, P6]
-    frameworks:
-      primary: pyvista
-      secondary: [plotly, matplotlib, manim]
+  geom3d:
+    id: P4
+    visual_essence: "Surface, volume, mesh, lattice, cross-section"
+    composes_with: [scalarfield, vectorfield, processanim]
+    frameworks: [pyvista, plotly, matplotlib, threejs]
     ux_rules:
-      - "Perspective projection default, orthographic as option — label which is used"
-      - "Lighting and material must not distort data interpretation — avoid specular flash"
-      - "Include coordinate axes triad for spatial orientation"
-      - "3D annotations (labels) must face camera or be billboarded"
-      - "Provide multiple canonical views (front, top, side) or auto-rotation"
-    code_template: "templates/code-patterns/geom3d.py"
+      - "Adaptive glyph decimation; avoid label/element overlap in 3D scenes"
+      - "Use autorange with margins for Plotly; tight_layout for Matplotlib 3D"
+      - "Interactive must be >30fps; downsample data before plotting if >100K points"
+    code_template: templates/code-patterns/geom3d.py
     gotchas:
-      - "Default perspective distorts depth perception for geometric comparisons"
-      - "Ambient occlusion off by default but essential for depth perception in static views"
-      - "High-resolution meshes cause sluggish interaction — decimate or use LOD"
-      - "Camera position can hide important features — set initial viewpoint thoughtfully"
+      - "Mesh resolution vs. performance tradeoff; >100K points requires downsampling"
+      - "Backface culling can hide interior structures in closed volumes"
+      - "3D perspective distortion can misrepresent spatial relationships"
 
-  - id: P5
-    name: GraphNet
-    visual_essence: "Node-link diagram, adjacency matrix, attention map, network topology"
-    best_for:
-      - self_attention
-      - multi_head_attention
-      - transformer_block
-      - s_parameter_block
-      - clock_tree
-      - dft_scan
-      - neural_architecture
-    composes_with: [P1, P3, P6, P9]
-    frameworks:
-      primary: graphviz
-      secondary: [matplotlib, plotly, bertviz, tikz]
+  graphnet:
+    id: P5
+    visual_essence: "Nodes+edges, energy level diagram, phase diagram"
+    composes_with: [processanim, probdist, signalflow]
+    frameworks: [graphviz, plotly, d3js, altair]
     ux_rules:
-      - "Adjacency/attention matrices must be square with same row/column order"
-      - "Node size proportional to metric (degree, importance, activation) with scale legend"
-      - "Edge weight/attention displayed as thickness or opacity — never both simultaneously"
-      - "Directed edges must have arrowheads; undirected must not"
-      - "Layout algorithm matters: force-directed for general, hierarchical for trees, bipartite for two-set graphs"
-    code_template: "templates/code-patterns/graphnet.py"
+      - "Adaptive layout to prevent node/edge/label overlap"
+      - "Color + size + position only; facet or toggle for additional dimensions"
+      - "Label key features (energy levels, phase boundaries, critical points)"
+    code_template: templates/code-patterns/graphnet.py
     gotchas:
-      - "Large graphs (>100 nodes) become hairballs — filter by threshold or use matrix view"
-      - "Graph layout is non-deterministic (except dot/hierarchical) — seed for reproducibility"
-      - "Symmetrical attention matrices can hide causal masking — ensure triangular pattern visible"
-      - "Edge crossing degrades readability; planar layouts are rarely achievable"
+      - "Auto-layout algorithms can obscure true graph topology"
+      - "Edge crossing density reduces readability in dense networks"
+      - "Node size scaling must preserve discriminability across magnitudes"
 
-  - id: P6
-    name: ProcessAnim
-    visual_essence: "Step-by-step animation, morphing, time evolution, frame sequence"
-    best_for:
-      - ddpm_forward
-      - ddpm_reverse
-      - electromagnetic_wave
-      - convection_cell
-      - brownian_motion
-      - style_transfer
-      - algorithm_walkthrough
-    composes_with: [P1, P2, P3, P4, P5, P9]
-    frameworks:
-      primary: manim
-      secondary: [matplotlib, plotly, hyperframes, remotion]
+  processanim:
+    id: P6
+    visual_essence: "Step-by-step morph, time evolution, particle trails"
+    composes_with: [scalarfield, vectorfield, signalflow, geom3d, graphnet, probdist, phasetraj, decisionprocess]
+    frameworks: [manim, matplotlib, moviepy, hyperframes]
     ux_rules:
-      - "Frame counter and timestamp must be visible — never assume user tracks time"
-      - "Colorbar range locked across all frames — auto-range destroys temporal perception"
-      - "Transition speed: 15-30 fps for smooth motion, hold key frames for 0.5-2 seconds"
-      - "Annotation must follow moving features — text anchored to tracked coordinate"
-      - "Include timeline scrub bar for interactive playback"
-    code_template: "templates/code-patterns/processanim.py"
+      - "Interactive must be >30fps; pre-render if complex"
+      - "Label key features at each step; use LaTeX for equations"
+      - "Use tight_layout() or constrained_layout to prevent frame bleed"
+    code_template: templates/code-patterns/processanim.py
     gotchas:
-      - "Memory leak: always close figures after saving each frame"
-      - "Frame interpolation (blitting) can skip annotations — verify text renders per frame"
-      - "Video codec choice matters: H.264 for distribution, lossless for further editing"
-      - "Variable frame rate causes timing drift — enforce constant FPS"
+      - "Frame interpolation can misrepresent underlying physics or dynamics"
+      - "Codec and compression choice affects text/equation legibility"
+      - "Particle trail persistence can obscure current state in dense systems"
 
-  - id: P7
-    name: ProbDist
-    visual_essence: "Probability density, CDF, quantile, violin plot, swarm plot, histogram"
-    best_for:
-      - maxwell_boltzmann
-      - wavefunction_probability
-      - noise_figure
-      - fit_quality
-      - tddb_weibull
-      - ber_waterfall
-      - quantization_error
-    composes_with: [P1, P3, P6]
-    frameworks:
-      primary: matplotlib
-      secondary: [plotly, seaborn, altair]
+  probdist:
+    id: P7
+    visual_essence: "Distribution, density, histogram, box/violin"
+    composes_with: [signalflow, scalarfield, processanim]
+    frameworks: [matplotlib, plotly, altair, seaborn]
     ux_rules:
-      - "Always label both distribution type (PDF/CDF/SF) and the random variable"
-      - "Shade area corresponding to probability > threshold for interpretability"
-      - "KDE bandwidth must not obscure bimodality — show histogram underneath as validation"
-      - "Axis limits must include tails to 3-sigma or 99.7% probability"
-      - "Q-Q plot reference line at 45° with confidence bands"
-    code_template: "templates/code-patterns/probdist.py"
+      - "Axes match physical units; distributions must integrate to 1 when required"
+      - "Use Viridis/Cividis/Plasma; no rainbow colormaps for density"
+      - "Softmax outputs, thermal distributions, and PDFs must be mathematically valid"
+    code_template: templates/code-patterns/probdist.py
     gotchas:
-      - "Default KDE bandwidth (Scott/rule-of-thumb) can hide multimodality"
-      - "Histogram bin width changes visual story — use Freedman-Diaconis or Sturges"
-      - "PDFs can exceed 1.0 — students confused; annotate that area integrates to 1"
-      - "Log-scale y-axis hides deviation in high-probability region — use linear for CDF"
+      - "Histogram bin width biases shape perception; Freedman-Diaconis is safer"
+      - "KDE bandwidth selection can hide or invent modes"
+      - "Boxplots discard distributional detail that may be physically meaningful"
 
-  - id: P8
-    name: PhaseTraj
-    visual_essence: "Phase portraits, limit cycles, bifurcation diagrams, trajectory in state space"
-    best_for:
-      - harmonic_oscillator
-      - pendulum_phase
-      - smith_chart_trace
-      - injection_locking
-      - pa_load_pull
-      - pll_lock_range
-      - quantum_coherence
-    composes_with: [P2, P3, P4, P7]
-    frameworks:
-      primary: matplotlib
-      secondary: [plotly, manim, pyvista]
+  phasetraj:
+    id: P8
+    visual_essence: "Parametric orbits, phase portrait, Poincaré section"
+    composes_with: [vectorfield, processanim, scalarfield]
+    frameworks: [matplotlib, plotly, bokeh, altair]
     ux_rules:
-      - "State space axes must be labeled with physical variables and units"
-      - "Fixed points marked distinctly: stable = filled dot, unstable = open circle, saddle = cross"
-      - "Nullclines (where dx/dt=0 or dy/dt=0) shown as thin lines intersecting at fixed points"
-      - "Direction must be indicated with arrowhead on trajectories"
-      - "Separatrix (boundary between qualitatively different behaviors) highlighted with thicker line"
-    code_template: "templates/code-patterns/phasetraj.py"
+      - "Vector fields must obey physical constraints (div/curl, Hamiltonian flow)"
+      - "Phase relationships and orbits must preserve physical consistency"
+      - "Label fixed points, separatrices, and limit cycles"
+    code_template: templates/code-patterns/phasetraj.py
     gotchas:
-      - "Trajectory arrows too sparse: user can't discern direction; too dense: visual clutter"
-      - "Limit cycles are closed loops — verify numerical integration didn't drift open over time"
-      - "Bifurcation parameter must be explicit — annotate critical values where behavior changes"
-      - "Phase portrait is 2D projection of higher-dimensional system — hidden dynamics may exist"
+      - "Poincaré section sampling must capture transients before steady state"
+      - "Trajectory overlap in dense phase portraits hides separatrices"
+      - "Numerical integration drift can violate energy conservation visibly"
 
-  - id: P9
-    name: DecisionProcess
-    visual_essence: "Flowchart, decision tree, DAG, Markov chain, pipeline"
-    best_for:
-      - transformer_block
-      - encoder_decoder
-      - sar_algorithm
-      - pipeline_stage
-      - knowledge_distillation
-      - beam_search
-      - carnot_cycle
-      - process_flow
-    composes_with: [P1, P3, P5]
-    frameworks:
-      primary: graphviz
-      secondary: [tikz, matplotlib, mermaid]
+  decisionprocess:
+    id: P9
+    visual_essence: "Sequential choices, probabilistic outcomes, cumulative trajectories"
+    composes_with: [phasetraj, probdist, graphnet, processanim]
+    frameworks: [plotly, d3js, matplotlib, graphviz]
     ux_rules:
-      - "Decision nodes: diamond; process nodes: rectangle; start/end: rounded rectangle"
-      - "Edges must have text labels explaining the decision/transition condition"
-      - "Hierarchical flow from top to bottom (or left to right) — never bidirectional without cause"
-      - "Color-code node types consistently across the visualization"
-      - "Backward edges (feedback, cycle, Markov return) use dashed lines to distinguish"
-    code_template: "templates/code-patterns/decisionprocess.py"
+      - "Color + size + position only; facet or toggle for additional policy dimensions"
+      - "Label decision nodes, branch probabilities, and cumulative rewards"
+      - "Probability distributions must sum to 1; policies must be normalized"
+    code_template: templates/code-patterns/decisionprocess.py
     gotchas:
-      - "Graphviz auto-layout can create tangled paths for dense graphs — manual rank hints needed"
-      - "Circular references (cycles) render poorly in hierarchical layout — use force-directed for cyclic graphs"
-      - "Too many nodes (>50) in a flowchart becomes unreadable — split into sub-diagrams"
+      - "Probability normalization must be maintained after every branching event"
+      - "Tree depth explodes horizontal layout; consider radial or hierarchical collapse"
+      - "Cumulative trajectory smoothing can obscure critical decision boundaries"
 
 interaction_tiers:
-  - id: t1
-    name: static
-    description: "Single static image with no interaction. Best for paper-ready figures, Org-inline previews, and quick iteration. All frameworks support this tier."
-    frameworks: [matplotlib, tikz, graphviz, schemdraw, altair, seaborn]
-  - id: t2
-    name: pan_zoom
-    description: "Pan and zoom for exploring dense regions of the visualization. Essential for detailed scientific plots and large diagrams. Reset-to-original button required."
-    frameworks: [plotly, matplotlib_widget, pyvista, bokeh, altair]
-  - id: t3
-    name: tooltip_hover
-    description: "Hover over data points reveals exact values, labels, and metadata. Critical for quantitative analysis where visual approximation is insufficient."
-    frameworks: [plotly, altair, bokeh, pyvista]
-  - id: t4
-    name: time_scrub
-    description: "Scrub through time dimension with playback controls (play, pause, seek). Frame counter with timestamp always visible. Best for animations and dynamic processes."
-    frameworks: [manim, matplotlib_FuncAnimation, plotly_slider, hyperframes, remotion]
-  - id: t5
-    name: param_sweep
-    description: "Adjust parameters via sliders, dropdowns, or knobs. Visualization updates in real-time. Essential for 'what-if' exploration and teaching physical intuition."
-    frameworks: [plotly, pyvista, bokeh, streamlit, matplotlib_widget]
-  - id: t6
-    name: full_ide
-    description: "Code-level manipulation with live preview. Modify source code and see the visualization update. Agent-driven generation and refinement loop. Jupyter/Org-babel native."
-    frameworks: [matplotlib, plotly, manim, pyvista, schemdraw, tikz, graphviz, altair, by-hand]
+  t1_explore:
+    description: "Sliders, toggles, parameter knobs — immediate visual feedback"
+    rule: "Every parameter change must update the visualization within 100ms"
+    best_frameworks: [plotly, bokeh, pyqtgraph, altair]
+
+  t2_guide:
+    description: "Animated walkthrough with checkpoints — structured narration"
+    rule: "Follow the 5-phase storytelling arc: Hook → Deconstruct → Connect → Checkpoint → Extend"
+    best_frameworks: [manim, matplotlib, hyperframes, remotion]
+
+  t3_discover:
+    description: "Open sandbox with scaffolding — creative exploration"
+    rule: "Provide guardrails (valid parameter ranges, hint system) without restricting exploration"
+    best_frameworks: [plotly, streamlit, threejs, d3js]
+
+  t4_progressive_disclosure:
+    description: "Start simple, reveal complexity on demand"
+    rule: "Initial view shows ≤2 visual channels; additional layers exposed via toggle or zoom"
+    best_frameworks: [plotly, altair, bokeh, streamlit]
+
+  t5_what_if_scenario:
+    description: "Pre-built narrative scenarios, not just sliders"
+    rule: "Each scenario must tell a coherent causal story with before/after states"
+    best_frameworks: [plotly, streamlit, matplotlib, manim]
+
+  t6_ab_comparison:
+    description: "Side-by-side or overlay of two configurations"
+    rule: "Compared states must share identical axes, scales, and color mappings"
+    best_frameworks: [plotly, matplotlib, altair, streamlit]
 
 ux_quality_rules:
-  - id: U1
-    rule: "Labels and annotations must include physical units"
-    applies_to: [P1, P2, P3, P4, P7, P8]
-    description: "Every axis, colorbar, and annotation must have dimensional units. Never show bare numbers for physical quantities. Use LaTeX for unit rendering when possible (e.g., r'$\\nabla \\times \\mathbf{E}$ (V/m)')."
-  - id: U2
-    rule: "Use perceptually uniform colormaps for continuous data"
-    applies_to: [P1, P2, P4, P6, P7]
-    description: "Never use jet/rainbow for continuous scalar data. viridis, cividis, plasma, inferno, and magma are perceptually uniform (constant luminance gradient). Diverging colormaps (RdBu_r, coolwarm) for signed data; sequential (viridis, plasma) for positive-only data. Grayscale compatibility for print."
-  - id: U3
-    rule: "Maximum 3 visual channels per plot"
-    applies_to: [P1, P2, P3, P4, P5, P7, P8]
-    description: "Human visual system processes ~3 independent channels simultaneously. Typical combinations: color + size + position, or color + opacity + line-style. Exceeding 3 channels causes cognitive overload and misreading. Use multiple coordinated views instead of channel overload."
-  - id: U4
-    rule: "Colorbar range must be fixed (not auto-scaled) and anchored to physical values"
-    applies_to: [P1, P2, P4, P6, P7]
-    description: "Auto-scaled colorbars destroy physical intuition — the same color represents different values across frames or plots. Set vmin/vmax explicitly based on physical bounds or data distribution. For animations, lock range across all frames. Annotate saturation (clipping) when data exceeds range."
-  - id: U5
-    rule: "Annotate zero crossings, sign changes, and critical thresholds"
-    applies_to: [P1, P2, P3, P7, P8]
-    description: "Zero is physically meaningful in signed fields, phase transitions, and difference maps. Use dashed/white contours at zero for scalar fields, marker lines for time series, and explicit labels for threshold values. Never let zero be an unmarked color in a diverging colormap."
-  - id: U6
-    rule: "Grid lines at major tick intervals with partial transparency"
-    applies_to: [P1, P2, P3, P7, P8]
-    description: "Grid lines improve quantitative readability without dominating. Use alpha=0.3 to 0.4, gray color, and align to major ticks. For log-scale plots, add minor grid lines at 2-9 intervals with higher transparency. Never use solid black grid lines — they compete with data."
-  - id: U7
-    rule: "Legend must never obscure data — place outside or in data-free corner"
-    applies_to: [P1, P2, P3, P5, P7, P8]
-    description: "Auto-placed legends frequently overlap with data. Place legends outside plot area when possible. When inside, place in corner with lowest data density. Use semitransparent background (alpha=0.7) for legends over data. Allow legend toggle for crowded multi-series plots."
-  - id: U8
-    rule: "Aspect ratio must preserve physical geometry"
-    applies_to: [P1, P2, P3, P4, P8]
-    description: "Stretching a plot to fill canvas space distorts physical relationships. Use equal aspect ratio ('equal', 'scaled') for spatial data where x and y have same units. For 3D visualization, set orthographic projection and equal axis scaling. Only vary aspect ratio when axes represent fundamentally different quantities."
-  - id: U9
-    rule: "Title must convey what + where + when in under 80 characters"
-    applies_to: [P1, P2, P3, P4, P5, P6, P7, P8, P9]
-    description: "Every visualization needs a descriptive title answering: what variable is shown, where in physical/system space, and when (if time-dependent). Example: 'E-field Magnitude (V/m) at z=0 plane, t=5.2 ns' is better than 'Electric Field'. Use LaTeX for variable names. Title font 1.2x-1.5x axis label size."
+  - id: no_overlap
+    rule: "Labels, arrows, and elements must not overlap; use adaptive glyph decimation for dense fields"
+    enforcement: "Bounding-box check before render; reduce marker size or sample density if collision detected"
+
+  - id: right_scale
+    rule: "Axes match physical units; log scale for multi-decade spans; colormaps centered on meaningful zero"
+    enforcement: "Validate axis labels include units; assert zero-centering for diverging data; switch to log for >2-decade ranges"
+
+  - id: scientific_grounding
+    rule: "Vector fields obey div/curl constraints; junction I-V follows Shockley; softmax sums to 1; distributions integrate to 1"
+    enforcement: "Post-render numerical validation of physical/mathematical invariants; reject frames with >1% deviation"
+
+  - id: max_3_visual_channels
+    rule: "Use only color + size + position; facet or toggle for additional dimensions"
+    enforcement: "Count active visual encodings; if >3, move the least important dimension to a facet row/column or interactive toggle"
+
+  - id: colorblind_safe
+    rule: "Viridis/Cividis/Plasma for scalars; no rainbow/jet colormaps; dark theme variant available"
+    enforcement: "Colormap whitelist check at code generation; generate second figure with inverted luminance"
+
+  - id: annotation_richness
+    rule: "Key features labeled (maxima, minima, zero-crossings, boundaries); equations in LaTeX"
+    enforcement: "Require ≥3 annotations per figure; validate LaTeX rendering in output"
+
+  - id: responsive_axes
+    rule: "tight_layout() or constrained_layout for Matplotlib; autorange with margins for Plotly"
+    enforcement: "Assert no label cutoff or figure overflow; re-run with tight_layout if bbox extends beyond canvas"
+
+  - id: frame_rate
+    rule: "Interactive must be >30fps; downsample data before plotting if >100K points"
+    enforcement: "Profile render time; if >33ms per frame, apply random or grid downsampling until target met"
+
+  - id: physical_consistency
+    rule: "EM: E⊥B⊥k; phase relationships correct; thermal distribution integrates to 1; energy conserved in phase portraits"
+    enforcement: "Domain-specific invariant checks; cross-check with reference analytical solutions where available"
 
 anti_patterns:
-  - id: A1
-    description: "Jet/rainbow colormap for continuous scalar data"
-    problem: "Jet colormap has non-monotonic luminance — yellow appears brightest to human eye, creating false perceptual boundaries. Colorblind-inaccessible (red-green confusion)."
-    fix: "Use viridis, cividis, plasma, inferno, or magma for sequential data. Use RdBu_r or coolwarm for diverging data. All are perceptually uniform and colorblind-friendly."
-    severity: high
-    applies_to: [P1, P2, P4, P6, P7]
-  - id: A2
-    description: "Auto-scaled colorbar per frame in animations"
-    problem: "Each frame independently scales color range to its own min/max. The same color represents different values across frames, destroying the viewer's ability to track quantitative changes over time."
-    fix: "Compute global min/max across ALL frames before rendering. Set fixed vmin/vmax for the entire animation. If the range spans orders of magnitude, use log-scale colorbar instead."
-    severity: high
-    applies_to: [P6, P1, P4]
-  - id: A3
-    description: "Missing physical units in axis labels and annotations"
-    problem: "Bare numbers without units are scientifically ambiguous. Viewers cannot interpret magnitude, scale, or compare across plots. Especially egregious for derived quantities (e.g., V/m vs kV/mm)."
-    fix: "Every axis label MUST include units in parentheses: 'Electric Field (V/m)', 'Frequency (Hz)', 'Probability Density (1/m)'. Use SI prefixes appended to the unit: 'Voltage (mV)'. Never use dimensionless labels without explicit 'arbitrary units' annotation."
-    severity: high
-    applies_to: [P1, P2, P3, P4, P7, P8]
-  - id: A4
-    description: "Quiver arrows without magnitude normalization or adaptive scaling"
-    problem: "Near singularities (point charges, vortices), field magnitude diverges. Without normalization, some arrows explode off-screen while others are invisibly small. Users see either a chaotic mess or nothing at all."
-    fix: "Normalize arrow lengths to uniform size OR use log-scale arrow lengths. Always include a reference arrow with numeric magnitude label. Clamp magnitude at a maximum value and indicate clipping. Use adaptive sampling: denser arrows near high-gradient regions, sparser where field is uniform."
-    severity: medium
-    applies_to: [P2]
-  - id: A5
-    description: "3D visualization with default perspective projection hiding geometric relationships"
-    problem: "Default perspective projection (pyvista, plotly) distorts parallel lines, warps spheres into ellipses at edges, and makes length comparisons impossible. Viewers misinterpret spatial relationships based on rendering artifacts, not actual geometry."
-    fix: "Default to orthographic (parallel) projection for scientific 3D visualization. If perspective is used, explicitly label projection type. Include reference grid or known-size object for scale. Provide canonical orthogonal views (front/top/side) alongside 3D view. Set focal point at center of data volume."
-    severity: medium
-    applies_to: [P4]
+  - name: overlay_overload
+    description: "Plotting more than 4 traces or layers in a single figure creates indistinguishable color soup"
+    fix: "Max 3 visual channels; move extra dimensions to faceting, legend toggling, or secondary figures"
+
+  - name: static_dump
+    description: "Presenting all information upfront without progression or interaction leads to zero engagement"
+    fix: "Apply progressive reveal, animations, or builds; start with the most salient 20% of information"
+
+  - name: equation_vomit
+    description: "Displaying math without corresponding visuals loses 90% of viewers"
+    fix: "Every equation term must have a visual counterpart (glyph, color region, or animated morph)"
+
+  - name: fake_physics
+    description: "Rendering results that violate physical laws teaches incorrect intuition"
+    fix: "Validate invariants before rendering: ∇·B=0, I-V follows Shockley, softmax sums to 1, energy conserved"
+
+  - name: no_interactivity
+    description: "Pure video or static image with no interactive element creates passive, low-retention learning"
+    fix: "Every T2 guided experience must embed ≥1 interactive element (slider, click, or checkpoint question)"
