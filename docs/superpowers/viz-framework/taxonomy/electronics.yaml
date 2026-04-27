@@ -1,1621 +1,1033 @@
 domain: electronics
 sub_disciplines:
-  device_physics:
+  circuit_theory:
     concepts:
-      - name: mosfet_iv_curve
+      - name: impedance_transfer_function
         primary_pattern: signalflow
-        secondary_patterns: [scalarfield]
+        secondary_patterns: [graphnet]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Id vs Vds family of curves, each trace a different Vgs step"
-          - "Triode region (linear) and saturation region (flat) clearly labeled"
-          - "Vdsat = Vgs - Vth line as dashed boundary between regions"
-          - "On-resistance Rds_on slope annotated in linear region"
+          - "Bode plot: log frequency axis, magnitude and phase subplots"
+          - "Pole/zero locations annotated on complex plane"
         gotchas:
-          - "Square-law model (Id ~ (Vgs-Vth)^2) is first-order only — short-channel effects modify exponent"
-          - "Vth varies with Vds (DIBL) and Vbs (body effect) — not constant"
-          - "Log-scale Id shows subthreshold slope (ideal 60mV/dec, real 70-100mV/dec)"
-      - name: bjt_gummel_plot
-        primary_pattern: signalflow
-        secondary_patterns: []
+          - "Phase wrap at +/-180 deg hides true phase margin"
+      - name: poles_zeros_stability
+        primary_pattern: graphnet
+        secondary_patterns: [phasetraj]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Root locus with arrow direction for increasing gain"
+          - "Unstable region (RHP) shaded red"
+        gotchas:
+          - "RHP pole and RHP zero have opposite effects on phase - do not cancel blindly"
+      - name: two_port_networks
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Ic and Ib vs Vbe on log-scale y-axis, linear x-axis"
-          - "Beta_F = Ic/Ib annotated at operating point"
-          - "Ideality factor n from slope of ln(Ic) vs Vbe in mV/decade"
-          - "High-level injection knee where beta rolls off annotated"
+          - "S/Z/Y parameters as matrix heatmap or table"
+          - "Reciprocity check: Z12=Z21 for passive networks"
         gotchas:
-          - "Recombination in base gives base current ideality n_b > 1, collector ideality n_c ~ 1"
-          - "Series resistance causes curvature at high currents — Vbe_internal = Vbe_applied - Ib*Rb - Ie*Re"
-          - "Temperature dependence: Vbe decreases ~2mV/°C at constant Ic"
-      - name: diode_characteristic
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+          - "Reference impedance mismatch causes re-normalization errors"
+      - name: nodal_analysis
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: schemdraw
+        alt_framework: matplotlib
+        interaction_tiers: [t2, t4]
         ux_rules:
-          - "I-V curve: forward bias exponential, reverse bias saturation current"
-          - "Reverse breakdown voltage V_BR annotated with Zener/avalanche label"
-          - "Turn-on voltage ~0.7V Si, ~0.3V Ge, ~2V LED marked"
-          - "Dynamic resistance r_d = n*V_T/I_d at bias point shown as tangent slope"
+          - "Node voltages labeled on schematic with reference ground"
+          - "KCL equations shown alongside current arrows"
         gotchas:
-          - "Forward voltage drop is current-dependent, not a fixed 0.7V"
-          - "Reverse recovery time limits switching speed — stored charge removal"
-          - "Junction capacitance C_j varies with reverse bias — important for varactors"
-      - name: jfet_transfer
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+          - "Floating nodes without DC path cause SPICE convergence failure"
+      - name: mesh_analysis
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: schemdraw
+        alt_framework: matplotlib
+        interaction_tiers: [t2, t4]
         ux_rules:
-          - "Id vs Vgs with Idss (Vgs=0) and Vp (pinch-off) annotated"
-          - "Square-law transfer: Id = Idss * (1 - Vgs/Vp)^2"
-          - "Multiple Idss bins from process variation shown as shaded band"
-          - "Gate leakage Igss vs Vgs on secondary log-scale axis"
+          - "Mesh currents drawn as loops with direction arrows"
+          - "KVL equations linked to each mesh"
         gotchas:
-          - "JFET is depletion-mode only — negative Vgs required to turn off N-channel"
-          - "Gate-channel junction is reverse-biased for normal operation — not forward"
-          - "Vp is negative for N-JFET — don't confuse sign convention"
-      - name: subthreshold_slope
-        primary_pattern: signalflow
-        secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Log(Id) vs Vgs with subthreshold and above-threshold regions marked"
-          - "Subthreshold slope SS = dVgs/d(log10 Id) in mV/dec annotated"
-          - "Ioff at Vgs=0 and Ion at Vgs=Vdd marked on curve"
-          - "Temperature dependence: SS = (kT/q)*ln(10)*(1+Cd/Cox)"
-        gotchas:
-          - "SS > 60 mV/dec at room temperature (ideal 60, real 70-100)"
-          - "Subthreshold swing degrades at high temperature — thermal limit"
-          - "DIBL (drain-induced barrier lowering) shifts Vth at high Vds — separate from SS"
-      - name: body_effect
-        primary_pattern: signalflow
-        secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Vth vs Vbs showing sqrt dependence: Vth = Vth0 + gamma*(sqrt(2*phi_F - Vbs) - sqrt(2*phi_F))"
-          - "Multiple gamma (body effect coefficient) family curves for different doping"
-          - "Threshold increase direction (more positive Vbs for NMOS) annotated"
-          - "Constant-Vth contour lines on Vgs-Vbs plane for fixed drain current"
-        gotchas:
-          - "Body effect increases Vth (NMOS with Vbs < 0) — raises noise margins, lowers headroom"
-          - "Source-body junction must remain reverse-biased — forward bias destroys isolation"
-          - "Floating body (SOI) has history-dependent Vth — kink effect possible"
-      - name: breakdown_voltage
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "I-V curve extending into breakdown: avalanche multiplication region labeled"
-          - "BVdss (drain-source breakdown) vs Vgs plotted showing snapback at high current"
-          - "Safe Operating Area (SOA) polygon on Vds-Id plane"
-          - "Temperature coefficient: avalanche (positive TC) vs Zener (negative TC) labeled"
-        gotchas:
-          - "Avalanche breakdown has positive TC (increases with temp); Zener (<5V) has negative TC"
-          - "Gate oxide breakdown is catastrophic and irreversible — different from junction breakdown"
-          - "Snapback (parasitic BJT turn-on) can destroy device — ESD protection must clamp below trigger voltage"
+          - "Current sources on mesh boundaries complicate supermesh formation"
 
-  amplifiers:
+  analog_building_blocks:
     concepts:
-      - name: common_source_gain
+      - name: amplifier_topologies
         primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        secondary_patterns: [graphnet]
+        best_framework: schemdraw
+        alt_framework: matplotlib
+        interaction_tiers: [t2, t4]
         ux_rules:
-          - "AC gain Av = -gm*(ro||RD) annotated on schematic and Bode plot"
-          - "Bias point marked on Id-Vgs transfer curve with load line"
-          - "Small-signal model (hybrid-pi) drawn adjacent to schematic"
-          - "Gain-bandwidth product (GBW) shown as intersection on Bode plot"
+          - "Small-signal model shown alongside schematic"
+          - "Gain, input/output impedance annotated"
         gotchas:
-          - "Source degeneration resistor RS reduces gain to -RD/(1/gm + RS) but improves linearity"
-          - "Miller multiplication of Cgd: C_in = Cgd*(1+|Av|) — dominates input pole"
-          - "Active load (current mirror) replaces RD for high gain in IC design"
+          - "Ignoring Early effect (VA) causes gain error in simple models"
       - name: differential_pair
         primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
+        secondary_patterns: [graphnet]
+        best_framework: schemdraw
+        alt_framework: plotly
+        interaction_tiers: [t1, t2, t4]
         ux_rules:
-          - "Transfer curve Id1, Id2 vs differential input Vid = Vin+ - Vin-"
-          - "Linear range ~+-sqrt(2)*(Vgs-Vth) annotated — tanh shape"
-          - "Tail current Iss shown as sum of Id1+Id2, constant over Vid"
-          - "Common-mode rejection ratio (CMRR = Ad/Acm) annotated in dB"
+          - "Tail current source shown explicitly"
+          - "Differential vs common-mode gain comparison"
         gotchas:
-          - "CMRR limited by tail current source output impedance and device mismatch"
-          - "Input common-mode range: bottom = Vgs_tail+Vdsat, top = Vdd-Vdsat_load-Vth+Vin_cm"
-          - "Offset voltage Vos = delta_Vth + (Vgs-Vth)/2*(delta_R/R + delta_beta/beta)"
-      - name: opamp_feedback
-        primary_pattern: decisionprocess
+          - "CMRR degradation from device mismatch not shown in ideal model"
+      - name: current_mirrors
+        primary_pattern: graphnet
         secondary_patterns: [signalflow]
-        best_framework: tikz
+        best_framework: schemdraw
         alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t2, t4]
         ux_rules:
-          - "Inverting and non-inverting configurations side by side with gain equations"
-          - "Virtual ground labeled with Op = On annotation for negative feedback"
-          - "Feedback factor beta = R1/(R1+R2) and loop gain Aol*beta indicated"
-          - "Bode plot with Aol, 1/beta, and closed-loop response Acl overlaid"
+          - "Reference and mirrored branches color-coded"
+          - "Channel-length modulation effect on mirror ratio"
         gotchas:
-          - "Phase margin < 45° gives peaking and ringing — check at 1/beta intercept"
-          - "Slew rate limits large-signal bandwidth — full-power bandwidth = SR/(2*pi*Vpk)"
-          - "Input bias currents through feedback network create DC offset — use compensation resistor"
-      - name: current_mirror
+          - "VDS mismatch between reference and output devices causes current error"
+      - name: op_amp_metrics
         primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Iout vs Vout with compliance voltage and output resistance annotated"
-          - "Matching ratio Iout/Iref = (W/L)_2 / (W/L)_1 labeled"
-          - "Cascode mirror shown below simple mirror with Rout comparison"
-          - "Current error vs Vds mismatch plotted for different L values"
-        gotchas:
-          - "Channel length modulation: Rout ~ r_o2 = 1/(lambda*Id) — longer L increases Rout"
-          - "Vds mismatch between M1 (diode-connected) and M2 causes systematic error"
-          - "Threshold mismatch delta_Vth from process variation ~ A_Vth/sqrt(W*L)"
-      - name: cascode_stage
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Stacked device layout with bias voltages Vb1, Vb2 labeled"
-          - "Output resistance boost factor ~ gm2*ro2 shown on small-signal model"
-          - "Swing range: Vout_min = Vdsat1 + Vdsat2, Vout_max = Vdd - Vdsat_load"
-          - "Folded vs telescopic: headroom and gain trade-off side by side"
-        gotchas:
-          - "Cascode raises Rout to ~ gm2*ro2*ro1 — but also adds pole at cascode node"
-          - "Biasing cascode gate too high or low kills swing — target Vdsat+ Vgs for optimal"
-          - "Noise: cascode device contributes negligible noise since gain from its gate is ~1"
-      - name: noise_figure
-        primary_pattern: signalflow
-        secondary_patterns: [scalarfield]
+        secondary_patterns: [graphnet]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t5]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "NF vs frequency with 1/f region, white noise floor, and HF corner annotated"
-          - "Noise circles on Smith chart for LNA design"
-          - "F_min, R_n, Gamma_opt annotated from noise parameter extraction"
-          - "Input-referred noise voltage and current spectral density dual-axis plot"
+          - "Open-loop gain, GBW, phase margin on single Bode plot"
+          - "Slew rate shown as max dV/dt on step response"
         gotchas:
-          - "NF is defined for a specific source impedance — NF_min at Gamma_source = Gamma_opt"
-          - "1/f noise corner frequency depends on device type and biasing — PMOS lower than NMOS"
-          - "After first LNA stage, subsequent stages contribute less by Friis formula"
-      - name: gbw_product
+          - "Phase margin read at unity-gain frequency, not gain-crossover of 0 dB if multiple crossings"
+      - name: active_filters
         primary_pattern: signalflow
-        secondary_patterns: []
+        secondary_patterns: [graphnet]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t5]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Gain (dB) vs frequency with -20dB/dec roll-off and GBW = gain * bandwidth constant"
-          - "Multiple GBW curves for different compensation capacitor values"
-          - "Dominant pole f_p1 and non-dominant pole f_p2 marked with phase margin"
-          - "Unity-gain frequency f_un shown where gain crosses 0dB"
+          - "Magnitude response with passband and stopband shaded"
+          - "Pole-zero plot linked to filter type (Butterworth, Chebyshev, etc.)"
         gotchas:
-          - "Constant GBW holds only for single-pole (dominant-pole compensated) amplifiers"
-          - "Slew rate and GBW are independent: SR = Iss/Cc, GBW = gm1/Cc"
-          - "Non-dominant pole must be > 2*GBW for 60° phase margin (single-pole model)"
-
-  filters:
-    concepts:
-      - name: butterworth_response
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t5]
-        ux_rules:
-          - "Magnitude |H(jw)| with maximally flat passband and monotonic roll-off"
-          - "Pole-zero plot on s-plane: poles on unit circle, equally spaced on left half"
-          - "Order N slider changing roll-off slope from -20N dB/dec to -40N dB/dec"
-          - "Step response: overshoot increases with N — annotated at N=2,4,8"
-        gotchas:
-          - "Butterworth has -3dB at cutoff regardless of order — not -6dB or other"
-          - "Group delay variation (non-constant) increases with order — bad for pulse fidelity"
-          - "Normalized prototype tables assume omega_c = 1 rad/s — must frequency-scale"
-      - name: chebyshev_ripple
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t5]
-        ux_rules:
-          - "Passband ripple (0.1dB, 0.5dB, 1dB, 3dB) selectable with slider"
-          - "Sharper roll-off than Butterworth for same order — annotated comparison overlay"
-          - "Poles lie on ellipse, not circle — lower Q for same order than Butterworth"
-          - "Group delay peaks near cutoff — worse than Butterworth for pulse applications"
-        gotchas:
-          - "Chebyshev Type I: passband ripple, monotonic stopband; Type II: monotonic passband, stopband ripple"
-          - "Ripple in dB = -10*log10(1 - epsilon^2) where epsilon is ripple factor"
-          - "Higher ripple = sharper cutoff = worse group delay variation — engineering trade-off"
-      - name: biquad_stage
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Tow-Thomas biquad schematic with three op-amps and R/C values labeled"
-          - "Transfer function H(s) = (k2*s^2 + k1*s + k0) / (s^2 + (omega_0/Q)*s + omega_0^2)"
-          - "Q-factor shown as peak height on magnitude plot with annotated -3dB bandwidth"
-          - "Component sensitivity analysis: dQ/dR, domega_0/dC annotated"
-        gotchas:
-          - "High-Q stages (>10) have large component sensitivities — small mismatch shifts poles significantly"
-          - "Op-amp finite GBW introduces excess phase that shifts actual pole frequency"
-          - "Dynamic range limited at high Q: internal node voltages can exceed input"
-      - name: sallen_key
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Unity-gain Sallen-Key schematic with two R, two C and op-amp in follower"
-          - "Same schematic with gain > 1 variant: resistor divider to non-inverting input"
-          - "Natural frequency omega_0 = 1/sqrt(R1*R2*C1*C2), Q = sqrt(R1*R2*C1*C2)/(R1*C1 + R2*C2 + R1*C2*(1-K))"
-          - "K>3 causes oscillation — Q goes to infinity at K=3 boundary annotated"
-        gotchas:
-          - "Sallen-Key low-pass at unity gain has Q max of 0.5 (only real poles) — need gain for complex poles"
-          - "Capacitor ratio C1/C2 >> 1 increases Q but also increases component spread"
-          - "Op-amp output impedance forms voltage divider with feedback — not ideal for high-frequency"
-      - name: gm_c_filter
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "OTA (operational transconductance amplifier) symbol with gm and output resistance"
-          - "Gm-C integrator: tau = C/gm, tunable by bias current"
-          - "Gm-C biquad with multiple OTA stages, each gm independently tunable"
-          - "Transconductance linearity range annotated: tanh(Vin/V_T) characteristic"
-        gotchas:
-          - "OTA output is high-impedance current, not voltage — needs explicit capacitive load"
-          - "Gm varies with process, temperature, and input amplitude — needs tuning circuit (PLL or master-slave)"
-          - "Linearity: simple differential pair has tanh gm characteristic — source degeneration linearizes"
-      - name: group_delay
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Group delay tau_g = -d(phi)/d(omega) plotted below phase response"
-          - "Constant group-delay region annotated — desirable for pulse/no-data distortion"
-          - "Bessel approximation shown as flattest group delay among all-pole filters"
-          - "Step response with and without constant group delay overlaid for comparison"
-        gotchas:
-          - "Non-constant group delay causes pulse dispersion — different frequencies arrive at different times"
-          - "Bessel filters have maximally flat group delay but poorest magnitude selectivity"
-          - "Group delay flatness generally trades off against magnitude roll-off sharpness"
-      - name: filter_cascade
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Block diagram: 2nd-order sections cascaded, each with omega_0i and Qi"
-          - "Pole pairing: highest-Q with lowest omega_0 to minimize dynamic range issues"
-          - "Section ordering: lowest-Q first, highest-Q later for best dynamic range"
-          - "Overall frequency response vs individual section responses overlaid"
-        gotchas:
-          - "Cascade ordering matters for noise and dynamic range — not commutative"
-          - "Each section's output impedance must drive next section's input — buffer if needed"
-          - "Gain scaling between sections prevents premature clipping and maintains SNR"
-
-  oscillators:
-    concepts:
-      - name: lc_tank
-        primary_pattern: signalflow
-        secondary_patterns: [phasetraj]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Resonant frequency f_0 = 1/(2*pi*sqrt(LC)) annotated on impedance plot"
-          - "Parallel RLC impedance vs frequency: peak at resonance with Q = R*sqrt(C/L)"
-          - "Tank voltage waveform: damped sinusoid with exponential decay envelope"
-          - "Negative resistance -R from cross-coupled pair shown alongside positive tank R"
-        gotchas:
-          - "Inductor Q limits phase noise — on-chip spiral inductors Q ~ 5-15, off-chip Q > 50"
-          - "Startup condition: | -R_active | < R_tank (i.e., gm > 1/R_tank for cross-coupled pair)"
-          - "Parasitic capacitance from active devices detunes resonator — include in C_total"
-      - name: ring_oscillator
-        primary_pattern: signalflow
-        secondary_patterns: [phasetraj]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t4]
-        ux_rules:
-          - "Odd number N of inverters in loop with frequency f = 1/(2*N*t_delay)"
-          - "Waveform at each stage: show sequential phase shift of 180°/N"
-          - "Startup: noise kicks oscillation from metastable midpoint"
-          - "Frequency vs supply voltage plotted as tuning curve"
-        gotchas:
-          - "Must have odd number of inversions — even number gives latch, not oscillation"
-          - "Frequency depends on delay per stage — process and temperature variations directly affect f"
-          - "Differential ring oscillators have even N with one stage cross-coupled for inversion"
-      - name: phase_noise_plot
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "L(f) in dBc/Hz vs offset frequency fm on log-log axes"
-          - "Three regions: 1/f^3 (flicker FM), 1/f^2 (white FM), and white noise floor"
-          - "Leeson's equation L(fm) ~ F*kT/(2*P_sig)*(1 + f_0/(2*Q*fm))^2 annotated"
-          - "Integrated phase noise (RMS jitter) shaded as area under L(f) curve"
-        gotchas:
-          - "dBc/Hz means dB below carrier per Hz bandwidth — normalize to measurement bandwidth"
-          - "Close-in phase noise depends on active device 1/f noise upconverted by nonlinearity"
-          - "Phase noise and jitter are the same quantity integrated differently — sigma_t = 1/(2*pi*f_0)*sqrt(integral)"
-      - name: crystal_oscillator
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Butterworth-Van Dyke equivalent circuit: C0, Lm, Cm, Rm with values"
-          - "Impedance vs frequency: series resonance fs and parallel resonance fp annotated"
-          - "Pierce oscillator topology with inverter, feedback resistor, and two load capacitors"
-          - "Pulling range: delta_f/f vs load capacitance CL for different crystal cuts"
-        gotchas:
-          - "Drive level too high damages crystal or causes frequency shifts — keep below manufacturer spec (~100uW)"
-          - "Series vs parallel resonance: difference ~ Cm/(2*C0) — must specify which mode"
-          - "Temperature stability: AT-cut has cubic T/f curve with turnover at 25-35°C"
-      - name: vco_tuning
-        primary_pattern: signalflow
-        secondary_patterns: [phasetraj]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Frequency vs control voltage Vctrl: linear tuning range and nonlinear edges annotated"
-          - "Tuning sensitivity Kvco (Hz/V or rad/s/V) as derivative of f-V curve"
-          - "Multiple tuning bands (varactor bank or capacitor array) for wide range"
-          - "Kvco variation across tuning range: normalized Kvco/Kvco_center plot"
-        gotchas:
-          - "Kvco varies with Vctrl — PLL loop dynamics change with operating point"
-          - "Varactor C-V curve is nonlinear — MOS varactor sharp transition, PN-junction smooth"
-          - "Supply pushing: frequency shifts with Vdd — regulated supply needed for clean VCO"
-      - name: quadrature_osc
+          - "Sallen-Key Q sensitivity to component tolerance"
+      - name: oscillators
         primary_pattern: phasetraj
         secondary_patterns: [signalflow]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t4]
+        interaction_tiers: [t1, t2]
         ux_rules:
-          - "I and Q outputs shown as sine/cosine pairs with exact 90° phase shift"
-          - "Phasor diagram: rotating vector with I on x-axis, Q on y-axis"
-          - "Coupling mechanism (parallel transistor pair or injection) annotated on schematic"
-          - "Phase error (deviation from 90°) vs frequency plotted"
+          - "Barkhausen criterion annotated: loop gain = 1, phase = 0 deg"
+          - "Startup transient vs steady-state limit cycle"
         gotchas:
-          - "Quadrature accuracy depends on matching between I/Q paths — mismatch gives phase error"
-          - "Two possible oscillation modes (I leads Q, or Q leads I) — startup determines mode"
-          - "Amplitude mismatch also degrades image rejection in I/Q receivers"
-      - name: injection_locking
-        primary_pattern: signalflow
-        secondary_patterns: [phasetraj]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Locking range delta_f_L vs injection strength I_inj/I_osc annotated"
-          - "Adler's equation: d(phi)/dt = omega_0 - omega_inj - (omega_0/(2*Q))*(I_inj/I_osc)*sin(phi)"
-          - "Phase shift vs frequency offset within locking range plotted"
-          - "Transient locking waveform: output frequency pulling toward injection"
-        gotchas:
-          - "Locking range inversely proportional to resonator Q — high-Q narrows range"
-          - "Sub-harmonic (1/N) and super-harmonic (N) injection locking possible at reduced range"
-          - "Phase noise improves inside locking range (tracks injection source), degrades at edge"
-
-  data_converters:
-    concepts:
-      - name: adc_transfer_curve
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Staircase transfer: digital code vs analog input with labeled quantization levels"
-          - "1 LSB = V_ref/2^N annotated as step height"
-          - "Quantization error sawtooth: error in [-0.5LSB, +0.5LSB] for ideal ADC"
-          - "Ideal straight line (no INL/DNL) overlaid as reference"
-        gotchas:
-          - "Quantization noise power = LSB^2/12 — RMS, not peak-to-peak"
-          - "ADC transfer is mid-rise (first transition at 0.5 LSB) or mid-tread — specify which"
-          - "Ideal quantization error is uniformly distributed, not Gaussian — for large signals it approximates Gaussian"
-      - name: dac_inl_dnl
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Transfer curve (analog out vs digital in) with endpoints connected as ideal line"
-          - "INL (integral nonlinearity) = deviation from ideal line in LSB units"
-          - "DNL (differential nonlinearity) = step size deviation from 1 LSB"
-          - "DNL < -1 LSB causes missing codes — annotated with red markers"
-        gotchas:
-          - "INL is cumulative sum of DNL: INL(k) = sum(DNL(1..k))"
-          - "DNL and INL measured after gain and offset calibration — raw values are larger"
-          - "Current-steering DAC unit element matching (random errors) gives Gaussian INL distribution"
-      - name: sar_algorithm
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3, t4]
-        ux_rules:
-          - "Binary search tree: each trial bit from MSB to LSB, comparator decision Yes/No"
-          - "DAC output waveform showing successive approximation converging to input"
-          - "Timing diagram: sample, N-bit trial phases, end-of-conversion flag"
-          - "Energy per conversion step annotated on capacitor array schematic"
-        gotchas:
-          - "SAR speed limited by DAC settling time (RC) + comparator decision time per bit"
-          - "Bit errors propagate: MSB error cannot be corrected by later bits"
-          - "Capacitor mismatch causes DNL/INL — split-array or calibration techniques mitigate"
-      - name: sigma_delta_shaping
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Noise shaping: quantization noise PSD pushed to high frequencies"
-          - "Noise transfer function NTF(z) = (1 - z^(-1))^L for L-th order shaping"
-          - "Modulator output bitstream showing pulse density proportional to input"
-          - "Decimation filter response overlaid on shaped noise spectrum"
-        gotchas:
-          - "Stability: NTF out-of-band gain > 1.5 (Lee criterion) risks modulator instability"
-          - "Idle tones appear for DC or low-amplitude inputs — dither breaks limit cycles"
-          - "Higher OSR (oversampling ratio) gives SNR improvement of 3*(2L+1) dB/octave"
-      - name: pipeline_stage
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Pipeline diagram: S/H -> sub-ADC -> sub-DAC -> residue amp * 2^M -> next stage"
-          - "Residue plot: Vout = 2^M * (Vin - Vdac) with decision thresholds marked"
-          - "1.5-bit/stage redundancy: digital correction overlapping inter-stage ranges"
-          - "Latency vs throughput: N stages * 1 clock/stage, but 1 sample/clock throughput"
-        gotchas:
-          - "Residue amplifier gain error > 0.5 LSB causes missing codes — redundancy fixes up to gain error * inter-stage range"
-          - "Capacitor mismatch in MDAC causes nonlinearity — calibration via foreground or background"
-          - "Stage scaling: later stages handle smaller signal, can use smaller capacitors for power savings"
-      - name: nyquist_sampling
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Time-domain: sine wave with sample points overlaid at fs"
-          - "Frequency-domain: original signal at f_sig and aliases at |k*fs +- f_sig|"
-          - "Nyquist zone boundaries at multiples of fs/2 annotated"
-          - "Anti-aliasing filter response: passband f < fs/2, stopband f > fs/2"
-        gotchas:
-          - "fs > 2*f_sig is necessary but not sufficient: signals at fs - f_sig fold back identically to f_sig"
-          - "Practical anti-aliasing filters need finite transition band — sample at 2.5x-4x highest frequency"
-          - "Undersampling (fs < f_sig) works for bandpass signals IF aliasing places signal in baseband without overlap"
-      - name: comparator_hysteresis
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Vout vs Vin with hysteresis window: rising threshold V_TR+ and falling threshold V_TR-"
-          - "Hysteresis width = V_TR+ - V_TR- = (R1/R2)*Vdd annotated on feedback schematic"
-          - "Input noise riding on slow-ramp input, showing clean vs bouncing comparator output"
-          - "Propagation delay vs overdrive: tau ~ tau_0 * ln(V_swing/(V_swing - V_OD))"
-        gotchas:
-          - "Hysteresis is desirable for noisy signals (immunity) but adds timing uncertainty"
-          - "Excess hysteresis > noise amplitude unnecessarily degrades effective resolution"
-          - "Dynamic hysteresis (positive feedback during regeneration only) gives speed + clean decision"
-
-  power_management:
-    concepts:
-      - name: ldo_psrr
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "PSRR (dB) vs frequency with DC PSRR, unity-gain roll-off, and HF parasitics annotated"
-          - "LDO schematic: pass transistor, error amplifier, reference voltage, feedback divider"
-          - "Output impedance Z_out(f) overlaid with PSRR(f) showing correlation"
-          - "Load current step response: Vout droop, recovery time, and overshoot annotated"
-        gotchas:
-          - "PSRR degrades as dropout voltage reduces — pass transistor gain falls near dropout"
-          - "Output capacitor ESR creates zero that affects stability and PSRR at mid-frequencies"
-          - "Bandgap reference noise dominates low-frequency PSRR — unfiltered reference couples to output"
-      - name: switching_regulator
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t4]
-        ux_rules:
-          - "Switch node V_LX waveform: square wave with duty cycle D = Vout/Vin (buck)"
-          - "Inductor current i_L: triangular wave with rising (switch on) and falling (switch off) slopes"
-          - "Output ripple: delta_Vout = delta_i_L * ESR + delta_i_L / (8*f_sw*C_out)"
-          - "Efficiency vs load current: conduction loss (I^2*R) and switching loss (f*C*V^2) regimes"
-        gotchas:
-          - "CCM (continuous) vs DCM (discontinuous conduction mode): DCM at light load — different dynamics"
-          - "Right-half-plane zero in boost converter: limits bandwidth to ~ f_RHPZ/3 for stability"
-          - "EMI from switch node ringing — snubber or gate drive control reduces high-frequency harmonics"
-      - name: buck_converter_ripple
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Output voltage ripple: capacitive component (triangular) and ESR component (square) decomposed"
-          - "Ripple vs duty cycle D: maximum ripple at D=0.5 for given L and C"
-          - "Steady-state waveforms: V_LX, i_L, i_C, V_out over two switching cycles"
-          - "Current ripple ratio r = delta_i_L / I_load annotated: typical r=0.3-0.4"
-        gotchas:
-          - "Ripple equation assumes ideal capacitor — ESL adds inductive spike at switching transitions"
-          - "Ceramic capacitor DC bias derating: effective C drops 30-80% at rated voltage"
-          - "Load transient response limited by inductor slew rate: di/dt = (Vin-Vout)/L for buck step-up"
-      - name: charge_pump
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3, t4]
-        ux_rules:
-          - "Dickson charge pump: diode chain with clock-driven capacitors — voltage multiplication"
-          - "Vout = N*(Vin - V_diode_drop) - I_load/(f_clk*C) annotated for each stage"
-          - "Clock phases phi1, phi2 with capacitor charge/discharge animation"
-          - "Output impedance as function of N, f_clk, and C showing optimum stage count"
-        gotchas:
-          - "Output voltage droops with increasing load current and stage count — not lossless multiplication"
-          - "Cross-coupled (Pelliconi) charge pump more efficient than Dickson for low-voltage CMOS"
-          - "Clock feedthrough couples to output through parasitic capacitance — low-pass filter needed"
+          - "Amplitude stabilization mechanism (nonlinearity) often omitted"
       - name: bandgap_reference
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Principle: Vref = Vbe + K*delta_Vbe = Vbe + K*(kT/q)*ln(N) ~ 1.25V (extrapolated to 0K)"
-          - "Curvature: Vref vs temperature with zero-TC point at ~25°C and residual curvature"
-          - "PTAT (proportional to absolute temperature) and CTAT (complementary) voltage generation shown"
-          - "Brokaw cell and Widlar bandgap schematics side by side with annotated startup circuit"
-        gotchas:
-          - "Bandgap has two stable operating points — off (zero current) and desired — startup circuit essential"
-          - "Op-amp offset voltage adds error multiplied by gain in delta_Vbe loop"
-          - "Curvature correction (beta-compensation or quadratic) needed for <50ppm/°C TC"
-      - name: current_sense
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Sense resistor R_sense with differential amplifier: Vout = I_load * R_sense * Gain"
-          - "Kelvin connection (4-wire) shown to eliminate PCB trace resistance error"
-          - "Common-mode rejection vs frequency for sense amplifier annotated"
-          - "Power loss in sense resistor: P_loss = I_load^2 * R_sense annotated as trade-off"
-        gotchas:
-          - "Sense resistor Kelvin connections are essential: PCB trace resistance (~1mOhm/square) adds error"
-          - "Amplifier input bias current creates voltage drop across input filter resistors"
-          - "Common-mode voltage range must cover both high-side and low-side sensing cases"
-      - name: soft_start
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t4]
-        ux_rules:
-          - "Output voltage Vout(t) ramp from 0 to V_nominal with controlled dv/dt"
-          - "Inrush current i_in(t) with and without soft-start overlaid for comparison"
-          - "Soft-start capacitor C_ss charged by constant current: V_ss(t) = I_ss*t/C_ss"
-          - "Duty cycle D(t) ramp from 0 to steady-state during soft-start period"
-        gotchas:
-          - "Output pre-bias: Vout already charged — synchronous rectifier must not sink current during start"
-          - "Multiple regulator sequencing: soft-start delays stagger supply ramp-up for FPGAs/processors"
-          - "Short-circuit during soft-start: hiccup mode vs latch-off protection strategy"
-
-  rf_circuits:
-    concepts:
-      - name: lna_noise_circle
-        primary_pattern: phasetraj
-        secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Smith chart with constant noise circles (F = F_min + const) centered at Gamma_opt"
-          - "Constant gain circles overlaid showing gain/noise trade-off"
-          - "Gamma_s = Gamma_opt for minimum noise figure, not conjugate match (max gain)"
-          - "S-parameters table annotated beside Smith chart: S11, S12, S21, S22"
-        gotchas:
-          - "Noise figure is NOT minimized at conjugate match — Gamma_opt != S11*"
-          - "LNA input matching affects both NF and input return loss — simultaneous optimization is constrained"
-          - "Inductive source degeneration creates real part at input without adding noisy resistance"
-      - name: mixer_conversion
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Spectrum: RF input at f_RF, LO at f_LO, IF output at f_IF = |f_RF - f_LO|"
-          - "Conversion gain/loss vs LO power: gain compresses as LO switches fully"
-          - "Port isolation: LO-RF, LO-IF, RF-IF leakage paths annotated on schematic"
-          - "Third-order intercept point (IIP3) from two-tone test extrapolated on log-log plot"
-        gotchas:
-          - "Image frequency at f_IM = f_LO +/- f_IF is equally downconverted — image-reject mixer or filter needed"
-          - "Self-mixing: LO leakage to RF port reflects back and mixes to DC — creates DC offset"
-          - "Gilbert cell mixer: switching pair should be fast (small overdrive) for low noise, tail for linearity"
-      - name: pa_load_pull
-        primary_pattern: phasetraj
-        secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Smith chart with constant output power contours: optimal Pout at Gamma_L_opt"
-          - "Constant PAE (power-added efficiency) contours overlaid"
-          - "Load line R_opt = (Vdd - V_knee)^2 / (2*Pout) annotated with waveform"
-          - "Gain compression contours showing linear vs compressed regions"
-        gotchas:
-          - "Maximum power and maximum efficiency load impedances are different points"
-          - "Harmonic terminations (2nd, 3rd) shift optimum impedance — class-F, inverse-F"
-          - "Package parasitics transform the on-chip load point — de-embed to die reference plane"
-      - name: t_line_smith
-        primary_pattern: phasetraj
-        secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Transmission line as rotation on Smith chart: 360° per lambda/2"
-          - "VSWR circle centered at chart center, radius = |Gamma|"
-          - "Impedance along line: Z(d) = Z_0 * (Z_L + j*Z_0*tan(beta*d)) / (Z_0 + j*Z_L*tan(beta*d))"
-          - "Standing wave pattern: |V(z)| and |I(z)| along line with maxima/minima annotated"
-        gotchas:
-          - "Quarter-wave transformer: Z_0_transformer = sqrt(Z_0_line * Z_load) — only matched at single frequency"
-          - "Lossy lines: attenuation constant alpha shrinks VSWR circle toward center with distance"
-          - "Stub tuning (shunt or series, open or short) for specific frequency — narrowband solution"
-      - name: s_parameter_block
         primary_pattern: graphnet
         secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
+        best_framework: schemdraw
+        alt_framework: matplotlib
+        interaction_tiers: [t2, t4]
         ux_rules:
-          - "2-port block with S-parameters: S11, S12, S21, S22 labeled at each port"
-          - "Signal flow graph: nodes a1,b1,a2,b2 with S-parameter branches"
-          - "Mason's gain formula applied to cascaded blocks: transfer function from graph"
-          - "Stability circles: input and output stability regions on Smith chart"
+          - "VBE and DeltaVBE contributions shown as temperature-compensated sum"
+          - "Output voltage vs temperature curve with curvature correction"
         gotchas:
-          - "S-parameters are defined for given Z_0 (usually 50 Ohm) — re-normalizing changes S-matrix"
-          - "Unilateral assumption (S12=0) simplifies analysis but may be inaccurate for some devices"
-          - "K-factor (Rollett) > 1 and |Delta| < 1 for unconditional stability — not sufficient alone for multi-stage"
-      - name: pll_lock_range
+          - "Op-amp offset voltage causes reference spread across process corners"
+      - name: ldo_regulator
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Load transient response with undershoot/overshoot annotated"
+          - "Dropout voltage region clearly marked"
+        gotchas:
+          - "Stability with low-ESR ceramic output capacitors requires internal compensation zero"
+      - name: pll_dll
         primary_pattern: signalflow
         secondary_patterns: [phasetraj]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t4]
+        interaction_tiers: [t1, t2]
         ux_rules:
-          - "PLL block diagram: PFD, charge pump, loop filter, VCO, frequency divider"
-          - "Lock acquisition: VCO frequency converges to N*f_ref over time"
-          - "Hold range (static) vs pull-in range (dynamic) vs lock range (cycle-slip free) annotated"
-          - "Phase margin PM vs loop bandwidth omega_c on Bode plot of open-loop gain"
+          - "Phase noise spectrum in dBc/Hz with integrated jitter"
+          - "Lock acquisition transient shown in phase plane"
         gotchas:
-          - "PLL type (I, II) determined by number of integrators in loop — Type II needed for zero static phase error"
-          - "Reference spur at f_ref caused by charge pump mismatch and leakage — below PLL bandwidth attenuated"
-          - "Cycle slipping during acquisition extends locking time — frequency detector needed for wide-range lock"
-      - name: iq_modulator
-        primary_pattern: phasetraj
-        secondary_patterns: [signalflow]
+          - "False lock on harmonics or sub-harmonics of reference"
+      - name: adc_architectures
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t2, t4]
         ux_rules:
-          - "Constellation diagram: I (in-phase) vs Q (quadrature) with symbol points labeled"
-          - "Vector diagram: carrier (LO), I component, Q component, and composite RF vector"
-          - "EVM (error vector magnitude) shown as deviation from ideal constellation point"
-          - "LO leakage (origin offset) and I/Q imbalance (gain/phase error) effects on constellation"
+          - "Transfer function (code vs voltage) with ideal line and DNL/INL deviation"
+          - "Spectral FFT with THD and SNDR annotated"
         gotchas:
-          - "I/Q gain imbalance creates rectangular constellation; phase imbalance creates parallelogram"
-          - "DC offset in I or Q path shifts entire constellation — appears as LO leakage at RF"
-          - "Carrier suppression depends on I/Q matching — direct conversion architecture eliminates IF"
-
-  digital_cmos:
+          - "Missing codes or non-monotonicity in flash ADC from comparator offset"
+      - name: charge_pump_dc_dc
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: schemdraw
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Steady-state inductor current ripple and capacitor voltage ripple"
+          - "Continuous vs discontinuous conduction mode boundary"
+        gotchas:
+          - "Right-half-plane zero in boost converter limits achievable bandwidth"
+  semiconductor_device_physics:
     concepts:
-      - name: inverter_vtc
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Voltage Transfer Characteristic: Vout vs Vin with V_OH, V_OL, V_IH, V_IL, V_M annotated"
-          - "Noise margins: NM_H = V_OH - V_IH, NM_L = V_IL - V_OL as vertical/horizontal bars"
-          - "Beta ratio (W/L)_p / (W/L)_n determines V_M — beta=1 gives V_M=Vdd/2 (symmetry)"
-          - "Gain = dVout/dVin: peak gain region annotated, typically -10 to -100 V/V"
-        gotchas:
-          - "V_M != Vdd/2 if beta_ratio != 1 — PMOS mobility roughly half NMOS, so size PMOS 2x wider"
-          - "Subthreshold region at V_M gives high gain but slow — not practical for digital switching"
-          - "Temperature: V_M shifts ~ 0.5-1 mV/°C due to Vth temperature coefficients"
-      - name: nand_gate
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: tikz
+      - name: band_diagrams
+        primary_pattern: graphnet
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
         alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t2]
         ux_rules:
-          - "CMOS NAND schematic: series NMOS (A,B), parallel PMOS"
-          - "Truth table with four input combinations and corresponding transistor states"
-          - "Sizing: each PMOS = Wp, each NMOS = 2*Wn for equal rise/fall drive (worst case)"
-          - "Switching delay as function of fan-in: rising delay ~ C_load * Vdd / (I_p_eff/N_p)"
+          - "Conduction band, valence band, Fermi level clearly labeled and color-coded"
+          - "Band bending aligned with charge density profile"
         gotchas:
-          - "Series NMOS stack has body effect on upper devices — Vth increase reduces drive"
-          - "Internal node X between stacked NMOS has parasitic capacitance — slower switching"
-          - "PMOS sizing for worst-case (single PMOS on) vs average — area vs speed trade-off"
-      - name: flipflop_timing
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Setup time t_su, hold time t_h, and clock-to-Q delay t_cq annotated on waveform"
-          - "Metastability window: data transitions inside (t_su + t_h) window cause indeterminate Q"
-          - "Timing diagram: CLK, D, Q with causal arrows and annotated delays"
-          - "Negative slack = required_time - arrival_time shown as red violation indicator"
-        gotchas:
-          - "Setup time violation cannot be fixed by slowing clock — must fix logic delay or clock skew"
-          - "Hold time violation fixed by adding delay (buffers) in short path — not by slowing clock"
-          - "Metastability resolution time follows tau * ln(1/P_failure) — MTBF depends on t_meta allowed"
-      - name: ring_counter
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3, t4]
-        ux_rules:
-          - "Shift register loop with single '1' circulating: Johnson counter has 2N states, ring has N"
-          - "State transition diagram: current state -> next state with clock edge arrows"
-          - "Timing diagram: Q0-Q3 waveforms showing rotating '1' pattern"
-          - "Self-correcting: logic gate to break all-0 illegal state (NOR of all but last to D0)"
-        gotchas:
-          - "Ring counter needs initialization to all-0 with a single 1 — startup without reset is random"
-          - "Johnson counter uses inverted feedback (Qbar of last to D of first) — 2N states, not N"
-          - "Glitch-free decoding: each state has unique output pattern — no decoder needed for ring"
-      - name: adder_carry
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: tikz
+          - "Electron energy vs electrostatic potential sign confusion"
+      - name: carrier_transport
+        primary_pattern: vectorfield
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
         alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Full adder block: S = A XOR B XOR Cin, Cout = A·B + B·Cin + A·Cin"
-          - "Ripple carry chain: critical path Cin -> Cout of each stage sequentially"
-          - "Carry-lookahead: generate G = A·B, propagate P = A+B, carry C_i+1 = G_i + P_i·C_i"
-          - "Delay comparison: ripple (O(N)) vs CLA (O(log N)) vs prefix/Kogge-Stone (O(log N))"
+          - "Drift and diffusion current components shown separately"
+          - "Velocity saturation region annotated on v-E curve"
         gotchas:
-          - "Ripple carry delay proportional to bit width — fine for < 8 bits, terrible for 64-bit"
-          - "Generate and propagate are mutually exclusive: G_i=1 => P_i=1, but P_i=1 does NOT imply G_i=1"
-          - "Static vs dynamic carry chain: dynamic faster but needs precharge and is noise-sensitive"
-      - name: sram_cell
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "6T SRAM cell schematic: cross-coupled inverters (4 transistors) + 2 access transistors"
-          - "Butterfly curve: VTC of inverter pair showing SNM (static noise margin) as largest embedded square"
-          - "Read/write margin plots: WL asserted, BL precharged, showing cell ratio CR = (W/L)_pull-down / (W/L)_access"
-          - "Leakage paths annotated: subthreshold, gate tunneling, junction leakage per cell"
-        gotchas:
-          - "Read stability requires CR > ~1.2-1.5 — access transistor must be weaker than pulldown"
-          - "Write margin requires PR (pull-up ratio) < ~0.5 — access transistor stronger than pullup"
-          - "SNM degrades with Vdd scaling — subthreshold SRAM (near-threshold) is fragile"
-      - name: clock_tree
+          - "Saturation velocity vs saturation current - different phenomena"
+      - name: pn_junction_iv_cv
         primary_pattern: graphnet
         secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
         ux_rules:
-          - "H-tree distribution: balanced path lengths to all leaf nodes, each branch equal delay"
-          - "Clock skew vs distance: zero skew at leaves, local skew from buffer/temperature variation"
-          - "Clock gating: AND gate in clock path with enable — disables clock to idle blocks"
-          - "Jitter accumulation along chain: sigma_j(N) = sigma_j(1) * sqrt(N) for uncorrelated jitter"
+          - "I-V semilog plot with ideality factor and IS extracted"
+          - "C-V profile with depletion width and doping extracted"
         gotchas:
-          - "Perfect H-tree requires symmetric layout — process gradient across die causes systematic skew"
-          - "Clock mesh (grid) trades power for low skew — power overhead ~30% vs tree"
-          - "PVT (process, voltage, temperature) variation across die causes local skew — OCV derating in timing"
-
-  memory:
-    concepts:
-      - name: dram_cell
-        primary_pattern: decisionprocess
+          - "Series resistance distorts I-V at high current - correct with Rs extraction"
+      - name: mosfet_operation
+        primary_pattern: graphnet
         secondary_patterns: [signalflow]
-        best_framework: tikz
+        best_framework: plotly
         alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t2, t4]
         ux_rules:
-          - "1T1C cell: access transistor T, storage capacitor Cs, bitline BL, wordline WL"
-          - "Charge sharing: BL precharged to Vdd/2, WL activated, charge redistributes between Cs and C_BL"
-          - "Sense amplifier: cross-coupled inverter pair latches small delta_V (~50-200mV)"
-          - "Refresh timing: retention time t_ret vs temperature — cells leak, must refresh ~64ms"
+          - "Id-Vgs and Id-Vds curves with triode/saturation regions shaded"
+          - "gm and ro extraction points marked"
         gotchas:
-          - "Read is destructive — sense amplifier must write back after reading"
-          - "Capacitor dielectric leakage (~fA/cell) determines refresh interval — junction leakage in access transistor also matters"
-          - "Alpha particle (or cosmic ray) strike flips stored charge — soft error, not permanent damage"
-      - name: flash_cell
-        primary_pattern: decisionprocess
-        secondary_patterns: []
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Floating gate transistor: Vth shift by charge stored on FG — erased (low Vth) vs programmed (high Vth)"
-          - "I-V curves for erased and programmed states with read voltage V_read between Vth_E and Vth_P"
-          - "Fowler-Nordheim tunneling (erase) and channel hot electron (program) mechanisms illustrated"
-          - "Endurance: Vth window closure after N_cycles — program/erase cycling degrades oxide"
-        gotchas:
-          - "Program/erase is not bit-level — must erase block (64-256KB) before reprogramming page"
-          - "Read disturb: repeatedly reading one cell can soft-program neighboring cells on same WL"
-          - "MLC (2 bits/cell) and TLC (3 bits/cell) require tighter Vth distributions — higher sensitivity to noise and wear"
-      - name: sram_6t
+          - "Subthreshold swing confused with transconductance efficiency"
+      - name: mosfet_capacitances
         primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Read SNM: largest square embedded in butterfly curve during read (WL=1, BL precharged)"
-          - "Write margin: voltage on node Q must drop below V_M of opposite inverter to flip cell"
-          - "Leakage components: subthreshold (dominates at 90nm+), gate tunneling (<45nm), GIDL"
-          - "Cell layout: symmetric with wordline on M2/M3, bitlines on M1/M2"
-        gotchas:
-          - "Read current I_read flows through access + pull-down to ground — must overcome BL capacitance"
-          - "Half-select disturb: cell on active WL but inactive BL experiences reduced SNM"
-          - "Statistical Vth variation (sigma_Vth ~ A_Vth/sqrt(W*L)) causes tail cells with marginal SNM"
-      - name: sense_amplifier
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Differential voltage sense: initial delta_V_BL = Vdd * Cs / (Cs + C_BL) for 1, 0 for 0"
-          - "Latch-type SA: cross-coupled PMOS and NMOS pairs with enable signals SAE (N-sense) and SAE_bar (P-sense)"
-          - "Offset voltage distribution: Gaussian with sigma ~ 10-30mV from transistor mismatch"
-          - "SAE timing: must wait until sufficient delta_V develops — early triggering reads noise"
-        gotchas:
-          - "SA offset reduces effective signal margin — redundancy or offset cancellation techniques needed"
-          - "Capacitive imbalance between BL and BL_bar causes systematic offset — careful layout required"
-          - "Overdrive after latching: SA resolves to full CMOS levels but consumes dynamic power"
-      - name: row_decoder
-        primary_pattern: decisionprocess
-        secondary_patterns: []
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Address pre-decoding: divide address into blocks (X-pre, Y-pre) to reduce gate fan-in"
-          - "NAND-based decoder tree: each level selects among 2-4 lines, final driver drives wordline"
-          - "Critical path: address -> pre-decoder -> NAND -> wordline driver -> WL rise to Vpp (boosted)"
-          - "Hierarchical wordline: global WL (slow, large pitch) + local WL (fast, small pitch)"
-        gotchas:
-          - "Wordline voltage boosted above Vdd (Vpp) for DRAM access transistor — needs charge pump"
-          - "Decoder output must drive entire wordline capacitance (hundreds to thousands of cells)"
-          - "Multi-segment architecture: only activate selected sub-array to reduce power"
-      - name: fefet_curve
-        primary_pattern: signalflow
-        secondary_patterns: [phasetraj]
+        secondary_patterns: [graphnet]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "P-E hysteresis loop: polarization vs electric field, remnant polarization Pr and coercive field Ec annotated"
-          - "Id-Vgs with characteristic counterclockwise hysteresis (memory window = Vth_high - Vth_low)"
-          - "Endurance: Vth window vs cycles, showing gradual closure from charge trapping"
-          - "Multi-level cell (MLC): partial polarization switching for intermediate states"
+          - "Cgs, Cgd, Cdb vs Vgs/Vds multi-panel plot"
+          - "Miller multiplication region annotated"
         gotchas:
-          - "Ferroelectric HfO2 (HZO) requires specific doping (Zr, Si, Al) and crystallization anneal"
-          - "Wake-up effect: Pr increases in first ~10^3-10^4 cycles before fatigue onset"
-          - "Imprint: preferred polarization state after high-temperature bake — shifts coercive field asymmetry"
-      - name: mram_hysteresis
+          - "Cgd non-monotonicity in strong inversion often missed"
+  nanoscale_effects:
+    concepts:
+      - name: short_channel_effects
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Vth roll-off, DIBL, subthreshold swing degradation vs L"
+          - "Long-channel reference curve overlaid for comparison"
+        gotchas:
+          - "DIBL and punchthrough confused - DIBL is Vth shift, punchthrough is leakage"
+      - name: gaa_nanosheets
+        primary_pattern: geom3d
+        secondary_patterns: [scalarfield]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "3D structure with gate-all-around geometry"
+          - "Sheet width and stacking count as adjustable parameters"
+        gotchas:
+          - "Corner effects in nanosheets create parasitic corner devices"
+      - name: quantum_tunneling
+        primary_pattern: scalarfield
+        secondary_patterns: [probdist]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Barrier shape and wavefunction penetration depth shown"
+          - "Transmission probability vs barrier thickness"
+        gotchas:
+          - "Direct tunneling vs Fowler-Nordheim tunneling regimes"
+      - name: process_variation
+        primary_pattern: probdist
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t5, t6]
+        ux_rules:
+          - "Distribution of Vth, Id across wafer or Monte Carlo sample"
+          - "Corner cases (SS, SF, FS, FF) highlighted"
+        gotchas:
+          - "Spatial correlation of variation ignored in simple Monte Carlo"
+      - name: self_heating_electrothermal
+        primary_pattern: scalarfield
+        secondary_patterns: [processanim]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t5]
+        ux_rules:
+          - "Temperature map overlaid on device geometry"
+          - "I-V collapse at high power annotated with temperature"
+        gotchas:
+          - "Self-heating time constant much slower than electrical - mismatch in transient simulation"
+      - name: rtn_noise
+        primary_pattern: signalflow
+        secondary_patterns: [probdist]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Random telegraph signal in time domain with amplitude levels"
+          - "Capture/emission time constants from hidden Markov fit"
+        gotchas:
+          - "RTN amplitude distribution often non-Gaussian and device-dependent"
+      - name: nc_fet
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Sub-60 mV/decade swing demonstrated on Id-Vgs"
+          - "Ferroelectric polarization charge linked to S-factor"
+        gotchas:
+          - "Hysteresis from ferroelectric can cause memory window instead of steep swing"
+      - name: tunnel_fet
+        primary_pattern: scalarfield
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Band-to-band tunneling path shown in band diagram"
+          - "Point subthreshold swing vs average swing distinction"
+        gotchas:
+          - "On-current severely limited by tunneling probability"
+      - name: two_d_material_fets
+        primary_pattern: geom3d
+        secondary_patterns: [scalarfield]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Monolayer or few-layer thickness visualization"
+          - "Ballistic transport regime annotation"
+        gotchas:
+          - "Contact resistance dominates in 2D devices - extrinsic vs intrinsic performance"
+      - name: memristor_rram
         primary_pattern: phasetraj
         secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Pinched hysteresis I-V loop with SET and RESET directions"
+          - "Filament formation animation in conductive bridge"
+        gotchas:
+          - "Variability between cycles (cycle-to-cycle) and devices (device-to-device)"
+      - name: fefet
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Polarization-voltage hysteresis loop linked to threshold shift"
+          - "Memory window vs endurance trade-off"
+        gotchas:
+          - "Wake-up and fatigue effects change polarization loop shape over cycles"
+      - name: variability_monte_carlo
+        primary_pattern: probdist
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t5, t6]
+        ux_rules:
+          - "Histograms of key metrics (delay, power, yield)"
+          - "Sensitivity analysis with tornado chart"
+        gotchas:
+          - "Latin hypercube sampling needed for rare-event tails"
+      - name: reliability_em_td
+        primary_pattern: signalflow
+        secondary_patterns: [probdist]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t2, t5]
         ux_rules:
-          - "R-H hysteresis loop: resistance vs applied magnetic field, R_P (parallel) and R_AP (anti-parallel) states"
-          - "STT-MRAM: switching current vs pulse width shown as J_c vs t_pulse with thermal stability factor Delta"
-          - "TMR ratio = (R_AP - R_P)/R_P annotated — typically 100-200% for MgO MTJ"
-          - "Write error rate vs write current: probability of failed switch drops exponentially above J_c0"
+          - "Black's equation fit for electromigration lifetime"
+          - "TDDB Weibull plot with beta and t63 extraction"
         gotchas:
-          - "Read disturb: read current can accidentally switch cell — read current must be << write current"
-          - "Thermal stability Delta = E_b/kT must exceed ~60 for 10-year retention at operating temperature"
-          - "Process variation in MTJ diameter causes resistance spread — tight lithography/etch required"
+          - "Acceleration factors (Eaa, gamma) extrapolated beyond measurement range"
 
-  sensors:
+  signal_integrity:
     concepts:
-      - name: wheatstone_bridge
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Bridge schematic: four resistors in diamond with excitation voltage V_ex and differential V_out"
-          - "Null condition: V_out = 0 when R1*R3 = R2*R4 — annotated as balance equation"
-          - "Bridge sensitivity dV_out/dR for quarter-bridge, half-bridge, and full-bridge configurations"
-          - "Nonlinearity error: quarter-bridge error ~ delta_R/(2*R) — compensated with active circuitry"
-        gotchas:
-          - "Lead wire resistance adds to each arm — 3-wire or 4-wire (Kelvin) connection cancels lead resistance"
-          - "Temperature coefficient of gauge factor (TCGF) and self-heating change sensitivity"
-          - "Common-mode voltage of bridge output is V_ex/2 — instrumentation amplifier CMRR critical"
-      - name: photodiode_response
-        primary_pattern: signalflow
-        secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Responsivity (A/W) vs wavelength: quantum efficiency QE = (R*1240)/(lambda_nm) annotated"
-          - "I-V curves for different illumination levels: photovoltaic (V>0), photoconductive (V<0), avalanche (V<<0)"
-          - "Noise: shot noise i_noise(RMS) = sqrt(2*q*I*BW), thermal from shunt resistance, dark current"
-          - "NEP (noise equivalent power) and D* (specific detectivity) annotated on noise plot"
-        gotchas:
-          - "Photoconductive mode (reverse bias) gives higher speed (reduced C_j) but adds dark current and Johnson noise"
-          - "Silicon responsivity peaks at ~ 900nm and drops to zero at bandgap (~1100nm)"
-          - "Capacitance depends on reverse bias voltage: C_j = C_j0 / sqrt(1 + V_R/V_bi)"
-      - name: hall_sensor
+      - name: transmission_lines
         primary_pattern: signalflow
         secondary_patterns: [vectorfield]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Hall voltage V_H = (R_H * I * B) / t where R_H = -1/(n*q) for electrons"
-          - "Orthogonal plate geometry: current along x, B-field along z, V_H across y"
-          - "V_H vs B with linear region and saturation (at high mobility * B) annotated"
-          - "Spinning current technique: four-phase switching to cancel offset voltage"
+          - "Smith chart with impedance trajectory vs frequency"
+          - "Reflection coefficient Gamma annotated on line"
         gotchas:
-          - "Hall coefficient R_H = -1/(n*q) — sign indicates carrier type (negative for electrons)"
-          - "Offset voltage (geometric) can be 100x larger than Hall voltage — spinning or chopping essential"
-          - "Temperature coefficient: mobility decreases with T, sensitivity R_H/t decreases (for constant-current bias)"
-      - name: strain_gauge
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Gauge factor GF = (delta_R/R) / epsilon where epsilon = delta_L/L (strain)"
-          - "Metal foil (GF ~ 2) vs semiconductor (GF ~ 100-150): sensitivity vs temperature stability trade-off"
-          - "Rosette pattern: three gauges at 0°/45°/90° for complete strain tensor measurement"
-          - "Temperature compensation: dummy gauge in same thermal environment in adjacent bridge arm"
-        gotchas:
-          - "Gauge resistance changes with temperature — TcR (temperature coefficient of resistance) can be larger than strain signal"
-          - "Transverse sensitivity: gauge responds slightly to strain perpendicular to intended axis"
-          - "Adhesive creep: at high temperatures or long duration, epoxy transfers strain imperfectly"
-      - name: thermocouple_curve
-        primary_pattern: signalflow
-        secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Seebeck voltage vs temperature for Type J/K/T/E/N/R/S/B with labeled useful ranges"
-          - "Cold junction compensation: V_measured = V(T_hot) - V(T_cold), add V(T_cold) from reference"
-          - "Polynomial fit coefficients a_i for V(T) = sum(a_i * T^i) annotated per type"
-          - "Nonlinearity error if approximating linear from 0°C to T_max shown as shaded region"
-        gotchas:
-          - "Type K (Chromel-Alumel) has short-range ordering error at 200-600°C — reversible shift of several °C"
-          - "Cold junction must be at known temperature — ice bath (0°C) or electronic compensation circuit"
-          - "Thermocouple measures temperature difference, not absolute — law of intermediate metals applies"
-      - name: mems_accel
-        primary_pattern: geom3d
-        secondary_patterns: [signalflow]
-        best_framework: pyvista
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Proof mass suspended by springs: displacement x = m*a/k, sensed by differential capacitors"
-          - "Comb-finger structure: interdigitated fixed and moving fingers, capacitance change ~ delta_x"
-          - "Frequency response: mechanical resonance f_res = 1/(2*pi)*sqrt(k/m) with damping ratio"
-          - "Cross-axis sensitivity: output from acceleration perpendicular to sense axis annotated"
-        gotchas:
-          - "Squeeze-film damping between comb fingers and substrate dominates — packaging pressure affects damping"
-          - "Stiction (stuck mass after over-range) — mechanical stops prevent, but anti-stiction coatings help"
-          - "Brownian noise (thermomechanical): noise floor = sqrt(4*k_B*T*b) / m in m/s^2/sqrt(Hz)"
-      - name: isfet_ph
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "ISFET structure: MOSFET with gate replaced by reference electrode + sensing membrane + electrolyte"
-          - "pH sensitivity: ~59 mV/pH (Nernstian) at 25°C, slope vs temperature plot"
-          - "Transfer curve Id-Vgs at different pH with uniform Vth shift (ideally)"
-          - "Drift: Vth shift over time — initial hydration drift (hours) + long-term slow drift (mV/day)"
-        gotchas:
-          - "Nernst limit is 59.16 mV/pH at 25°C, proportional to absolute temperature"
-          - "Reference electrode stability critical — Ag/AgCl drift < few mV over days"
-          - "Light sensitivity: ISFET channel is photodiode — must measure in dark or use differential pair"
-
-  optoelectronics:
-    concepts:
-      - name: led_iv
-        primary_pattern: signalflow
-        secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "I-V curve: exponential forward bias, reverse breakdown region annotated"
-          - "L-I curve (light power vs current): linear above threshold with slope efficiency dP/dI"
-          - "Turn-on voltage labeled for different materials: GaAs (1.4V), GaN (3.3V), InGaN (2.7V)"
-          - "Differential resistance R_diff = dV/dI at operating point shown as tangent slope"
-        gotchas:
-          - "LED is current-driven: small voltage change causes large current change — use current source, not voltage"
-          - "Efficiency droop: output power per mA decreases at high current density (Auger recombination, carrier leakage)"
-          - "Forward voltage has negative temperature coefficient (~ -2 to -4 mV/°C)"
-      - name: photodetector_qe
-        primary_pattern: signalflow
-        secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "External QE = electrons_out / photons_in vs wavelength"
-          - "Absorption coefficient alpha(lambda) overlaid with QE showing correlation"
-          - "Cutoff wavelength lambda_c = hc/E_g annotated for Si (1100nm), InGaAs (1650nm), Ge (1850nm)"
-          - "Responsivity R = QE * lambda_nm / 1240 (A/W) shown on secondary y-axis"
-        gotchas:
-          - "QE < 1 due to surface reflection, incomplete absorption (too thin), and recombination"
-          - "At short wavelengths, absorption near surface increases surface recombination losses"
-          - "Anti-reflection coating (typically SiN for Si) maximizes QE at design wavelength"
-      - name: laser_threshold
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "L-I curve: spontaneous emission below I_th, linear stimulated emission above I_th"
-          - "Threshold current I_th annotated with spectral narrowing shown in inset"
-          - "Slope efficiency dP/dI = eta_i * (h*nu/q) * alpha_m/(alpha_i + alpha_m) derived"
-          - "Temperature dependence: I_th(T) = I_th(T0) * exp((T-T0)/T0), T0 annotated"
-        gotchas:
-          - "Threshold is kink in L-I curve, not a sharp transition — amplified spontaneous emission (ASE) in transition"
-          - "Above threshold, carrier density clamps at threshold value — gain equals round-trip loss"
-          - "Thermal rollover: junction heating at high current reduces gain, L-I curve saturates and drops"
-      - name: waveguide_grating
-        primary_pattern: signalflow
-        secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: pyvista
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Bragg condition m*lambda = 2*n_eff*Lambda for m-th order with n_eff from mode solver"
-          - "Reflection spectrum: narrow stopband centered at lambda_Bragg with bandwidth delta_lambda"
-          - "Coupled-mode theory: kappa (coupling coefficient) from index perturbation amplitude annotated"
-          - "Transmission spectrum with side-lobes labeled (apodization window reduces side-lobes)"
-        gotchas:
-          - "Side-lobe level depends on grating apodization (Gaussian, raised cosine) — uniform grating has sinc side-lobes"
-          - "Fabry-Perot cavity formed by two gratings separated by phase shift — single-frequency laser"
-          - "Thermo-optic effect: d(lambda_Bragg)/dT ~ 0.01 nm/°C for silica — needs athermal packaging or temperature control"
-      - name: optical_modulator
-        primary_pattern: signalflow
-        secondary_patterns: [phasetraj]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Mach-Zehnder modulator: two arms with opposite phase shift, interference at output"
-          - "Transfer function P_out/P_in = 0.5*(1 + cos(delta_phi)) — nonlinear cosine response"
-          - "V_pi (voltage for pi phase shift) annotated: lower is better (higher efficiency)"
-          - "Electro-optic bandwidth: RC-limited or transit-time-limited, f_3dB from S21 roll-off"
-        gotchas:
-          - "Cosine transfer is nonlinear — must bias at quadrature (delta_phi = pi/2) for linear operation"
-          - "DC bias drift from charge accumulation in waveguide — requires bias control circuit"
-          - "Chirp: phase modulation accompanies amplitude modulation unless push-pull (differential) drive"
-      - name: vcsel_pattern
-        primary_pattern: signalflow
-        secondary_patterns: [scalarfield, geom3d]
-        best_framework: matplotlib
-        alt_framework: pyvista
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "L-I-V curves: voltage and light power vs current with threshold and operating point"
-          - "Far-field pattern: Gaussian beam profile with divergence angle theta annotated"
-          - "Emission spectrum: single longitudinal mode (short cavity FSR > gain bandwidth)"
-          - "Eye diagram at data rate: optical modulation amplitude (OMA) and extinction ratio (ER) annotated"
-        gotchas:
-          - "VCSEL is multi-transverse-mode for aperture > ~4um — single-mode needs oxide aperture < 3-4um"
-          - "Thermal lensing at high current guides higher-order modes — beam profile changes with current"
-          - "Polarization is not guaranteed stable — elliptical mesa or grating can stabilize"
-      - name: fiber_dispersion
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Dispersion parameter D (ps/nm/km) vs wavelength: zero-dispersion at ~1310nm (standard SMF)"
-          - "Chromatic dispersion = material dispersion + waveguide dispersion — both plotted separately"
-          - "Pulse broadening: delta_t = |D| * L * delta_lambda — annotated for different bit rates"
-          - "PMD (polarization mode dispersion): DGD (differential group delay) ~ ps/sqrt(km)"
-        gotchas:
-          - "Dispersion-shifted fiber (DSF) moves zero-dispersion to 1550nm — but causes FWM (four-wave mixing)"
-          - "Non-zero dispersion-shifted fiber (NZDSF) keeps small non-zero D at 1550nm to suppress FWM"
-          - "Dispersion compensation: DCF with opposite-sign D or FBG (chirped fiber Bragg grating)"
-
-  mixed_signal:
-    concepts:
-      - name: sample_hold
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Track (S closed) and hold (S open) phases labeled on timing diagram"
-          - "Acquisition time: C_hold charges to Vin within 0.5 LSB — tau = R_on*C_hold"
-          - "Hold mode droop: capacitor discharges through leakage (switch, op-amp, PCB) in V/s"
-          - "Aperture uncertainty (jitter): delta_V = SR * t_jitter — limits SNR at high frequencies"
-        gotchas:
-          - "Charge injection: channel charge Q_ch = W*L*Cox*(Vgs-Vth) dumps onto C_hold at switch turn-off"
-          - "Clock feedthrough: gate-drain overlap capacitance C_gd couples clock edge to hold capacitor"
-          - "Dielectric absorption: capacitor 'remembers' previous voltage — polypropylene or NP0/COG minimize"
-      - name: voltage_reference
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Vref vs temperature: bandgap curvature plot with temperature coefficient TC in ppm/°C"
-          - "Line regulation: dVref/dVin (ppm/V) vs frequency — PSRR of reference circuit"
-          - "Noise spectral density: 1/f noise corner and white noise floor nV/sqrt(Hz) annotated"
-          - "Long-term stability: ppm/1000hrs drift from measurements at multiple burn-in points"
-        gotchas:
-          - "Output impedance of reference is not zero — load regulation degrades with load current"
-          - "Thermal hysteresis: Vref changes differently on temperature up-sweep vs down-sweep"
-          - "Buried Zener references (<2ppm/°C) have lower drift than bandgap but require higher voltage (>6.3V)"
-      - name: comparator_metastability
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Regeneration time t_reg = tau * ln(V_swing / V_in_diff) where tau = C/gm"
-          - "Metastability probability P_meta = exp(-t_available / tau) per comparison"
-          - "Mean time between failures MTBF = 1/(f_clk * P_meta) annotated"
-          - "Cascade of latches: each successive latch reduces probability exponentially"
-        gotchas:
-          - "tau = C_node / g_m,eff during regeneration — gm is small-signal, not large-signal"
-          - "Noise can push comparator toward one decision or the other — but not reliable at zero differential"
-          - "Synchronizer cascade: two FFs in series cuts P_meta by factor (t_res / tau)^2 — NOT just sqrt"
-      - name: charge_injection
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "MOS switch turning off: channel charge Q_ch splits ~50/50 between source and drain"
-          - "Voltage error on hold capacitor: delta_V = (W*L*Cox*(Vgs-Vth) + C_ov*(V_on - V_off)) / (2*C_hold)"
-          - "Dummy switch: opposite-phase transistor absorbs Q_ch — annotated with charge splitting arrows"
-          - "Bottom-plate sampling: open ground-side switch first to make charge injection signal-independent"
-        gotchas:
-          - "Charge split is NOT exactly 50/50 — depends on impedance at each terminal and fall time"
-          - "Dummy switch must be exactly half-width of main switch — only helps if Cs = Cd"
-          - "Signal-dependent charge injection (Vgs-Vth depends on Vin) causes nonlinearity, not just offset"
-      - name: clock_jitter
-        primary_pattern: probdist
-        secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Jitter histogram: Gaussian distribution of period/edge uncertainty with sigma annotated"
-          - "Period jitter (cycle-to-cycle) vs absolute jitter (long-term) — different applications"
-          - "Phase noise L(f) integral gives RMS jitter: sigma_t = 1/(2*pi*f_c) * sqrt(integral)"
-          - "Bathtub curve: BER vs sampling time, eye opening and jitter budget annotation"
-        gotchas:
-          - "Random jitter (RJ) is unbounded Gaussian — deterministic jitter (DJ) is bounded (DDJ, PJ, BUJ)"
-          - "DJ cannot be reduced by averaging (it's deterministic); RJ variance reduces as 1/sqrt(N)"
-          - "Total jitter at BER=10^-12 is TJ = DJ + 14*RJ (peak-to-peak from Q-scale extrapolation)"
-      - name: dll_lock
-        primary_pattern: signalflow
-        secondary_patterns: [phasetraj]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t4]
-        ux_rules:
-          - "DLL block diagram: phase detector, charge pump, loop filter, voltage-controlled delay line (VCDL)"
-          - "Lock process: delay line control voltage converges, total delay = 1*T_ref (or N*T_ref)"
-          - "Delay line transfer characteristic: delay vs control voltage with linear range annotated"
-          - "False lock: DLL locks to harmonic (N*T_ref delay when 1*T_ref intended) — lock detector essential"
-        gotchas:
-          - "DLL has NO jitter accumulation (unlike PLL) — only delay line noise, not VCO phase integration"
-          - "False lock to 2*T_ref, 3*T_ref, etc. — startup circuit must initialize to minimum delay"
-          - "Dead zone in phase detector causes zero-gain region — compromise between no dead zone and no overlap"
-      - name: serdes_eye
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Eye diagram: all bit transitions overlaid, eye opening (height=amplitude margin, width=timing margin)"
-          - "Eye mask: hexagon showing forbidden region per standard (PCIe, USB, Ethernet)"
-          - "BER contour: 10^-12, 10^-15 contours as nested probability ellipses inside eye"
-          - "ISI (inter-symbol interference): eye closure from channel loss and reflections"
-        gotchas:
-          - "Eye measured at receiver after equalization (CTLE + DFE) — not at transmitter"
-          - "Measuring infinite-persistence eye hides low-probability events — use color-graded persistence"
-          - "Statistical eye from single-bit response convolution assumes linearity — not valid for nonlinear drivers"
-
-  analog_layout:
-    concepts:
-      - name: common_centroid
-        primary_pattern: geom3d
-        secondary_patterns: [decisionprocess]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2]
-        ux_rules:
-          - "2D array layout: AB/BA pattern for 2-device matching, crossed quad for 4-device"
-          - "Centroid of A devices = centroid of B devices — annotated with center point"
-          - "Cross-sectional gradient cancellation: first-order linear gradient fully cancelled"
-          - "Dummy devices on perimeter for uniform etch/loading environment"
-        gotchas:
-          - "Interdigitation cancels linear gradients but not quadratic (parabolic) gradients"
-          - "Common centroid with odd number of fingers: centered device must be split"
-          - "Routing asymmetry from centroid to pins destroys matching improvement — route symmetrically"
-      - name: guard_ring
-        primary_pattern: decisionprocess
-        secondary_patterns: []
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2]
-        ux_rules:
-          - "P+ guard ring in N-well for PMOS, N+ guard ring in P-sub for NMOS — minority carrier collector"
-          - "Substrate tap frequency: every 10-20um for good substrate contact, low-resistance path"
-          - "Double guard ring: inner collector + outer shield for extreme isolation"
-          - "Guard ring connected to clean supply (not noisy digital Vdd/Vss)"
-        gotchas:
-          - "Guard ring must be continuous loop — gaps allow minority carriers to bypass"
-          - "Guard ring doping type must match substrate type for ohmic contact — P+ in P-sub, N+ in N-well"
-          - "Break in guard ring for routing completely defeats isolation — tunnel under with lower metal if needed"
-      - name: well_proximity
-        primary_pattern: scalarfield
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2]
-        ux_rules:
-          - "WPE (well proximity effect): threshold shift vs distance from well edge plotted"
-          - "SCE (shadowing from well photoresist): Vth and Idsat shift as function of distance from well"
-          - "STI (shallow trench isolation) stress: mobility shift vs distance from STI edge"
-          - "Keep-out distance: minimum spacing from well edge to critical matching devices annotated"
-        gotchas:
-          - "WPE causes 5-30mV Vth shift depending on distance — can kill matching in sensitive pairs"
-          - "Effect extends several microns from well edge — not just at immediate edge"
-          - "PDK usually provides parameterized p-cell or SA/SB/LOD (length of diffusion) parameters for modeling"
-      - name: dummy_devices
-        primary_pattern: decisionprocess
-        secondary_patterns: []
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2]
-        ux_rules:
-          - "Dummy transistors on both sides of matched pair: identical geometry, G/S/D shorted"
-          - "Dummy gate poly on edges: prevents etch rate variation (microloading) at array boundary"
-          - "Dummy metal fill: required for CMP planarity but may add parasitic capacitance"
-          - "N-well dummy: continuous N-well region fills empty space — prevents N-to-N-well spacing DRC"
-        gotchas:
-          - "Dummy gates not shorted to active region can accumulate charge during plasma processing — antenna effect"
-          - "Floating dummies: leave them floating or tie to well — depends on process and noise constraints"
-          - "Metal dummy fill adds capacitive load to nearby signals — floating vs grounded fill is a design choice"
-      - name: metal_density
-        primary_pattern: scalarfield
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2]
-        ux_rules:
-          - "Density map: metal coverage percentage per tile (typically 100x100 um) with color scale"
-          - "DRC rules: minimum density (e.g. 20%) and maximum density (e.g. 80%) per metal layer"
-          - "Gradient constraint: density difference between adjacent tiles must be < specified limit"
-          - "CMP (chemical mechanical polishing) dishing and erosion as function of line width and density"
-        gotchas:
-          - "Density too low: CMP over-polishes (dishing) — density too high: under-polishes"
-          - "Density rules are per metal layer independently — fill on one layer doesn't help another"
-          - "Automated fill violates signal integrity if not aware of critical nets (RF, clock, sensitive analog)"
-      - name: antenna_effect
-        primary_pattern: decisionprocess
-        secondary_patterns: []
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2]
-        ux_rules:
-          - "Antenna ratio: metal_area / gate_area > limit causes gate oxide damage during plasma etch"
-          - "Charge collects on floating metal during processing — no discharge path until connected to gate"
-          - "Antenna diode: reverse-biased junction provides discharge path to substrate"
-          - "Metal jumping: route to higher metal layer (closer to gate in process) to break long victim"
-        gotchas:
-          - "Antenna rules apply cumulatively: charge collected at each metal etch step adds up"
-          - "Antenna diode adds junction capacitance — may impact high-speed or RF circuits"
-          - "Via jumping works because charge from upper metal doesn't reach gate until via is etched (last step)"
-      - name: latchup_guard
-        primary_pattern: decisionprocess
-        secondary_patterns: []
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2]
-        ux_rules:
-          - "PNPN structure (parasitic SCR): P+ source (PMOS) -> N-well -> P-sub -> N+ source (NMOS)"
-          - "Triggering: forward-bias well/substrate junction — voltage, current, or ESD event"
-          - "Guard ring spacing: reduces well and substrate resistance (R_well, R_sub) — less voltage drop"
-          - "Latchup immunity: holding voltage > Vdd, trigger current > I_test per JEDEC standard"
-        gotchas:
-          - "Latchup is regenerative: once triggered, current continues until power cycled (or device destroyed)"
-          - "Substrate and well taps must be within ~10-20um of any active device — not just chip periphery"
-          - "I/O pads most susceptible — transient over/undershoot beyond Vdd/Vss rails forward-biases junctions"
-
-  reliability:
-    concepts:
-      - name: hci_degradation
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Id degradation vs stress time: delta_Id/Id0 ~ A * t^n on log-log scale"
-          - "Worst-case stress: Vgs ~ Vds/2 for NMOS (peak substrate current), Vgs=Vds for PMOS (peak gate current)"
-          - "Delta_Vth and delta_Gm plotted separately — different degradation mechanisms"
-          - "Recovery: partial annealing after stress removed — R-D model (reaction-diffusion) annotated"
-        gotchas:
-          - "HCI is NOT self-healing — permanent Si-H bond breaking, not just charge trapping"
-          - "NMOS worst at Vgs=Vds/2 (hot carriers at drain), PMOS worst at Vgs=Vds (energetic holes)"
-          - "Lucky electron model: probability ~ exp(-phi_it/(q*lambda*E)) exponential dependence on lateral field"
-      - name: nbti_shift
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Delta_Vth vs stress time: power-law t^n (n~0.16-0.25) on log-log plot"
-          - "Temperature acceleration: delta_Vth ~ exp(-Ea/kT) with Ea ~ 0.1-0.15 eV annotated"
-          - "Recovery phase: Vth partially recovers when stress removed (VG = 0 or negative)"
-          - "AC vs DC stress: AC duty cycle reduces effective degradation — frequency dependence shown"
-        gotchas:
-          - "NBTI primarily affects PMOS (holes in channel interact with Si-H bonds at Si/SiO2 interface)"
-          - "Recovery is fast (microseconds) — measurement delay underestimate true degradation"
-          - "Ultra-fast measurement (on-the-fly or single-pulse Id) needed to capture full degradation"
-      - name: tddb_weibull
-        primary_pattern: probdist
-        secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Weibull plot: ln(-ln(1-F)) vs ln(t_BD) with slope beta (shape parameter)"
-          - "Area scaling: t_BD(63%) ~ A^(-1/beta) — smaller area, longer time to breakdown"
-          - "Voltage acceleration: t_BD ~ exp(gamma*E_ox) or power-law V^n model annotated"
-          - "Percolation model: progressive trap generation forming conductive path across oxide"
-        gotchas:
-          - "Weibull slope beta decreases (spread increases) for thinner oxides — intrinsic vs extrinsic breakdown"
-          - "Soft breakdown (SBD) may not cause hard failure — circuit-specific, some circuits tolerate SBD"
-          - "TDDB is statistical — weakest link determines product lifetime for large total gate area"
-      - name: electromigration
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Black's equation: MTTF = A * J^(-n) * exp(Ea/kT) with n~1-2, Ea annotated"
-          - "Void formation: metal atoms migrate from cathode to anode, void grows at cathode"
-          - "Resistance increase vs time: gradual R rise then abrupt jump at open failure"
-          - "Blech length: below critical line length (L < L_Blech), back-stress prevents EM — infinite lifetime"
-        gotchas:
-          - "EM is DC-current phenomenon — AC (bidirectional) has negligible net mass transport"
-          - "Copper has ~10x better EM resistance than aluminum — but still finite at scaled dimensions"
-          - "Via EM is different mechanism — Cu/dielectric interface diffusion, not bulk diffusion"
-      - name: esd_clamp
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "TLP (transmission line pulse) I-V: trigger voltage V_t1, holding voltage V_h, failure current I_t2"
-          - "HBM (human body model) and CDM (charged device model) waveforms: 100ns and 1ns pulses"
-          - "ESD clamp: GGNMOS (gate-grounded NMOS) with snapback; active clamp (RC-triggered) for low V_h"
-          - "ESD current path: pad -> clamp -> ground — low-impedance, wide metal path required"
-        gotchas:
-          - "CDM discharge is ~1ns, not 100ns — different failure mechanisms (gate oxide vs junction)"
-          - "ESD protection must not interfere with normal circuit operation — leakage and capacitance constraints"
-          - "Multi-finger GGNMOS: not all fingers turn on simultaneously — ballasting resistors ensure uniform triggering"
-      - name: hot_carrier
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Substrate current I_sub (indicator of impact ionization) vs Vgs at fixed Vds — bell-shaped curve"
-          - "Degradation rate ~ (I_sub/W)^m * t^n — product of stress current and time"
-          - "Vds acceleration: lifetime ~ exp(B/Vds) — lower Vds dramatically extends lifetime"
-          - "Analog vs digital: analog circuit sensitive to gm degradation, digital to Idsat degradation"
-        gotchas:
-          - "Maximum degradation at Vgs = Vds/2 (NMOS) because impact ionization peaks at this bias"
-          - "Hot carrier degradation is self-limiting: damage slows as localized damage increases threshold locally"
-          - "LDD (lightly doped drain) structure spreads high field — reduces peak field but increases series resistance"
-      - name: voltage_overshoot
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Absolute maximum ratings: voltage vs time, transient overvoltage tolerance"
-          - "Gate oxide breakdown: E_BD ~ 10-15 MV/cm — oxide thickness determines max voltage"
-          - "Junction breakdown at drain: BVdss as function of gate voltage (off-state breakdown)"
-          - "Margin: typical Vdd to abs max ratio and why (process variation, supply tolerance)"
-        gotchas:
-          - "Absolute maximum is NOT a safe operating point — it's a do-not-exceed-or-else limit"
-          - "Transient overshoot during hot-plug is most common violation — TVS (transient voltage suppressor) or RC filter needed"
-          - "Multiple supply sequencing: certain sequences apply excessive voltage to gate oxides if not controlled"
-
-  test_and_measurement:
-    concepts:
-      - name: smith_chart_trace
-        primary_pattern: phasetraj
-        secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "S11 trace across frequency on Smith chart: impedance transformation along transmission line"
-          - "Marker at each frequency point: impedance value Z = R + jX read from grid"
-          - "Constant VSWR circle: distance from center = |Gamma| — lower = better match"
-          - "Frequency annotation at multiple points along trace with direction arrow"
-        gotchas:
-          - "Calibration (SOLT or TRL) moves reference plane to DUT — uncalibrated measurement includes cables/connectors"
-          - "Smith chart is normalized to Z0 (usually 50 Ohm) — re-normalization changes appearance"
-          - "Negative resistance (|Gamma| > 1) indicates active device (oscillation) or calibration error"
-      - name: spectrum_analyzer
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Power vs frequency: RBW (resolution bandwidth), VBW (video bandwidth), sweep time annotated"
-          - "Noise floor = -174 dBm/Hz + NF + 10*log10(RBW) — theoretical limit shown"
-          - "Harmonics: f0, 2f0, 3f0 with dBc values, total harmonic distortion THD annotated"
-          - "Phase noise: carrier with noise skirt decaying 20-30 dB/decade from carrier"
-        gotchas:
-          - "RBW determines ability to resolve close tones — narrower RBW reduces noise floor (10*log improvement) but slows sweep"
-          - "Mixer-based spectrum analyzer has image frequencies — pre-selector filter removes image"
-          - "Input attenuator setting affects noise floor: 0dB atten gives best sensitivity but worst input match"
-      - name: oscilloscope_eye
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Eye diagram with mask test: hexagonal forbidden zone for compliance testing"
-          - "Rise/fall time (20%-80%), jitter RMS and peak-peak annotated"
-          - "Eye height and eye width: voltage margin and timing margin in mV and ps respectively"
-          - "Trigger point marked: rising/falling edge, threshold level, coupling mode"
-        gotchas:
-          - "Scope probe loading: 10MOhm||10pF probe changes circuit behavior at high frequency"
-          - "Bandwidth needed ~ 3x signal frequency for square waves (5th harmonic still has significant energy)"
-          - "Sample rate must be > 2x bandwidth (Nyquist) — but 5-10x for eye diagram detail"
-      - name: network_analyzer
-        primary_pattern: signalflow
-        secondary_patterns: [phasetraj]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "S-parameter magnitude (dB) and phase (deg) vs frequency in dual-panel plot"
-          - "Calibration types: SOLT, TRL, LRM — reference plane and error model annotated"
-          - "Group delay: -d(phase)/d(omega) computed from S21 phase — shows filter dispersiveness"
-          - "2-port de-embedding: fixture effects removed mathematically using S-parameter math"
-        gotchas:
-          - "VNA measures S-parameters at 50 Ohm — re-normalize to other impedances for non-50-Ohm systems"
-          - "Calibration standards (Open, Short, Load, Thru) are not ideal — parasitic capacitance/inductance modeled"
-          - "IF bandwidth trade-off: narrower gives lower trace noise but slower sweep"
-      - name: probe_calibration
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "10x probe compensation: square wave into probe, adjust cap for flat top (no overshoot/undershoot)"
-          - "Probe impedance vs frequency: 10MOhm at DC dropping to ~100 Ohm at 100 MHz"
-          - "Ground lead inductance: 6-inch ground lead has ~150nH — resonance at ~150-200 MHz"
-          - "Differential probe: CMRR vs frequency degradation from mismatched probe tips"
-        gotchas:
-          - "Long ground lead creates LC resonance with probe input capacitance — ringing on fast edges"
-          - "Passive probe loading shifts bias point and frequency response of high-impedance nodes"
-          - "Active probe has lower input capacitance (~1pF) but limited voltage range and higher cost"
-      - name: dft_scan
+          - "Lossy line model required for GHz+ frequencies - ideal line insufficient"
+      - name: s_parameters_smith_chart
         primary_pattern: graphnet
-        secondary_patterns: [decisionprocess]
-        best_framework: tikz
+        secondary_patterns: [signalflow]
+        best_framework: plotly
         alt_framework: matplotlib
-        interaction_tiers: [t1, t2]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Scan chain: flip-flops connected in shift register with SCAN_ENABLE multiplexers"
-          - "Stuck-at fault model: each node tested for stuck-at-0 and stuck-at-1"
-          - "Fault coverage percentage (FC%) annotated — typical >98% for high-volume production"
-          - "Test pattern compression: EDT (embedded deterministic test) reduces tester data volume"
+          - "|S11| must be <= 1 for passive loads"
+          - "Smith chart with constant resistance and reactance circles"
         gotchas:
-          - "Scan adds area (~5-15%) and delay (mux in data path) — must be accounted in timing closure"
-          - "At-speed testing: capture at functional clock, not just slow scan clock (transition delay fault model)"
-          - "IDDQ testing catches defects missed by stuck-at — elevated quiescent current indicates bridging faults"
-      - name: ber_waterfall
+          - "S-parameter reference impedance mismatch between measurement and simulation"
+      - name: eye_diagrams
         primary_pattern: signalflow
         secondary_patterns: [probdist]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t5]
         ux_rules:
-          - "BER vs Eb/N0 (dB): waterfall curve with annotated BER=10^-12 target"
-          - "Theoretical limit (QPSK): BER = 0.5*erfc(sqrt(Eb/N0)) shown as dashed reference"
-          - "Coding gain: distance between uncoded and coded BER curve at target BER"
-          - "Error floor: irreducible BER at high Eb/N0 due to decision feedback errors, ISI"
+          - "Eye height, width, jitter annotated with mask overlay"
+          - "PRBS length >= 2^7-1 for meaningful statistics"
         gotchas:
-          - "To verify BER=10^-12, need 3*10^12 bits (99% confidence) — accelerated stress testing extrapolates"
-          - "Bathtub curve is complementary view: BER vs sampling time at fixed SNR"
-          - "1 dB implementation loss from ideal is typical for commercial receiver — 3dB+ loss needs investigation"
+          - "Insufficient UI accumulation creates artificial eye closure"
+      - name: crosstalk_next_fext
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Aggressor and victim waveforms time-aligned"
+          - "Near-end vs far-end crosstalk polarity difference highlighted"
+        gotchas:
+          - "Crosstalk highly sensitive to rise time - specify edge rate"
+      - name: jitter_analysis
+        primary_pattern: probdist
+        secondary_patterns: [signalflow]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t5]
+        ux_rules:
+          - "TIE histogram with random and deterministic components"
+          - "Bathtub curve with BER thresholds"
+        gotchas:
+          - "Random jitter unbounded - extrapolation to low BER requires care"
+
+  spice_simulation:
+    concepts:
+      - name: dc_sweep_load_line
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Device I-V and load line intersection = Q-point"
+          - "Operating region (saturation, triode, cutoff) shaded"
+        gotchas:
+          - "Load line slope wrong if supply or resistance value mis-scaled"
+      - name: ac_noise_analysis
+        primary_pattern: signalflow
+        secondary_patterns: [probdist]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Noise spectral density (V/sqrtHz) with total integrated noise"
+          - "Contributors ranked by magnitude at target frequency"
+        gotchas:
+          - "Spot noise vs integrated noise - specify bandwidth"
+      - name: process_corners
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t5, t6]
+        ux_rules:
+          - "TT, FF, SS, FS, SF curves overlaid with identical axes"
+          - "Worst-case corner identified for each spec"
+        gotchas:
+          - "Corner models may not capture worst-case local mismatch"
+      - name: monte_carlo_mismatch
+        primary_pattern: probdist
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t5, t6]
+        ux_rules:
+          - "Yield distribution with spec limits as vertical lines"
+          - "Sensitivity to Pelgrom coefficient Avt"
+        gotchas:
+          - "Monte Carlo sample size too small for rare yield targets (<1000)"
+      - name: tcad_cross_sections
+        primary_pattern: geom3d
+        secondary_patterns: [scalarfield]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Doping concentration log scale with junction depths marked"
+          - "Electric field and potential overlays toggleable"
+        gotchas:
+          - "Mesh density at junctions determines accuracy - inspect mesh first"
+      - name: transient_analysis
+        primary_pattern: signalflow
+        secondary_patterns: [processanim]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Time step small enough to capture fastest dynamics"
+          - "Initial condition verified before transient start"
+        gotchas:
+          - "Gear vs trapezoidal integration method affects ringing artifacts"
+
+  ai_ml_eda:
+    concepts:
+      - name: bayesian_optimization
+        primary_pattern: decisionprocess
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Surrogate model (GP) mean and uncertainty shown"
+          - "Acquisition function surface with next sample marked"
+        gotchas:
+          - "GP kernel length scale must match design variable sensitivity"
+      - name: rl_topology_synthesis
+        primary_pattern: decisionprocess
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t2, t3]
+        ux_rules:
+          - "Action space as schematic element insertion/removal"
+          - "Reward trajectory with intermediate spec satisfaction"
+        gotchas:
+          - "Sparse rewards cause credit assignment problems - shape reward carefully"
+      - name: generative_ai_analog_layout
+        primary_pattern: geom3d
+        secondary_patterns: [graphnet]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t2, t3]
+        ux_rules:
+          - "Generated layout vs human expert side-by-side"
+          - "Design rule check violations highlighted in red"
+        gotchas:
+          - "Symmetry and matching constraints hard to encode as loss function"
+      - name: gnn_parasitic_extraction
+        primary_pattern: graphnet
+        secondary_patterns: [geom3d, scalarfield]
+        best_framework: plotly
+        alt_framework: pyvista
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Graph representation of netlist with node features"
+          - "Predicted vs golden parasitics as scatter plot"
+        gotchas:
+          - "GNN generalization to unseen layout styles poor without diverse training"
+      - name: cryogenic_cmos
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t5]
+        ux_rules:
+          - "I-V curves at 300 K vs 4 K overlaid"
+          - "Threshold voltage increase and kink effect annotated"
+        gotchas:
+          - "Self-heating more pronounced at cryo due to reduced phonon scattering"
+      - name: surrogate_modeling
+        primary_pattern: scalarfield
+        secondary_patterns: [probdist]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Prediction vs simulation scatter with R^2 and RMSE"
+          - "Uncertainty quantification on extrapolated regions"
+        gotchas:
+          - "Surrogate accuracy degrades outside training envelope - flag extrapolation"
+
+  photonics:
+    concepts:
+      - name: optical_waveguides
+        primary_pattern: geom3d
+        secondary_patterns: [scalarfield, vectorfield]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Mode profile (E-field) cross-section with effective index"
+          - "Single-mode vs multi-mode operation wavelength range"
+        gotchas:
+          - "Bent waveguide radiation loss underestimated in 2D simulations"
+      - name: directional_coupler
+        primary_pattern: geom3d
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Power oscillation between waveguides vs coupling length"
+          - "Even and odd mode profiles shown"
+        gotchas:
+          - "Coupling length highly sensitive to gap and wavelength"
+      - name: ring_resonator
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Drop/through spectrum with FSR and FWHM annotated"
+          - "Racetrack vs circular ring geometry comparison"
+        gotchas:
+          - "Fabrication-induced radius variation shifts resonance significantly"
+      - name: mzi_modulator
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Transfer function vs phase difference with extinction ratio"
+          - "Push-pull vs single-arm drive comparison"
+        gotchas:
+          - "DC drift in electro-optic phase shifter requires bias stabilization"
+      - name: photodetector_pin_apd
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Responsivity vs wavelength with bandgap edge"
+          - "APD gain vs bias with breakdown region marked"
+        gotchas:
+          - "Avalanche gain statistical variation (excess noise factor)"
+      - name: vcsel_dfb_laser
+        primary_pattern: signalflow
+        secondary_patterns: [geom3d]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "L-I curve with threshold current and rollover"
+          - "Optical spectrum with side-mode suppression ratio"
+        gotchas:
+          - "Thermal rollover confused with gain saturation"
+      - name: silicon_photonics_pic_layout
+        primary_pattern: geom3d
+        secondary_patterns: [graphnet]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Component library icons with connectivity waveguides"
+          - "Foundry design rule constraints overlaid"
+        gotchas:
+          - "Waveguide crossing loss and crosstalk add up quickly in dense layouts"
+      - name: electro_optical_co_simulation
+        primary_pattern: signalflow
+        secondary_patterns: [processanim]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Electrical drive waveform and optical response synchronized"
+          - "Eye diagram at receiver after complete link"
+        gotchas:
+          - "Electrical and optical time constants differ by orders of magnitude"
+      - name: wdm_multiplexer
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Channel spectra with crosstalk and insertion loss"
+          - "AWG star coupler free spectral range"
+        gotchas:
+          - "Temperature drift causes channel misalignment - athermal design needed"
+
+  analog_compute_in_memory:
+    concepts:
+      - name: crossbar_mac_operation
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Weight matrix as conductance map with bit-line outputs"
+          - "Dot-product operation animated as current summation"
+        gotchas:
+          - "Sneak paths in passive crossbars cause read disturbance"
+      - name: adc_dac_cim_readout
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "ADC resolution vs energy per conversion trade-off"
+          - "Readout noise contribution to MAC accuracy"
+        gotchas:
+          - "ADC nonlinearity folds into weight error"
+      - name: memory_device_iv_analog
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Multi-level cell I-V with target conductance states"
+          - "Write-verify loop for precise programming"
+        gotchas:
+          - "Conductance drift over time degrades inference accuracy"
+      - name: cim_accuracy_vs_efficiency
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t5, t6]
+        ux_rules:
+          - "Pareto frontier of accuracy vs TOPS/W"
+          - "Bit-precision sweep from 1-bit to 8-bit"
+        gotchas:
+          - "Accuracy measured on full network, not just single layer"
+      - name: noise_in_cim
+        primary_pattern: probdist
+        secondary_patterns: [signalflow]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Noise sources ranked: thermal, shot, flicker, readout"
+          - "Signal-to-noise ratio vs array size"
+        gotchas:
+          - "Array-size-dependent IR drop often dominant noise source"
+
+  neuromorphic_analog:
+    concepts:
+      - name: spiking_neuron_dynamics
+        primary_pattern: phasetraj
+        secondary_patterns: [signalflow, processanim]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Membrane potential vs time with threshold and reset"
+          - "Phase portrait of integrate-and-fire vs resonate-and-fire"
+        gotchas:
+          - "Refractory period effect on maximum firing rate"
+      - name: analog_synapse_array
+        primary_pattern: graphnet
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Weight map as conductance or capacitance grid"
+          - "Update pulses shown as direction and magnitude"
+        gotchas:
+          - "Symmetric potentiation/depression hard to achieve in analog memories"
+      - name: address_event_representation
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t2, t3]
+        ux_rules:
+          - "Event timestamp and polarity on 2D spatial grid"
+          - "Time surface representation for temporal context"
+        gotchas:
+          - "AER bus contention and collision handling in dense event streams"
+      - name: on_chip_learning_stdp
+        primary_pattern: processanim
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t2, t3]
+        ux_rules:
+          - "Pre- and post-synaptic spike timing window visualized"
+          - "Weight change Deltaw vs Deltat with LTP and LTD regions"
+        gotchas:
+          - "STDP window asymmetry causes network instability without homeostasis"
+      - name: spike_encoding
+        primary_pattern: signalflow
+        secondary_patterns: [probdist]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Rate coding vs temporal coding vs population coding comparison"
+          - "Reconstruction error vs spike count trade-off"
+        gotchas:
+          - "Temporal coding sensitive to jitter beyond encoding time window"
+
+  time_domain_vco:
+    concepts:
+      - name: vco_based_adc
+        primary_pattern: signalflow
+        secondary_patterns: [phasetraj]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Input voltage vs oscillation frequency linearity plot"
+          - "Phase quantization and folding effects shown"
+        gotchas:
+          - "VCO nonlinearity causes harmonic distortion in ADC output"
+      - name: time_domain_amplifier
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Pulse width or delay modulation vs input amplitude"
+          - "Time resolution vs voltage gain trade-off"
+        gotchas:
+          - "Supply sensitivity higher than voltage-mode amplifiers"
+      - name: ring_amplifier
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Output slew rate and settling behavior vs stage count"
+          - "Stability boundary with load capacitance variation"
+        gotchas:
+          - "Self-biasing point sensitive to PVT - Monte Carlo essential"
+      - name: time_to_digital_converter
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Transfer function: time interval vs digital code"
+          - "DNL/INL with systematic nonlinearity from buffer delay mismatch"
+        gotchas:
+          - "Metastability in flip-flops causes code bubbles"
+
+  in_sensor_processing:
+    concepts:
+      - name: event_based_vision_dvs
+        primary_pattern: processanim
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Async events as sparse dots with polarity color"
+          - "Reconstructed frame rate independent of event rate"
+        gotchas:
+          - "Noise events in low-light conditions corrupt reconstruction"
+      - name: in_pixel_analog_processing
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: schemdraw
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Pixel circuit schematic with photodiode and processing transistors"
+          - "Operation sequence: reset, integration, readout"
+        gotchas:
+          - "Fill factor reduction due to added in-pixel circuitry"
+      - name: focal_plane_processor
+        primary_pattern: graphnet
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "2D processing array with nearest-neighbor communication"
+          - "Convolution kernel visualization on sensor plane"
+        gotchas:
+          - "Data movement bottleneck between sensor and processor despite proximity"
+  energy_harvesting:
+    concepts:
+      - name: subthreshold_analog_design
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: schemdraw
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - " gm/Id vs Id/W curves with weak/moderate/strong inversion regions"
+          - "Energy per operation vs speed trade-off"
+        gotchas:
+          - "Mismatch dominates in subthreshold - larger devices needed for precision"
+      - name: cold_start_boost_converter
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t2, t4]
+        ux_rules:
+          - "Startup from mV-level input with oscillator kick-start"
+          - "Output voltage ramp with switching onset threshold"
+        gotchas:
+          - "Minimum input voltage limited by native transistor threshold"
+      - name: mppt
+        primary_pattern: signalflow
+        secondary_patterns: [scalarfield]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "P-V curve with operating point tracking maximum"
+          - "Perturb-and-observe or incremental conductance method comparison"
+        gotchas:
+          - "Rapid irradiance changes cause MPPT to track local false maximum"
+      - name: backscatter_communication
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t2, t4]
+        ux_rules:
+          - "Reflected vs absorbed state modulation in time domain"
+          - "Link budget from reader to tag and back"
+        gotchas:
+          - "Self-interference at reader from transmitted carrier"
+      - name: thermoelectric_generator
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Seebeck voltage vs temperature gradient"
+          - "Source impedance and load matching for max power transfer"
+        gotchas:
+          - "Figure of merit ZT includes thermal conductivity - nanostructuring helps"
+
+  chopper_precision:
+    concepts:
+      - name: chopper_stabilization
+        primary_pattern: signalflow
+        secondary_patterns: [processanim]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t2, t4]
+        ux_rules:
+          - "Input-referred offset before and after chopping compared"
+          - "Modulation spectrum with chopping frequency and harmonics"
+        gotchas:
+          - "Charge injection from switches creates residual offset"
+      - name: auto_zeroing
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t2, t4]
+        ux_rules:
+          - "Two-phase clock: sampling offset, amplification with cancellation"
+          - "Residual offset histogram over multiple cycles"
+        gotchas:
+          - "Noise folding from wideband sampling during auto-zero phase"
+      - name: dynamic_element_matching
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t2, t4]
+        ux_rules:
+          - "Element selection sequence and mismatch shaping spectrum"
+          - "Spurious tones reduced to noise floor by rotation"
+        gotchas:
+          - "DEM introduces noise floor elevation - trade with linearity"
+      - name: correlated_double_sampling
+        primary_pattern: signalflow
+        secondary_patterns: [processanim]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t2, t4]
+        ux_rules:
+          - "Reset level and signal level sampled and subtracted"
+          - "kTC noise cancellation demonstrated"
+        gotchas:
+          - "Incomplete settling between samples causes signal-dependent errors"
+
+  open_source_analog:
+    concepts:
+      - name: open_pdk_device_exploration
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Device I-V family curves for available transistor flavors"
+          - "Process parameter table with min/max values"
+        gotchas:
+          - "Open PDK models may lack statistical mismatch data"
+      - name: ngspice_python_flow
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Netlist schematic and Python control script side-by-side"
+          - "Waveform extraction and post-processing pipeline"
+        gotchas:
+          - "Parser differences between ngspice and commercial simulators"
+      - name: open_source_layout
+        primary_pattern: geom3d
+        secondary_patterns: [graphnet]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "GDS layer stack with design rule check markers"
+          - "Layout vs schematic (LVS) clean indicator"
+        gotchas:
+          - "DRC rules differ between Magic, KLayout, and ALIGN - validate target PDK"
+      - name: gdsfactory_photonics
+        primary_pattern: geom3d
+        secondary_patterns: [graphnet]
+        best_framework: pyvista
+        alt_framework: plotly
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Parametric component cells with adjustable dimensions"
+          - "Routing waveguides with automatic bend insertion"
+        gotchas:
+          - "Component models must match foundry PDK for simulation accuracy"

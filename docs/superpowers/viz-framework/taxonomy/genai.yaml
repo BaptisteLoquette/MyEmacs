@@ -1,975 +1,574 @@
 domain: genai
 sub_disciplines:
-  transformers:
+  transformer_internals:
     concepts:
-      - name: self_attention
-        primary_pattern: graphnet
-        secondary_patterns: [scalarfield, probdist]
-        best_framework: matplotlib
-        alt_framework: bertviz
-        interaction_tiers: [t1, t2, t3]
+      - name: multi_head_attention_heatmaps
+        primary_pattern: scalarfield
+        secondary_patterns: [graphnet]
+        best_framework: bertviz
+        alt_framework: plotly
+        interaction_tiers: [t1, t2]
         ux_rules:
-          - "Attention matrix as heatmap: token-token attention scores with perceptually uniform colormap"
-          - "Row/column labels must show token text (not just position indices)"
-          - "Diagonal self-attention patterns annotated (early layers high diagonal, later layers more dispersed)"
-          - "Scale annotations: Q·K^T / sqrt(d_k) with softmax dimension labeled"
+          - "Attention weights normalized per head (row-wise softmax)"
+          - "Token positions aligned between query and key axes"
         gotchas:
-          - "Raw attention scores are NOT probabilities — softmax normalization is critical to show"
-          - "Causal masking (triangular) must be visually obvious for autoregressive models"
-          - "Head-level attention patterns vary — averaging across heads loses syntactical/semantic head specialization"
-      - name: multi_head_attention
+          - "Attention weights are not explanations - high weight != high importance"
+      - name: attention_flow_across_layers
+        primary_pattern: graphnet
+        secondary_patterns: [processanim]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Layer-by-layer attention path animated with token highlighting"
+          - "Residual connections shown as bypass routes"
+        gotchas:
+          - "Copying behavior in lower layers vs abstract matching in upper layers"
+      - name: qkv_projections
         primary_pattern: graphnet
         secondary_patterns: [scalarfield]
-        best_framework: bertviz
+        best_framework: plotly
         alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t2, t4]
         ux_rules:
-          - "H parallel attention heads as grid of heatmaps, each with distinct token pair focus"
-          - "Head diversity: show per-head pattern specialization (syntax, semantics, positional, rare-token)"
-          - "Concatenation step: visual connection from H heads → d_model output"
-          - "W_O projection matrix shown as linear map merging head outputs"
+          - "Q, K, V matrices as 3D tensor slices with projection dimensions"
+          - "Attention score computation as dot-product heatmap"
         gotchas:
-          - "Not all heads specialize — some are redundant (can be pruned)"
-          - "Head dimension d_k = d_model/H — attention computed in lower-dimensional subspace"
-          - "Multi-head vs single-head: different heads attend to different representation subspaces"
+          - "Scale factor 1/sqrtdk critical - omitting causes gradient instability"
+      - name: residual_stream_analysis
+        primary_pattern: signalflow
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t2, t4]
+        ux_rules:
+          - "Layer norm and residual addition shown as stream operators"
+          - "Activation norm growth monitored across depth"
+        gotchas:
+          - "Residual stream interpretation conflates token and position information"
+      - name: logit_lens_early_exiting
+        primary_pattern: probdist
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Top-k predictions from each layer vs final output"
+          - "Confidence trajectory with early-exit threshold"
+        gotchas:
+          - "Layer norm before unembedding changes distribution shape significantly"
       - name: positional_encoding
         primary_pattern: scalarfield
         secondary_patterns: [signalflow]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Sinusoidal PE: PE(pos, 2i) = sin(pos/10000^(2i/d)), PE(pos, 2i+1) = cos(pos/10000^(2i/d))"
-          - "Heatmap of PE values across positions (rows) and dimensions (columns)"
-          - "Dot product PE(pos) · PE(pos+k) as function of offset k — shows position-aware similarity"
-          - "Learned vs sinusoidal comparison: both can work, sinusoidal generalizes beyond training length"
+          - "Sinusoid wavelengths span from 2pi to 2pi*10000"
+          - "Relative position encoding matrix symmetric about diagonal"
         gotchas:
-          - "PE is added to token embeddings, not concatenated — same dimension d_model"
-          - "Sinusoidal PE allows extrapolation to longer sequences than training length"
-          - "Rotary Position Embedding (RoPE) encodes relative position inherently via rotation, not addition"
-      - name: layer_normalization
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Pre-LN vs Post-LN: architecture diagram showing LN placement relative to sublayers"
-          - "Normalization statistics trajectory: mean and variance per layer across training steps"
-          - "Gradient flow: LN stabilizes activation magnitudes, prevents vanishing/exploding gradients"
-          - "Trainable parameters gamma and beta annotated — learnable scale and shift"
-        gotchas:
-          - "Pre-LN (LN before attention/FFN) trains more stably but Post-LN often achieves slightly better performance"
-          - "LN normalizes across feature dimension (d_model), NOT batch or sequence dimension"
-          - "RMSNorm (removes mean centering) is faster and often equivalent — used in LLaMA family"
-      - name: feed_forward
-        primary_pattern: graphnet
-        secondary_patterns: [signalflow]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Two-layer FFN: FFN(x) = W2 * activation(W1*x + b1) + b2 — expansion ratio 4x typical"
-          - "Activation function: GELU vs ReLU vs SwiGLU — shape comparison plot"
-          - "Dimension expansion/contraction: d_model → d_ff (4*d_model) → d_model visually"
-          - "Parameter count: FFN dominates (2*d_model*d_ff vs 4*d_model*d_k for attention)"
-        gotchas:
-          - "FFN stores most factual knowledge — larger FFN ratio improves knowledge capacity"
-          - "SwiGLU (gated activation) needs three weight matrices, not two — parameter count increases 50%"
-          - "FFN layers are position-independent (applied per-token) — positional info must come from attention"
-      - name: encoder_decoder
-        primary_pattern: graphnet
-        secondary_patterns: [decisionprocess]
-        best_framework: tikz
-        alt_framework: graphviz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Encoder (bidirectional self-attention) → Decoder (masked self-attention + cross-attention)"
-          - "Cross-attention: Query from decoder, Key/Value from encoder output — information bottleneck"
-          - "Token flow: source tokens → encoder → encoded representation → cross-attention → decoder → target tokens"
-          - "Padding mask propagation: source padding ignored in encoder, target padding in decoder self-attention"
-        gotchas:
-          - "Encoder is non-autoregressive (sees full input); Decoder is autoregressive (sees past + encoded input)"
-          - "Decoder-only models (GPT) skip cross-attention entirely — all information in self-attention context"
-          - "Encoder-decoder excels at translation (explicit alignment) but decoder-only scales better with more data"
-      - name: transformer_block
-        primary_pattern: decisionprocess
-        secondary_patterns: [graphnet]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Complete block: LN → Multi-Head Attention (+ residual) → LN → FFN (+ residual)"
-          - "Residual connections emphasized with bypass arrows — identity shortcut"
-          - "Layer count L and dimension d_model annotated as architectural parameters"
-          - "Parameter distribution pie chart: attention vs FFN vs embedding per block"
-        gotchas:
-          - "DeepNorm: special initialization + LN scaling for >100 layer transformers"
-          - "Residual stream bandwidth d_model is the main architectural bottleneck — all information flows through it"
-          - "Checkpointing (activation recomputation): trades compute for memory — save only layer boundaries during forward"
-
-  attention_mechanisms:
-    concepts:
-      - name: scaled_dot_product
-        primary_pattern: graphnet
-        secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Attention(Q,K,V) = softmax(Q·K^T / sqrt(d_k)) · V shown as computational graph"
-          - "Q, K, V shapes annotated: Q[seq, d_k], K[seq, d_k], V[seq, d_v]"
-          - "Scaling factor 1/sqrt(d_k) prevents softmax saturation at large d_k"
-          - "Gradient flow diagram: backpropagation through softmax and dot products"
-        gotchas:
-          - "Without sqrt(d_k) scaling, softmax gradients vanish as d_k grows (softmax saturates to one-hot)"
-          - "Softmax output must sum to 1 per row — attention is a weighted sum of V vectors"
-          - "Q·K^T matrix is O(n^2) memory — the key bottleneck for long sequences"
-      - name: additive_attention
-        primary_pattern: decisionprocess
-        secondary_patterns: [graphnet]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Bahdanau attention: score(h_enc, h_dec) = v^T·tanh(W1*h_enc + W2*h_dec)"
-          - "Computational graph: encoder hidden states, decoder hidden state, tanh activation, linear projection"
-          - "Comparison with dot-product: additive uses learned alignment function, not fixed similarity metric"
-          - "Historical context: originally for RNN seq2seq translation (Bahdanau et al. 2015)"
-        gotchas:
-          - "Additive attention is O(n*m) per step, not easily parallelized — dot-product attention's O(n^2) is parallelizable"
-          - "tanh activation bounds score to [-1,1] — different dynamic range than dot-product"
-          - "Largely superseded by scaled dot-product in modern transformers, but alignment modeling insight persists"
-      - name: sparse_attention
-        primary_pattern: graphnet
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: bertviz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Sparse pattern matrix: which token pairs are computed (1) vs skipped (0)"
-          - "Local window: each token attends to k neighbors — band-diagonal attention matrix"
-          - "Strided attention: attends to every s-th token — combines local (window) + long-range (stride)"
-          - "Complexity reduction: O(n^2) → O(n*k) for window, O(n^2/s) for strided"
-        gotchas:
-          - "Sparse patterns are hand-designed (not learned) — may miss important long-range dependencies"
-          - "Combining multiple sparse patterns (BigBird: random + window + global) covers diverse dependencies"
-          - "Global tokens (CLS, SEP) attend to all tokens — anchor points for sparse-to-dense information routing"
-      - name: flash_attention
-        primary_pattern: decisionprocess
-        secondary_patterns: [scalarfield]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Tiling strategy: attention computed in SRAM-sized blocks avoiding HBM read/write"
-          - "Online softmax: recomputes normalization incrementally per block — numerically identical result"
-          - "IO-aware: compute vs memory bandwidth trade-off — attention is memory-bound, not compute-bound"
-          - "Speed comparison: wall-clock time vs standard attention at different sequence lengths"
-        gotchas:
-          - "Flash Attention produces EXACT same output as standard attention — not approximate (numerically equivalent up to floating point order)"
-          - "Requires custom CUDA kernel — not a pure PyTorch drop-in at the code level"
-          - "Flash Attention 2: further optimizes by reducing non-matmul FLOPs and better work partitioning"
-      - name: cross_attention
-        primary_pattern: graphnet
-        secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: bertviz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Q from target (decoder), K,V from source (encoder) — information flows from source to target"
-          - "Alignment matrix: source token (row) to target token (column) showing translation alignment"
-          - "Encoder-decoder diagrams: explicit cross-attention layer colored differently from self-attention"
-          - "Multi-modal cross-attention: text query attends to image patches (or vice versa)"
-        gotchas:
-          - "Cross-attention is the ONLY connection between encoder and decoder — bottleneck for information transfer"
-          - "Source sequence length drives cross-attention memory cost: O(n_src * n_tgt) not square of maximum"
-          - "In multi-modal models, cross-attention can align modalities with different sequence lengths"
-      - name: local_attention
-        primary_pattern: graphnet
-        secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: bertviz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Sliding window: each token attends to w tokens before and after — total 2w+1 per token"
-          - "Dilated sliding window: gap of d tokens between attended positions — expanded receptive field"
-          - "Receptive field growth: L layers * w window = total context accessible (with dilation, exponential)"
-          - "Memory: O(n*w) vs O(n^2) — linear scaling with sequence length"
-        gotchas:
-          - "Information propagates at 1 token/layer through local attention — need L > n/(2w) for full connectivity"
-          - "Combining local + global tokens (Longformer) achieves O(n) complexity with full context"
-          - "Convolution analogy: local attention with fixed pattern = dynamic convolution"
-      - name: linear_attention
-        primary_pattern: graphnet
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Kernel trick: softmax(QK^T) ≈ phi(Q)·phi(K)^T where phi is a feature map"
-          - "Linearized: Attention(Q,K,V) ≈ phi(Q) · (phi(K)^T · V) — change multiplication order for O(n) complexity"
-          - "Feature map options: ReLU, ELU+1, softmax approximation, random Fourier features"
-          - "Complexity: O(n*d^2) vs O(n^2*d) — linear wins when n >> d (long sequences)"
-        gotchas:
-          - "Linear attention is an approximation — quality degrades on tasks requiring precise token-token interactions"
-          - "Feature map dimension d_proj trades quality vs speed — larger d_proj better approximation, more compute"
-          - "Causal masking is trivial in linear attention: maintain running KV sum and query against it"
-
+          - "Length generalization failure when test sequence exceeds training max_len"
   diffusion_models:
     concepts:
-      - name: ddpm_forward
-        primary_pattern: processanim
-        secondary_patterns: [probdist, scalarfield]
-        best_framework: matplotlib
-        alt_framework: manim
-        interaction_tiers: [t1, t2, t3, t4]
-        ux_rules:
-          - "Forward process: x_t = sqrt(alpha_bar_t) * x_0 + sqrt(1 - alpha_bar_t) * epsilon"
-          - "Image grid showing progressive noise corruption across timesteps (0 to T)"
-          - "Variance schedule: alpha_bar_t monotonically decreasing — annotated at key timestep markers"
-          - "Noise schedule comparison: linear, cosine, sigmoid schedules plotted on same axis"
-        gotchas:
-          - "Forward process is fixed (no learning) — just add Gaussian noise with known variance schedule"
-          - "Markov property: each step depends only on previous step, but x_t given x_0 is directly computable"
-          - "Cosine schedule keeps more signal at early timesteps than linear — improves sample quality"
-      - name: ddpm_reverse
-        primary_pattern: processanim
-        secondary_patterns: [probdist, scalarfield]
-        best_framework: manim
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3, t4, t5]
-        ux_rules:
-          - "Reverse denoising: x_{t-1} = (1/sqrt(alpha_t)) * (x_t - (beta_t/sqrt(1-alpha_bar_t))*epsilon_theta(x_t,t))"
-          - "Denoising trajectory: image grid showing noise removal from x_T to x_0"
-          - "Predicted noise epsilon_theta vs true noise epsilon — difference = score-matching objective"
-          - "Sampling speed: DDIM (deterministic, 50 steps) vs DDPM (stochastic, 1000 steps) overlaid"
-        gotchas:
-          - "Reverse process requires learned model epsilon_theta to predict noise — unconditional variance is fixed"
-          - "Stochasticity from added sigma_t*z term enables diverse samples — dropped in DDIM for determinism"
-          - "Classifier-free guidance: epsilon_theta = epsilon_uncond + w*(epsilon_cond - epsilon_uncond) — w>1 sharpens"
       - name: noise_schedule
         primary_pattern: signalflow
-        secondary_patterns: []
+        secondary_patterns: [probdist]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t5]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "beta_t vs t: linear, cosine, sigmoid, and learnable schedules overlaid"
-          - "alpha_bar_t vs t: shows signal retention across timesteps — key design choice"
-          - "SNR(t) = alpha_bar_t / (1-alpha_bar_t) vs t — log-scale for interpretability"
-          - "Schedule effect on final sample quality: FID score vs schedule type annotated"
+          - "alpha(t) and beta(t) curves with signal-to-noise ratio"
+          - "Schedule comparison: linear, cosine, sigmoid"
         gotchas:
-          - "Linear schedule destroys signal too fast at low t — most denoising work in middle 50% of timesteps"
-          - "Cosine schedule is smoother (zeros near t=0 and t=T) — improved likelihood and sample quality"
-          - "Schedule must be monotonic: beta_t increasing, alpha_bar_t decreasing"
-      - name: score_matching
-        primary_pattern: probdist
+          - "Cosine schedule underestimates noise at very early steps"
+      - name: denoising_trajectory_grid
+        primary_pattern: processanim
+        secondary_patterns: [scalarfield, probdist]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Fixed color scale across all timesteps"
+          - "Trajectory path in latent space overlaid"
+        gotchas:
+          - "Different random seeds produce visually different but equally valid trajectories"
+      - name: score_function
+        primary_pattern: vectorfield
         secondary_patterns: [scalarfield]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Score function s(x) = grad_x log p(x) as vector field pointing toward high density"
-          - "Score field overlaid on 2D data distribution: Langevin dynamics particles climbing to modes"
-          - "Noise-conditional score: s(x, sigma) for multiple sigma levels — denoising autoencoder connection"
-          - "Score matching loss = ||s_theta(x_tilde, sigma) - (x_tilde - x)/sigma^2||^2"
+          - "Score vectors pointing toward high data density"
+          - "Magnitude colormap on log scale for visibility"
         gotchas:
-          - "Score function is undefined in low-density regions without noise — noise perturbation makes it learnable"
-          - "Langevin dynamics: sampling follows score direction + noise — convergence needs annealing (sigma schedule)"
-          - "Score-based models (NCSN) and DDPM are equivalent: score network = epsilon / sigma"
-      - name: classifier_guidance
+          - "Score estimation noisy in low-density regions - Langevin dynamics helps"
+      - name: classifier_free_guidance
+        primary_pattern: decisionprocess
+        secondary_patterns: [probdist]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t6]
+        ux_rules:
+          - "Guidance scale w slider from 0 (unconditional) to high (overcooked)"
+          - "Compare conditional vs unconditional score side-by-side"
+        gotchas:
+          - "High guidance causes mode collapse and artifact saturation"
+      - name: latent_diffusion_space
+        primary_pattern: geom3d
+        secondary_patterns: [probdist]
+        best_framework: plotly
+        alt_framework: umap-learn
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "VAE latent space with decoder reconstructions at grid points"
+          - "Interpolation paths smooth and semantically meaningful"
+        gotchas:
+          - "Latent space holes cause poor reconstruction - prior must cover support"
+      - name: flow_matching_consistency
         primary_pattern: processanim
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: manim
-        interaction_tiers: [t1, t2, t3, t4]
-        ux_rules:
-          - "Classifier guidance: epsilon_theta(x_t,t) - sqrt(1-alpha_bar_t)*w*grad_x log p_phi(y|x_t)"
-          - "Guidance strength w slider: w=0 unconditional, w>0 conditional, w>1 sharpens class boundaries"
-          - "Sample grid per class: generated images for each class label with varying w"
-          - "Gradient of classifier: visual overlay of grad direction pushing sample toward class"
-        gotchas:
-          - "Classifier must be noise-aware (trained on all noise levels t) — standard clean-image classifier fails"
-          - "w > 1 improves Inception Score but reduces diversity (precision vs recall trade-off)"
-          - "Classifier-free guidance avoids separate classifier model — uses conditional and unconditional model jointly"
-      - name: ddim_sampling
-        primary_pattern: processanim
-        secondary_patterns: [decisionprocess]
-        best_framework: manim
+        secondary_patterns: [vectorfield]
+        best_framework: plotly
         alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3, t4, t5]
+        interaction_tiers: [t1, t2]
         ux_rules:
-          - "DDIM: x_{t-1} = sqrt(alpha_bar_{t-1}) * x_0_pred + sqrt(1-alpha_bar_{t-1}) * epsilon_pred"
-          - "Deterministic (eta=0) vs stochastic (eta>0) — slider to toggle sampling noise"
-          - "Subsampling: 1000 timesteps → 50 steps trajectory with key frames at equal intervals"
-          - "Latent interpolation: DDIM latent at T → different decoded results — latent space continuity"
+          - "Straight-line probability flow vs curved diffusion path"
+          - "Consistency model single-step vs multi-step comparison"
         gotchas:
-          - "DDIM is NOT a different model — same trained DDPM checkpoint, just different sampling procedure"
-          - "Deterministic DDIM allows latent space interpolation: two latents → smooth image morphing"
-          - "Fewer steps = faster but lower quality — 50-100 DDIM steps are often sufficient for good results"
-      - name: latent_diffusion
-        primary_pattern: decisionprocess
-        secondary_patterns: [graphnet, processanim]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Architecture: VAE encoder E → latent z → diffusion in latent space → VAE decoder D → image"
-          - "Compression ratio: original space / latent space — typically 4x-8x spatial reduction"
-          - "VAE regularization: KL divergence term balancing reconstruction vs latent regularity"
-          - "Advantage: diffusion on compressed latent (e.g., 64x64) vs pixel space (512x512) — 64x less compute"
-        gotchas:
-          - "VAE must be frozen during diffusion training — joint training leads to collapse"
-          - "Latent dimension must preserve semantic content — too aggressive compression loses details"
-          - "Decoder artifacts (blur, color shift) appear in output but NOT during latent diffusion phase"
-          - "Efficient ML:"
-
-  efficient_ml:
+          - "Flow matching requires probability path specification - wrong path = wrong marginals"
+  embeddings_latent_space:
     concepts:
-      - name: model_pruning
-        primary_pattern: graphnet
-        secondary_patterns: [probdist, signalflow]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Weight magnitude distribution: histogram with pruning threshold annotated"
-          - "Sparsity vs accuracy: trade-off curve — typically 50-90% sparse with <1% accuracy loss"
-          - "Unstructured vs structured pruning: individual weights vs entire neurons/channels/filters"
-          - "Lottery ticket hypothesis: winning tickets exist at initialization — iterative magnitude pruning"
-        gotchas:
-          - "Unstructured sparsity needs specialized hardware (sparse tensor cores) for speedup"
-          - "Structured pruning (remove channels) gives immediate speedup but larger accuracy drop"
-          - "One-shot pruning accuracy far lower than iterative prune-retrain — magnitude-based ranking changes as training proceeds"
-      - name: quantization
-        primary_pattern: probdist
-        secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Weight distribution overlaid with quantization levels (INT8, INT4) — rounding vs clipping error"
-          - "Accuracy vs bit-width: FP32 → FP16 → INT8 → INT4 with Pareto curve annotated"
-          - "Per-tensor vs per-channel quantization: granularity affects accuracy retention"
-          - "Dynamic vs static quantization: calibration data distribution determines scale and zero-point"
-        gotchas:
-          - "FP32 → INT8 gives ~4x size reduction but activation quantization may degrade more than weights"
-          - "Outlier channels (weights 10-100x larger) dominate quantization error — mixed precision or clipping needed"
-          - "Quantization-aware training (QAT) simulates quantization during training — typically recovers 1-3% accuracy vs PTQ"
-      - name: knowledge_distillation
-        primary_pattern: decisionprocess
-        secondary_patterns: [graphnet, probdist]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Teacher-student diagram: large model (frozen) → soft labels (T>1) + hard labels → small model"
-          - "Temperature T: higher T softens probability distribution — highlights inter-class similarities"
-          - "Loss decomposition: KL divergence (soft targets) + cross-entropy (hard targets) weighted by alpha"
-          - "Capacity gap: when student too small, performance degrades — intermediate-sized teacher assistant"
-        gotchas:
-          - "Temperature T=1 gives standard softmax; T>>1 reveals dark knowledge (relative class similarities)"
-          - "Distillation loss gradient scales by 1/T^2 — need to multiply KL loss by T^2 when combining with CE loss"
-          - "Online distillation (co-distillation): peers train together, no pre-trained teacher — mutual learning"
-      - name: lora_finetune
-        primary_pattern: graphnet
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "LoRA decomposition: Delta_W = B·A where B[d,r] and A[r,k] with rank r << min(d,k)"
-          - "Weight update: W_new = W_pretrained + alpha/r * B·A — alpha scales contribution"
-          - "Trainable parameters: only A and B matrices — typically 0.1-1% of total parameters"
-          - "Adapter placement: attention projection matrices (Q, K, V, O) and/or FFN layers"
-        gotchas:
-          - "Rank r=8-16 is often sufficient — larger rank adds parameters without proportional gain"
-          - "LoRA merges back into original weights at deployment: W_deploy = W0 + (alpha/r)*BA — zero inference overhead"
-          - "Multiple LoRA adapters can be loaded simultaneously for multi-task — but cross-task interference possible"
-      - name: model_compression
-        primary_pattern: decisionprocess
-        secondary_patterns: [graphnet, probdist]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Compression pipeline: pruning → quantization → distillation → deployment — sequential vs joint optimization"
-          - "Size vs accuracy: original model, pruned, quantized, distilled, distilled+quantized on Pareto plot"
-          - "Latency benchmarks: inference time across different hardware (GPU, CPU, mobile NPU, edge TPU)"
-          - "Layer-wise sensitivity: compress different layers by different amounts based on sensitivity analysis"
-        gotchas:
-          - "Compression steps are not commutative — optimal order: train → distill → prune → quantize"
-          - "Compressed model may be faster on CPU but slower on GPU (unstructured sparsity not accelerated)"
-          - "BatchNorm statistics must be re-calibrated after pruning — running mean/variance shift from removed channels"
-      - name: neural_architecture_search
-        primary_pattern: decisionprocess
+      - name: token_embedding_projection
+        primary_pattern: geom3d
         secondary_patterns: [graphnet]
-        best_framework: graphviz
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
+        best_framework: plotly
+        alt_framework: umap-learn
+        interaction_tiers: [t1, t3]
         ux_rules:
-          - "Search space: candidate operations (conv, pool, identity, skip) at each edge in a DAG"
-          - "Controller (RNN/RL) selects operations → child network trained → accuracy as reward → controller updated"
-          - "Differentiable NAS (DARTS): continuous relaxation of discrete ops via softmax mixing weights"
-          - "Efficiency: FLOPS vs accuracy Pareto front of discovered architectures"
+          - "UMAP or t-SNE with perplexity slider"
+          - "Semantic clusters labeled with representative tokens"
         gotchas:
-          - "NAS is extremely compute-intensive — weight-sharing (one-shot NAS) trains a supernet once, searches cheaply"
-          - "Discovered architectures often don't generalize across datasets — CIFAR-10 search may not transfer to ImageNet"
-          - "Hardware-aware NAS: latency lookup table or predictor for target device — accuracy per millisecond"
-      - name: mixed_precision
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "FP16 forward/backward with FP32 master weights — gradient scaling to prevent underflow"
-          - "Loss scaling: dynamic (auto-increment/decrement on overflow) vs static — loss value over training"
-          - "Speedup: FP16/FP32 mixed vs pure FP32 throughput (images/sec) on Volta+ GPUs"
-          - "Overflow detection: gradients with Inf/NaN plotted to show where loss scaling prevents/non-prevents"
-        gotchas:
-          - "Gradient values < 2^-24 fall to zero in FP16 — loss scaling shifts them into representable range"
-          - "Certain ops (softmax, LayerNorm, loss) must stay in FP32 — accumulator precision matters"
-          - "BF16 (16-bit mantissa same as FP32) avoids underflow — no loss scaling needed, simpler training"
-
-  gans:
-    concepts:
-      - name: generator_network
-        primary_pattern: decisionprocess
-        secondary_patterns: [graphnet, probdist]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Generator: z (latent noise) → dense → reshape → transposed convolutions (or upsample+conv) → image"
-          - "Latent space interpolation: two z vectors → intermediate generated images"
-          - "Output activation: tanh ([-1,1] normalized) for images, no activation for regression"
-          - "Architecture comparison: DCGAN (transposed conv) vs StyleGAN (mapping network + AdaIN)"
-        gotchas:
-          - "Generator must NOT be stronger than discriminator — D must slightly lead for stable training"
-          - "Spectral normalization on generator stabilizes but reduces expressiveness — balance with hinge loss"
-          - "Transposed convolution checkerboard artifacts — replace with upsample (bilinear/nearest) + convolution"
-      - name: discriminator
-        primary_pattern: signalflow
-        secondary_patterns: [graphnet]
-        best_framework: matplotlib
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "D(x) output: probability of real image — 1.0 for real, 0.0 for fake (ideal)"
-          - "Feature discrimination: intermediate layer outputs as spatial feature map (PatchGAN)"
-          - "D_loss = -E[log(D(real))] - E[log(1-D(fake))] (standard) vs hinge loss vs WGAN loss"
-          - "Gradient magnitude plot per layer: vanishing gradient when D overpowers G"
-        gotchas:
-          - "Sigmoid cross-entropy loss is the original but suffers from saturation — hinge loss or WGAN-WD more stable"
-          - "Label smoothing (real = 0.9 not 1.0) reduces discriminator overconfidence — improves stability"
-          - "Discriminator should see same batch of real AND fake — separate batch statistics cause training artifacts"
-      - name: adversarial_loss
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Minimax loss: min_G max_D V(D,G) = E[log D(x)] + E[log(1-D(G(z)))]"
-          - "Non-saturating generator loss: max_G E[log(D(G(z)))] — stronger gradient at start of training"
-          - "Loss curves over training: D_loss and G_loss with convergence and oscillation annotations"
-          - "JS divergence visualization: when real and fake distributions are disjoint, JS divergence = log 2 (constant)"
-        gotchas:
-          - "Minimax G loss saturates when D is confident on fakes — gradient vanishes (non-saturating alternative preferred)"
-          - "Loss values are NOT reliable quality metrics — lower G loss doesn't mean better samples (mode collapse)"
-          - "Wasserstein distance (WGAN) provides meaningful loss that correlates with sample quality"
-      - name: wgan_gradient
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Critic (not discriminator) outputs: score, not probability — higher = more real"
-          - "Gradient penalty: enforce ||grad_x D(x)||_2 = 1 along interpolation between real and fake"
-          - "Gradient penalty heatmap: norms across spatial positions verifying Lipschitz constraint"
-          - "Wasserstein distance W(P_r, P_g) during training — decreases monotonically with good training"
-        gotchas:
-          - "Weight clipping (original WGAN) limits capacity and causes gradient issues — gradient penalty is strictly better"
-          - "Gradient penalty computes grad of critic output wrt interpolated samples — need 2nd-order gradients (slower)"
-          - "Critic should be trained more than generator (typically 5:1 ratio) — 1:1 ratio causes instability"
-      - name: stylegan_mapping
-        primary_pattern: graphnet
-        secondary_patterns: [decisionprocess]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Mapping network: z → 8-layer MLP → w (intermediate latent space) — NOT truncated normal"
-          - "AdaIN: AdaIN(x_i, y) = y_s,i * (x_i - mu(x_i))/sigma(x_i) + y_b,i — style at each resolution"
-          - "Style mixing: two latent codes w1, w2 for coarse (shape) and fine (color/texture) layers"
-          - "Truncation trick: w' = w_avg + psi * (w - w_avg) — psi=1 full variation, psi<1 more typical"
-        gotchas:
-          - "W space is more disentangled than Z space — mapping network learns to unwarp latent distribution"
-          - "Constant input (learned 4x4x512) replaces noise input — spatial variation from noise injection layers only"
-          - "Path length regularization: ensures equal perceptual change for equal dW — smoother latent space"
-      - name: cyclegan_translation
-        primary_pattern: decisionprocess
-        secondary_patterns: [graphnet]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Two generators: G: X→Y and F: Y→X with cycle consistency: F(G(x)) ≈ x and G(F(y)) ≈ y"
-          - "Dual discriminators: D_X distinguishes real X from F(y), D_Y distinguishes real Y from G(x)"
-          - "Cycle consistency loss (L1) weighted by lambda — typically lambda=10 to balance with adversarial losses"
-          - "Identity loss: G(y) ≈ y and F(x) ≈ x — preserves color composition when input already from target domain"
-        gotchas:
-          - "Without cycle consistency, G could map all X to the same plausible Y (mode collapse)"
-          - "Paired data (pix2pix style) not needed — unpaired translation is key innovation"
-          - "Geometry changes (object shape) often fail — CycleGAN best for texture/style transfer, not object-to-object"
-      - name: mode_collapse
-        primary_pattern: probdist
-        secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Multiple generated samples showing limited diversity — all samples look similar"
-          - "Generated distribution vs real distribution: G covers only 1-2 modes of real data"
-          - "Diversity metrics: Inception Score (high IS = diverse + classifiable), FID (low FID = similar distributions)"
-          - "Anti-collapse techniques: minibatch discrimination, unrolled GANs, PacGAN, WGAN-GP"
-        gotchas:
-          - "Mode collapse is NOT the same as low quality — collapsed generator can produce high-quality but repetitive samples"
-          - "Adding more capacity to generator can worsen collapse — need architectural constraints (minibatch std dev)"
-          - "Feature matching (match intermediate D features, not just output) provides diversity signal"
-          - "Efficient ML:"
-
-  rl:
-    concepts:
-      - name: markov_decision
-        primary_pattern: decisionprocess
-        secondary_patterns: [graphnet]
-        best_framework: graphviz
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "MDP diagram: states (circles), actions (arrows), transitions P(s'|s,a), rewards R(s,a)"
-          - "Bellman equation: V(s) = max_a [R(s,a) + gamma * sum_s' P(s'|s,a) * V(s')]"
-          - "Gridworld visualization: state values as colormap, optimal actions as arrows"
-          - "Gamma (discount factor) effect: gamma=0 (myopic) vs gamma→1 (farsighted) on policy"
-        gotchas:
-          - "Markov property: future depends only on current state, not history — must encode necessary history in state"
-          - "Gamma < 1 is required for infinite-horizon convergence — average reward formulation for ergodic MDP"
-          - "Partially observable MDP (POMDP): agent receives observation, not true state — belief state required"
-      - name: q_learning
-        primary_pattern: scalarfield
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3, t5]
-        ux_rules:
-          - "Q-table as heatmap: states (rows) × actions (columns) with Q-values"
-          - "Q-value update: Q(s,a) += alpha * [r + gamma * max_a' Q(s',a') - Q(s,a)]"
-          - "Epsilon-greedy exploration: epsilon decay curve over episodes (1.0 → 0.01)"
-          - "Convergence: max |Q_new - Q_old| over training steps"
-        gotchas:
-          - "Q-learning is off-policy: learns optimal policy while following exploratory policy"
-          - "Maximization bias: max over Q induces upward bias — double Q-learning uses separate networks for selection/evaluation"
-          - "Tabular Q-learning doesn't scale — deep Q-network (DQN) uses neural network as function approximator"
-      - name: policy_gradient
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Policy network: pi_theta(a|s) outputs action probabilities for discrete or mean/std for continuous"
-          - "REINFORCE: grad_theta J = E[G_t * grad_theta log pi_theta(A_t|S_t)] — Monte Carlo return"
-          - "Baseline subtraction: reduces variance — V(s) as baseline, advantage A = Q - V"
-          - "Return trajectory: cumulative vs discounted reward over episode with variance shaded"
-        gotchas:
-          - "REINFORCE has high variance — needs many rollouts; Actor-Critic reduces variance with bootstrapping"
-          - "Policy gradient is on-policy: data from old policy becomes stale after update — PPO constrains update size"
-          - "Log prob gradient: grad log pi = grad pi / pi — small probabilities have huge gradient contributions"
-      - name: actor_critic
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Actor (policy pi) + Critic (value V or Q) — actor acts, critic evaluates"
-          - "Advantage A(s,a) = Q(s,a) - V(s) — positive advantage = good action, negative = bad action"
-          - "TD error: delta_t = r_t + gamma*V(s') - V(s) — if V is perfect, E[delta] = 0"
-          - "Network architecture: shared backbone with separate policy and value heads"
-        gotchas:
-          - "Actor and critic can share early layers but need separate optimization — policy and value losses have different scales"
-          - "Bias-variance trade-off: bootstrapping (TD, low variance, bias) vs Monte Carlo (high variance, unbiased)"
-          - "N-step return: combines TD and MC — G_n = r + gamma*r' + ... + gamma^(n-1)*r^(n-1) + gamma^n*V(s_n)"
-      - name: ppo_surrogate
-        primary_pattern: signalflow
-        secondary_patterns: []
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Clipped objective: L = E[min(r_t*A_t, clip(r_t, 1-eps, 1+eps)*A_t)] where r_t = pi_new/pi_old"
-          - "Clipping ratio: r_t plotted against advantage sign — clip when too positive (A>0) or too negative (A<0)"
-          - "KL divergence (PPO penalty variant): adaptively adjust penalty coefficient beta"
-          - "Multiple epochs on same data: PPO reuses rollouts without catastrophic forgetting (constrained update)"
-        gotchas:
-          - "Epsilon=0.2 is standard — larger epsilon may cause policy degradation (r_t diverges from 1)"
-          - "Clipping only occurs when r_t*A_t leaves [1-eps, 1+eps]*A_t — not all updates are clipped"
-          - "GAE (Generalized Advantage Estimation): exponentially weighted sum of TD errors — lambda trades bias/variance"
-      - name: reward_shaping
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Original sparse reward vs shaped dense reward over timesteps — guiding signal"
-          - "Potential-based shaping: F(s,s') = gamma*phi(s') - phi(s) — guarantees optimal policy preservation"
-          - "Decomposition: sub-goal rewards for intermediate milestones in complex tasks"
-          - "Reward engineering pitfalls: unintended behaviors from poorly designed reward functions"
-        gotchas:
-          - "Non-potential-based shaping changes the optimal policy — must use potential-based for invariance"
-          - "Reward hacking: agent exploits reward function loopholes (e.g., going in circles for distance reward)"
-          - "Reward scale matters — large rewards cause gradient explosion; tiny rewards vanish; normalize to [-1,1] or standardize"
-      - name: value_function
-        primary_pattern: scalarfield
-        secondary_patterns: [signalflow]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "State value V(s) as surface/heatmap over state space — peaks at goal, troughs at obstacles"
-          - "Q(s,a) as bar chart per state showing action values — optimal action has highest bar"
-          - "Bellman residual: |V(s) - (r + gamma * V(s'))| over training — converges to zero"
-          - "Value iteration vs policy iteration: convergence speed comparison on same MDP"
-        gotchas:
-          - "Value functions are defined for a specific policy — off-policy evaluation is harder than on-policy"
-          - "Catastrophic forgetting: when approximating V with neural net, updating at one state erases neighboring values"
-          - "Value overestimation in DQN: max Q gives upward bias — clipped double Q-learning or ensemble mitigates"
-
-  nlp:
-    concepts:
-      - name: token_embedding
-        primary_pattern: scalarfield
-        secondary_patterns: [graphnet]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Embedding matrix: rows=tokens, columns=dimensions — heatmap or PCA/t-SNE projection"
-          - "Token relationships: nearest neighbors in embedding space for sample tokens"
-          - "Subword tokenization: BPE merges visualized — byte pairs → merge tree → vocabulary"
-          - "Embedding dimension d vs vocabulary size V — d=300-768 typical for text, larger for code"
-        gotchas:
-          - "Embedding matrix = V*d parameters — can dominate small models (e.g., V=50k, d=768 = 38M params)"
-          - "UNK tokens degrade performance — subword tokenization (BPE, SentencePiece) eliminates UNK problem"
-          - "Pre-trained embeddings (GloVe, word2vec) capture static meaning — contextual embeddings (BERT) capture dynamic meaning"
-      - name: beam_search
-        primary_pattern: decisionprocess
-        secondary_patterns: [signalflow]
-        best_framework: tikz
-        alt_framework: graphviz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Search tree: root → candidate tokens → pruned branches (gray) → top-k beams (colored)"
-          - "Beam width k: k=1 = greedy, k=5 = standard, k>10 diminishing returns"
-          - "Score normalization: normalize log-prob by length^alpha to prevent favoring short sequences"
-          - "Pruning visualization: candidates below beam_threshold removed at each step"
-        gotchas:
-          - "Beam search is NOT guaranteed optimal — prunes globally optimal path if it ranks poorly early"
-          - "Length normalization is critical: without it, beam search favors 1-word outputs (highest prob per token)"
-          - "Beam search can produce degenerate repetitive text — sampling (temperature, top-k, top-p) often more diverse"
-      - name: bleu_score
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "n-gram precision: P_n = matched n-grams / total n-grams — computed for n=1,2,3,4"
-          - "Brevity penalty: BP = min(1, exp(1 - ref_len/hyp_len)) — penalizes too-short translations"
-          - "BLEU = BP * exp(sum(w_n * log P_n)) — weighted geometric mean of n-gram precisions"
-          - "Component breakdown: individual P_1 through P_4 and BP as stacked bar decomposition"
-        gotchas:
-          - "BLEU is precision-only (no recall) — high BLEU doesn't mean good translation (e.g., repeating one word)"
-          - "Reference-dependent: same translation scores differently against different references — use multi-reference BLEU"
-          - "BLEU < 10 = useless, 10-20 = hard to get the gist, 20-30 = understandable, 30-40 = good, >40 = near-human"
-      - name: perplexity
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Perplexity = exp(cross_entropy_loss) — interpreted as weighted branching factor"
-          - "PPL vs training steps: exponential decay then plateau — lower is better"
-          - "Token-level PPL: which tokens have highest perplexity — rare words, names, numbers"
-          - "Domain comparison: PPL on in-domain vs out-of-domain text showing generalization gap"
-        gotchas:
-          - "Perplexity is NOT an absolute metric — different tokenizers give different PPL (cannot compare across tokenizers)"
-          - "Low PPL does NOT guarantee good generation — model can have low PPL but produce repetitive text"
-          - "Bits-per-byte (BPB) is comparable across tokenizers: BPB = log2(PPL) / bytes_per_token"
-      - name: text_generation
-        primary_pattern: decisionprocess
-        secondary_patterns: [graphnet]
-        best_framework: graphviz
-        alt_framework: tikz
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Sampling strategies: greedy (argmax), temperature sampling (P_i ~ exp(z_i/T)), top-k, top-p (nucleus)"
-          - "Temperature effect: T=0 deterministic, T=1 default, T>1 random, T→∞ uniform — slider to adjust"
-          - "Top-p vs top-k: nucleus sampling adapts threshold, top-k uses fixed k — different diversity characteristics"
-          - "Repetition penalty: penalize tokens already in context — theta hyperparameter"
-        gotchas:
-          - "Greedy decoding produces generic, repetitive text — always use temperature + sampling for creative tasks"
-          - "Top-p=0.9 is commonly best — dynamic threshold adapts to confidence distribution (sharp vs flat)"
-          - "Repetition penalty > 1.2 degrades coherence — moderate values (1.05-1.1) work well for most models"
-      - name: prompt_engineering
-        primary_pattern: decisionprocess
-        secondary_patterns: []
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Prompt structure anatomy: system promp → context → instruction → examples (few-shot) → query"
-          - "Few-shot learning curve: 0-shot → 1-shot → 3-shot → 5-shot → diminishing returns at 8+"
-          - "Chain-of-thought: step-by-step reasoning vs direct answer — accuracy comparison per task type"
-          - "Prompt sensitivity heatmap: accuracy vs prompt wording variation — robustness analysis"
-        gotchas:
-          - "Exact same task worded differently can give >30% accuracy difference — prompts are brittle"
-          - "Too many examples create prompt length bloat — cost and latency scale with prompt size"
-          - "CoT only helps for multi-step reasoning tasks (>3 steps) — simple tasks may degrade with CoT"
-      - name: semantic_similarity
-        primary_pattern: scalarfield
-        secondary_patterns: [graphnet]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Cosine similarity matrix: sentence pairs as heatmap — diagonal=1.0, off-diagonal semantic overlap"
-          - "Embedding space: t-SNE/UMAP projection with semantically similar texts clustered"
-          - "SBERT architecture: two identical BERTs → pooling → cosine similarity — compute efficiency"
-          - "Threshold selection: similarity threshold vs F1 score — annotation for semantic search"
-        gotchas:
-          - "Cosine similarity > 0.8 doesn't guarantee semantic equivalence — model struggles with negation and subtle differences"
-          - "Embedding dimensionality: d=768 (BERT) compresses complex meaning into vector — information loss"
-          - "Different sentence transformers give different similarity scores for same pair — no universal threshold"
-
-  computer_vision:
-    concepts:
-      - name: cnn_features
-        primary_pattern: scalarfield
-        secondary_patterns: [graphnet]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Feature map visualization: input → conv1 → conv2 → conv3 → conv4 → conv5 — spatial reduction, channel expansion"
-          - "Filter visualization: learned kernels shown as small grayscale images for first layer"
-          - "Receptive field: increasing field size across layers annotated (e.g., 3x3→5x5→10x10)"
-          - "Activation heatmap (CAM): which image regions contribute to classification decision"
-        gotchas:
-          - "Deeper layers have larger receptive fields but lower spatial resolution — trade-off between what and where"
-          - "MaxPooling indices show what's discarded — but useful information may be in non-maximum regions"
-          - "Feature maps are NOT interpretable per channel — no guarantee channel 42 = fur texture"
-      - name: segmentation_mask
-        primary_pattern: scalarfield
-        secondary_patterns: [graphnet]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Input image → ground truth mask → predicted mask side by side with IoU annotated"
-          - "Per-class IoU: bar chart for each class label — highest=best segmented, lowest=confused"
-          - "U-Net architecture: contracting path + expanding path + skip connections — resolution restoration"
-          - "Boundary refinement: zoomed crop showing pixel-level accuracy at object boundaries"
-        gotchas:
-          - "Background class dominates pixel count — weighted loss essential (Dice loss, focal loss)"
-          - "Thin structures (<5 pixels) are hardest to segment — boundary loss or distance-based loss helps"
-          - "Instance vs semantic: semantic merges all instances of same class, instance distinguishes them"
-      - name: object_detection
-        primary_pattern: signalflow
-        secondary_patterns: [decisionprocess]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Bounding box overlay: ground truth (green) vs prediction (red) with confidence scores"
-          - "PR curve: precision vs recall — AP (average precision) as area under curve"
-          - "Anchor box visualization: multiple scales and aspect ratios at each grid cell"
-          - "NMS (non-maximum suppression): IoU threshold vs number of boxes retained"
-        gotchas:
-          - "AP is mAP (mean average precision) averaged over IoU thresholds [0.5:0.05:0.95] in COCO metric"
-          - "Small object detection (<32x32 pixels) much harder — anchor scales must match data distribution"
-          - "NMS threshold too low = missed overlapping objects; too high = duplicate detections"
-      - name: image_augmentation
-        primary_pattern: signalflow
-        secondary_patterns: [probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "Augmentation gallery: original + rotations + flips + crops + color jitter + noise"
-          - "Augmentation policy: strength vs regularization effect — weak augment underfits, strong augment over-regularizes"
-          - "CutMix: overlay patch from another image — label mixing ratio proportional to area"
-          - "AutoAugment/RandAugment: learned or randomized augmentation sequences — magnitude slider"
-        gotchas:
-          - "Too aggressive augment = model can't converge — must still be recognizable by human"
-          - "Test-time augmentation (TTA): apply augments to test image, average predictions — 1-2% accuracy gain"
-          - "Geometric augmentations preserve semantic content; color augmentations may change meaning (banana → red = apple?)"
-      - name: feature_pyramid
-        primary_pattern: graphnet
-        secondary_patterns: [scalarfield]
-        best_framework: tikz
-        alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
-        ux_rules:
-          - "FPN: backbone feature maps (C2→C5) → lateral connections → top-down pathway → P2→P5 feature pyramids"
-          - "Multi-scale detection: each FPN level detects objects at different scales — small at P2, large at P5"
-          - "Feature map resolution vs semantic level: low-level (high res, simple features) to high-level (low res, complex)"
-          - "Fusion methods: sum, concatenate, attention — comparison of semantic content at each level"
-        gotchas:
-          - "Bottom-up path already has semantic hierarchy — FPN adds top-down path that enriches low-level features"
-          - "Each pyramid level has same channel dimension (typically 256) — different resolutions, same semantic richness"
-          - "PANet adds extra bottom-up path after FPN — shorter info path from low-level to high-level features"
-      - name: style_transfer
-        primary_pattern: processanim
-        secondary_patterns: [scalarfield, graphnet]
-        best_framework: matplotlib
-        alt_framework: manim
-        interaction_tiers: [t1, t2, t3, t5]
-        ux_rules:
-          - "Content + Style = Output triptych with loss decomposition bar chart"
-          - "Content loss: L_content = ||F_output - F_content||^2 at layer relu4_2"
-          - "Style loss: Gram matrix difference at multiple layers weighted by w_l"
-          - "Style interpolation: slider between two style images producing intermediate artistic blends"
-        gotchas:
-          - "Gram matrix captures texture statistics (correlations between filter responses) — not spatial layout"
-          - "Optimization-based (Gatys) slow per image (>1 min); feed-forward (Johnson) fast but fixed style"
-          - "Style transfer can't handle semantic mismatch — applying Van Gogh to a cat: texture transfers but shapes distort"
-      - name: depth_estimation
-        primary_pattern: scalarfield
+          - "Dimensionality reduction distorts global distances - trust local neighborhoods only"
+      - name: semantic_arithmetic
+        primary_pattern: vectorfield
         secondary_patterns: [geom3d]
-        best_framework: pyvista
+        best_framework: plotly
         alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t3]
         ux_rules:
-          - "RGB input → depth map (colormap: viridis, near=dark/far=bright) → 3D point cloud projection"
-          - "Depth error map: |predicted - true| as heatmap — errors at boundaries, transparent surfaces, distant regions"
-          - "Scale ambiguity: monocular depth is relative (up to scale factor) — annotated shift in histogram"
-          - "Stereo matching: disparity map (inverse depth) with left-right consistency check overlay"
+          - "Vector addition/subtraction in embedding space with result nearest neighbors"
+          - "King - Man + Woman ~= Queen trajectory shown"
         gotchas:
-          - "Monocular depth is inherently ambiguous — optical illusion (Ames room) fools both humans and models"
-          - "Stereo depth accuracy degrades with 1/distance^2 — far objects have large depth uncertainty"
-          - "Reflective and transparent surfaces break depth assumptions — lidar multi-path, stereo reflection mismatch"
-
-  multimodal:
-    concepts:
-      - name: clip_embedding
+          - "Analogy accuracy varies by language and embedding training data"
+      - name: layer_wise_representation_evolution
+        primary_pattern: processanim
+        secondary_patterns: [probdist]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Token representation trajectory through layer depth"
+          - "Classification confidence evolution vs layer index"
+        gotchas:
+          - "Early layers more syntactic, late layers more semantic - but not strictly linear"
+      - name: embedding_similarity_matrix
         primary_pattern: scalarfield
-        secondary_patterns: [graphnet, probdist]
-        best_framework: matplotlib
-        alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Joint embedding space: text embeddings (T) and image embeddings (I) projected to same d-dim sphere"
-          - "Contrastive matrix: n_image × n_text cosine similarity — diagonal = true pairs, off-diagonal = negatives"
-          - "Zero-shot classification: image embedding · class text embeddings → softmax → predicted class"
-          - "t-SNE of multimodal space: images and texts embedded together showing modality alignment"
+          - "Cosine similarity heatmap with diagonal self-similarity = 1"
+          - "Hierarchical clustering dendrogram alongside"
         gotchas:
-          - "CLIP is trained on 400M image-text pairs — scale of weak supervision, not quality of each pair"
-          - "CLIP is strong at broad categories, weak at fine-grained (dog breeds, car models) — training data bias"
-          - "Text encoder is crucial — 'a photo of {}' template choice affects zero-shot accuracy by 5-10%"
-      - name: cross_modal_attention
+          - "Cosine similarity insensitive to vector magnitude - Euclidean may reveal more"
+
+  neural_network_architecture:
+    concepts:
+      - name: model_architecture_diagram
         primary_pattern: graphnet
+        secondary_patterns: [geom3d]
+        best_framework: graphviz
+        alt_framework: tikz
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Layer dimensions and parameter counts annotated"
+          - "Skip/residual connections clearly distinguished from sequential flow"
+        gotchas:
+          - "Auto-generated diagrams from code often omit data shape annotations"
+      - name: autograd_computation_graph
+        primary_pattern: graphnet
+        secondary_patterns: [processanim]
+        best_framework: graphviz
+        alt_framework: plotly
+        interaction_tiers: [t2, t4]
+        ux_rules:
+          - "Forward pass top-to-bottom, backward pass bottom-to-top gradient flow"
+          - "Tensor shapes at each node validate broadcasting"
+        gotchas:
+          - "In-place operations break computation graph - highlight with warnings"
+      - name: parameter_distribution
+        primary_pattern: probdist
         secondary_patterns: [scalarfield]
         best_framework: matplotlib
-        alt_framework: bertviz
-        interaction_tiers: [t1, t2, t3]
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Cross-attention matrix: text tokens (Q) attend to image patches (K,V) — alignment score heatmap"
-          - "Attention overlay on image: highlight which regions each text token attends to"
-          - "Modality gap: distribution of text-text, image-image, and text-image similarities in joint space"
-          - "Fusion strategies: early fusion (concatenate before transformer) vs late fusion (separate encoders + cross-attention)"
+          - "Histogram per layer with mean, std, and sparsity annotated"
+          - "Weight initialization distribution overlaid for comparison"
         gotchas:
-          - "Cross-attention has O(n_text * n_image_patches) complexity — for 16x16 grid + 77 tokens = manageable, not 336x336"
-          - "Modality gap: CLIP embeddings cluster by modality — cosine sim within modality > across modality"
-          - "Fine-grained alignment (word to image region) requires explicit supervision or pretraining"
-      - name: text_to_image
-        primary_pattern: processanim
-        secondary_patterns: [scalarfield, graphnet]
-        best_framework: matplotlib
-        alt_framework: manim
-        interaction_tiers: [t1, t2, t3, t4]
-        ux_rules:
-          - "Prompt → text encoder → diffusion model → VAE decoder → image — pipeline annotated"
-          - "Denoising progression: noise → rough shapes → details → sharp image across timesteps"
-          - "CFG (classifier-free guidance): unconditional + conditional outputs — guidance scale w slider"
-          - "Prompt following accuracy: highlighted regions matching each prompt phrase"
-        gotchas:
-          - "CFG scale > 7.5 oversaturates colors and creates artifacts — 5-7 is typical sweet spot"
-          - "VAE decoder adds artifacts (blur, compression artifacts) — upscaling model (refiner) fixes some"
-          - "Multiple subjects interact poorly (concept bleeding) — attention-based compositional generation helps"
-      - name: vqa_pipeline
-        primary_pattern: decisionprocess
-        secondary_patterns: [graphnet]
-        best_framework: tikz
+          - "BatchNorm running stats vs training stats must be distinguished"
+      - name: attention_head_diversity
+        primary_pattern: probdist
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
         alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "VQA architecture: image → vision encoder, question → text encoder → fusion → answer classifier"
-          - "Attention maps: which image regions answer each question — overlay for correct vs incorrect"
-          - "Question types breakdown: counting, spatial reasoning, attribute identification, logical — accuracy per type"
-          - "Answer distribution: pie chart of yes/no, number, color, other — bias toward yes (linguistic prior)"
+          - "Intra-head similarity matrix and head redundancy metric"
+          - "Pruned heads marked with performance impact"
         gotchas:
-          - "Models exploit linguistic priors: answering 'yes' to 'Is there a...' without looking at image"
-          - "Counting beyond 5-6 is unreliable — models estimate, don't count explicitly"
-          - "VQA v2 balanced pairs (same image, different question → different answer) reduces language bias"
-      - name: audio_visual_fusion
+          - "Some heads are language-specific - diversity depends on training corpus"
+      - name: throughput_memory_analysis
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t5]
+        ux_rules:
+          - "Roofline model with arithmetic intensity and bandwidth ceiling"
+          - "Memory footprint breakdown: weights, activations, optimizer states"
+        gotchas:
+          - "Activation checkpointing trades compute for memory - show crossover point"
+  training_dynamics:
+    concepts:
+      - name: loss_curves_metrics
         primary_pattern: signalflow
         secondary_patterns: [graphnet]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Dual-stream: audio spectrogram → audio encoder + video frames → visual encoder → fusion → output"
-          - "Temporal alignment: audio-visual synchronization shown as waveform with frame numbers"
-          - "Cross-modal correspondence: which sounds correspond to which visual objects (localization heatmaps)"
-          - "Fusion types: concatenation, bilinear pooling, transformer cross-attention — parameter count comparison"
+          - "Train and validation curves on log scale with early stopping marker"
+          - "Learning rate warm-up and decay overlaid as secondary axis"
         gotchas:
-          - "Audio and visual streams have different temporal resolutions — audio (16k Hz), video (30 fps)"
-          - "Synchronization is critical: off-by-1-frame data kills performance — data pipeline needs frame-accurate alignment"
-          - "Background audio (music, noise) degrades fusion — audio source separation as preprocessing"
-      - name: image_captioning
-        primary_pattern: graphnet
+          - "Validation loss increase may precede overfitting by many epochs"
+      - name: learning_rate_schedule
+        primary_pattern: signalflow
+        secondary_patterns: [probdist]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Step, cosine, polynomial, and warm-up schedules compared"
+          - "Effective learning rate with Adam beta correction shown"
+        gotchas:
+          - "Cosine annealing restart period must match convergence timescale"
+      - name: gradient_flow_norm_analysis
+        primary_pattern: signalflow
         secondary_patterns: [scalarfield]
         best_framework: matplotlib
         alt_framework: plotly
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t4]
         ux_rules:
-          - "Encoder-decoder: CNN/ViT image → feature vector → LSTM/Transformer decoder → caption tokens"
-          - "Attention visualization: which image region is described by each generated word"
-          - "Beam search vs sampling: caption diversity comparison — 5 captions from different decoding strategies"
-          - "Evaluation metrics: BLEU-4, METEOR, CIDEr, SPICE annotated — different aspects of quality"
+          - "Gradient norm per layer across training steps"
+          - "Vanishing vs exploding gradient thresholds marked"
         gotchas:
-          - "CIDEr and SPICE better correlate with human judgment than BLEU for captioning — BLEU is translation metric"
-          - "Hallucination: model describes objects not present — especially in unusual image contexts"
-          - "OFA/BLIP-2 unified architectures: one model for captioning, VQA, retrieval — better than task-specific models"
-      - name: multimodal_llm
+          - "Gradient clipping changes optimization trajectory - not just numerical stability"
+      - name: weight_update_statistics
+        primary_pattern: probdist
+        secondary_patterns: [signalflow]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Update/weight ratio histogram (effective learning rate per parameter)"
+          - "Adam momentum and second moment trajectories"
+        gotchas:
+          - "Large batch training requires learning rate scaling - linear or sqrt rule"
+      - name: scaling_laws_visualization
+        primary_pattern: signalflow
+        secondary_patterns: [probdist]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t5]
+        ux_rules:
+          - "Loss vs compute, parameters, data size on log-log axes"
+          - "Iso-loss contours for model-data trade-offs"
+        gotchas:
+          - "Power-law breaks at small scale due to irreducible loss"
+  generation_analysis:
+    concepts:
+      - name: token_probability_distribution
+        primary_pattern: probdist
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Top-k probabilities bar chart with temperature-scaled softmax"
+          - "Entropy and perplexity annotated per position"
+        gotchas:
+          - "Temperature > 1 flattens distribution but does not increase diversity monotonically"
+      - name: beam_search_tree
+        primary_pattern: graphnet
+        secondary_patterns: [decisionprocess]
+        best_framework: plotly
+        alt_framework: graphviz
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Tree depth = sequence length, beam width = branching factor"
+          - "Score annotations on each node with normalized log-prob"
+        gotchas:
+          - "Beam search often produces repetitive sequences - diversity penalties needed"
+      - name: sampling_strategy_comparison
+        primary_pattern: probdist
+        secondary_patterns: [decisionprocess]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t6]
+        ux_rules:
+          - "Greedy, beam, top-k, nucleus, temperature samples side-by-side"
+          - "Diversity vs quality trade-off with quantitative metrics"
+        gotchas:
+          - "Nucleus sampling p threshold interacts with vocabulary size"
+      - name: attribution_saliency_maps
+        primary_pattern: scalarfield
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Token-level gradient attribution overlaid on input text"
+          - "Integrated gradients with baseline comparison"
+        gotchas:
+          - "Saliency can be saturated - attributions near zero do not mean unimportant"
+      - name: counterfactual_analysis
         primary_pattern: decisionprocess
         secondary_patterns: [graphnet]
-        best_framework: tikz
+        best_framework: plotly
         alt_framework: matplotlib
-        interaction_tiers: [t1, t2, t3]
+        interaction_tiers: [t1, t3]
         ux_rules:
-          - "Architecture: image(s) → vision encoder → projection → LLM (frozen or fine-tuned) → text response"
-          - "Input types: single image, multi-image, video frames, interleaved image-text — supported formats"
-          - "Projection methods: linear layer vs Q-former (learned queries) vs perceiver resampler"
-          - "Benchmark comparison: MMBench, MME, SEED-Bench scores across LLaVA, Qwen-VL, GPT-4V"
+          - "Minimal input perturbation that flips prediction"
+          - "Counterfactual path in embedding space shown"
         gotchas:
-          - "Vision-language connector is the bottleneck — simple MLP works surprisingly well (LLaVA 1.5)"
-          - "High-resolution images need tiling strategy (LLaVA-NeXT) or native high-res encoding — crop-then-encode"
-          - "LLM backbone quality dominates overall performance — better LLM = better MLLM, even with same vision encoder"
+          - "Adversarial examples may not be semantically meaningful counterfactuals"
+      - name: speculative_decoding
+        primary_pattern: processanim
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Draft model tokens accepted/rejected highlighted green/red"
+          - "Speedup vs acceptance rate trade-off curve"
+        gotchas:
+          - "Draft model too small lowers acceptance rate; too large negates speedup"
+
+  rl_decision_processes:
+    concepts:
+      - name: mdp_state_transition_graph
+        primary_pattern: graphnet
+        secondary_patterns: [decisionprocess]
+        best_framework: plotly
+        alt_framework: graphviz
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "States as nodes, actions as edges, rewards as edge weights"
+          - "Transition probabilities labeled on edges"
+        gotchas:
+          - "State space explosion in continuous or high-dimensional MDPs"
+      - name: value_function_v_q
+        primary_pattern: scalarfield
+        secondary_patterns: [decisionprocess]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "State-value V(s) heatmap and action-value Q(s,a) as overlaid bars"
+          - "Bellman optimality equation visualized as backup diagram"
+        gotchas:
+          - "Value function approximation errors propagate via bootstrapping"
+      - name: policy_visualization
+        primary_pattern: vectorfield
+        secondary_patterns: [decisionprocess]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Policy pi(a|s) as probability distribution over actions per state"
+          - "Policy improvement direction arrows in state space"
+        gotchas:
+          - "Stochastic policy entropy collapse causes premature convergence"
+      - name: episodic_trajectory
+        primary_pattern: processanim
+        secondary_patterns: [phasetraj]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Agent path in state space with reward events as color-coded points"
+          - "Cumulative return annotated along trajectory"
+        gotchas:
+          - "Sparse reward environments have long credit assignment horizons"
+      - name: reward_curve
+        primary_pattern: signalflow
+        secondary_patterns: [probdist]
+        best_framework: matplotlib
+        alt_framework: plotly
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Episode return smoothed with exponential moving average"
+          - "Min/max envelope across seeds shown as confidence band"
+        gotchas:
+          - "Reward hacking: agent exploits specification rather than intended behavior"
+      - name: multi_agent_interaction
+        primary_pattern: graphnet
+        secondary_patterns: [processanim]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Joint action space as product of individual action spaces"
+          - "Emergent coordination or competition dynamics animated"
+        gotchas:
+          - "Non-stationarity from other agents learning breaks single-agent assumptions"
+      - name: actor_critic_architecture
+        primary_pattern: graphnet
+        secondary_patterns: [signalflow]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t2, t4]
+        ux_rules:
+          - "Actor and critic networks with shared encoder layers highlighted"
+          - "Advantage estimate A = Q - V or GAE shown"
+        gotchas:
+          - "Critic learning rate too high destabilizes actor updates"
+      - name: ppo_clipping_trpo_trust_region
+        primary_pattern: phasetraj
+        secondary_patterns: [decisionprocess]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Probability ratio r(theta) clipped region shaded"
+          - "KL divergence constraint vs clipping comparison"
+        gotchas:
+          - "Clipping objective can ignore policy changes when advantage has wrong sign"
+      - name: exploration_exploitation_tradeoff
+        primary_pattern: decisionprocess
+        secondary_patterns: [probdist]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Epsilon-greedy or UCB schedule vs cumulative regret"
+          - "Optimal arm pull fraction approaching 1 over time"
+        gotchas:
+          - "Pure exploration forever yields linear regret - must decay appropriately"
+
+  mechanistic_interpretability:
+    concepts:
+      - name: circuit_discovery
+        primary_pattern: graphnet
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
+        alt_framework: graphviz
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Cleaned attribution graph with indirect effect edges"
+          - "Circuit components (attention heads, MLP neurons) labeled by function"
+        gotchas:
+          - "Attribution patching underestimates indirect effects via correlated features"
+      - name: sparse_autoencoders
+        primary_pattern: scalarfield
+        secondary_patterns: [probdist]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Feature activation histogram with top activating examples"
+          - "Dictionary learning loss and L0 sparsity trade-off"
+        gotchas:
+          - "Feature splitting: single true feature represented by multiple latents"
+      - name: superposition_geometry
+        primary_pattern: geom3d
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Feature directions as vectors in neuron activation space"
+          - "Interference (cosine similarity) between features visualized"
+        gotchas:
+          - "Superposition is model-size dependent - larger models may use dedicated dimensions"
+      - name: activation_patching_causal_tracing
+        primary_pattern: processanim
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Corrupted vs restored run comparison with logit difference heatmap"
+          - "Causal chain from subject to prediction token traced"
+        gotchas:
+          - "Activation patching shows necessity, not sufficiency"
+      - name: indirect_object_identification
+        primary_pattern: graphnet
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Name-mover and S-inhibition head roles in circuit"
+          - "Logit attribution flow to indirect object vs direct object"
+        gotchas:
+          - "IOI circuit varies by model size and training data composition"
+
+  multi_modal_cross_modal:
+    concepts:
+      - name: clip_joint_embedding_space
+        primary_pattern: geom3d
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: umap-learn
+        interaction_tiers: [t1, t3]
+        ux_rules:
+          - "Image and text embeddings in shared space with modality color"
+          - "Alignment score (cosine similarity) annotated for pairs"
+        gotchas:
+          - "CLIP embeddings biased by training data stereotypes"
+      - name: cross_attention_image_text
+        primary_pattern: scalarfield
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t4]
+        ux_rules:
+          - "Text token attending to image patches as attention map overlay"
+          - "Multi-head cross-attention diversity across layers"
+        gotchas:
+          - "Attention maps can be diffuse - use rollout or gradient for sharper localization"
+      - name: vlm_generation_trace
+        primary_pattern: processanim
+        secondary_patterns: [graphnet]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Token-by-token generation with attended image regions highlighted"
+          - "Hallucination detection via attention to irrelevant regions"
+        gotchas:
+          - "VLMs often hallucinate object counts and spatial relationships"
+      - name: image_generation_trajectory
+        primary_pattern: processanim
+        secondary_patterns: [scalarfield]
+        best_framework: plotly
+        alt_framework: matplotlib
+        interaction_tiers: [t1, t2]
+        ux_rules:
+          - "Latent diffusion denoising steps shown as image sequence"
+          - "Text conditioning strength vs visual fidelity trade-off"
+        gotchas:
+          - "Classifier-free guidance scale too high causes unnatural saturation"
