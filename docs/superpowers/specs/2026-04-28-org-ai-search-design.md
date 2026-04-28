@@ -44,6 +44,8 @@ Org-AI-Search is an Emacs minor mode that turns ordinary org tables into a decla
 
 **Communication:** Emacs calls Python as a subprocess with JSON arguments via stdin; Python returns JSON via stdout. Emacs owns the buffer; Python owns the network.
 
+**Special case — MiniMax MCP:** The MiniMax backend is not an HTTP REST API. The Python bridge spawns `uvx minimax-coding-plan-mcp` as a subprocess and speaks the MCP protocol over stdio. All other backends use standard HTTP requests.
+
 ---
 
 ## 4. Discovery Table DSL
@@ -136,6 +138,40 @@ Dynamic columns:
 | **Hacker News** | None | title, url, score, author, created_at, descendants | `score`→`score`, `comments`→`descendants`; unstructured params need LLM |
 | **Brave** | Free API key | title, url, description, age | All params beyond title/url/description require LLM + page fetch |
 | **Firecrawl** | Free API key | (Any URL → markdown, title, links, metadata) | Acts as enrichment engine, not primary search |
+| **MiniMax MCP** | Token Plan key | title, url, snippet, related_queries | `summary`→`snippet`, `url`→`link`; coding-focused web search via MCP `web_search` tool |
+
+### 6.3 MiniMax Token Plan MCP (Special Case)
+
+Unlike other backends, **MiniMax MCP** is not a REST API. It is an MCP (Model Context Protocol) server distributed as `uvx minimax-coding-plan-mcp`. The Python bridge spawns it as a subprocess and communicates via stdio using the MCP protocol.
+
+**Why include it:**
+- The user already has a MiniMax Token Plan subscription and API key configured in `auth-source` (same key used for gptel).
+- Its `web_search` tool is optimized for coding/development queries, returning structured organic results: title, link, snippet, and related search queries.
+- Provides an alternative search flavor to Brave — more coding-contextualized.
+
+**Transport:**
+```bash
+uvx minimax-coding-plan-mcp -y
+```
+with env vars `MINIMAX_API_KEY` and `MINIMAX_API_HOST` (reused from existing gptel auth-source entry).
+
+**Field map:**
+- `title` → result title
+- `url` / `link` → result URL
+- `snippet` → search result snippet (can serve as `summary`)
+- `related_queries` → suggested follow-up queries (optional column)
+
+**Enrichment strategy:** Native-first — snippets often suffice as summaries. For custom params (e.g., `"code language"`, `"framework"`), LLM fallback on the fetched page via Firecrawl or raw HTTP.
+
+### 6.4 Backend Configuration in Emacs
+
+| Backend | Auth | Native Fields | Enrichment Strategy |
+|---------|------|---------------|-------------------|
+| **GitHub** | Free token | name, description, stars, language, updated_at, url, topics, license | `description`→`description`, `stars`→`stargazers_count`, `language`→`language` |
+| **Hacker News** | None | title, url, score, author, created_at, descendants | `score`→`score`, `comments`→`descendants`; unstructured params need LLM |
+| **Brave** | Free API key | title, url, description, age | All params beyond title/url/description require LLM + page fetch |
+| **Firecrawl** | Free API key | (Any URL → markdown, title, links, metadata) | Acts as enrichment engine, not primary search |
+| **MiniMax MCP** | Token Plan key | title, url, snippet, related_queries | `summary`→`snippet`, `url`→`link`; coding-focused web search via MCP `web_search` tool |
 
 ### 6.3 Backend Configuration in Emacs
 
@@ -151,7 +187,8 @@ Dynamic columns:
     (github          :type dev        :auth token    :enrichment native)
     (hackernews      :type dev        :auth none     :enrichment llm-fallback)
     (brave           :type web        :auth api-key  :enrichment llm-fallback)
-    (firecrawl       :type scrape     :auth api-key  :enrichment native)))
+    (firecrawl       :type scrape     :auth api-key  :enrichment native)
+    (minimax-mcp     :type web        :auth token-plan :enrichment native)))
 ```
 
 ---
