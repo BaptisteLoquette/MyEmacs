@@ -199,7 +199,7 @@ Return only valid JSON with the requested keys.
 | `C-c C-s s` | Discovery table | **Execute** — run all queries, render output table |
 | `C-c C-s r` | Output table | **Refresh** — re-run discovery, merge results, mark stale |
 | `C-c C-s e` | Discovery table | **Edit** — tweak query/count/backend inline and re-run |
-| `C-c C-s d` | Output table | **Delete** — remove output table + stale tags |
+| `C-c C-s d` | Output table | **Delete stale** — remove all rows tagged `:stale:` |
 | `C-c C-s t` | Output row | **Tag** — add/edit tags for current row |
 | `C-c C-s c` | Output row | **Clear tags** — remove tags from current row |
 | `C-c C-s b` | Anywhere | **Backend cycle** — rotate default backend |
