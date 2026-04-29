@@ -11,6 +11,7 @@
 
 (require 'org-table)
 (require 'json)
+(require 'org-ai-search-table)
 
 (defgroup org-ai-search nil
   "AI-powered search in org tables."
