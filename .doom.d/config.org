@@ -32,6 +32,16 @@
   (all-the-icons-completion-mode +1))
 (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup)
 
+* System / OS
+** Use Git Bash for POSIX-compliant shell commands
+#+begin_src emacs-lisp
+(when IS-WIN
+  (setq shell-file-name "C:/Program Files/Git/bin/bash.exe")
+  (setq explicit-shell-file-name "C:/Program Files/Git/bin/bash.exe")
+  ;; vterm can still use cmdproxy if preferred
+  (setq-default vterm-shell "C:/Program Files/Emacs/emacs-30.2/libexec/emacs/30.2/x86_64-w64-mingw32/cmdproxy.exe"))
+#+end_src
+
 * Keybindings — Hybrid Evil/Emacs
 ** Evil only in editing buffers
 (after! evil
@@ -72,8 +82,43 @@
      (latex . t)
      (emacs-lisp . t)
      (dot . t)
-     (gnuplot . t)
      (mermaid . t))))
+
+** Emacs-Jupyter (Jupyter kernel integration)
+Doom's `:lang org +jupyter` module already installs emacs-jupyter.
+Here we configure it for rich kernel output in Org buffers.
+
+#+begin_src emacs-lisp
+(after! ob-jupyter
+  ;; Make standard `python' src blocks use the Jupyter python kernel.
+  ;; This gives you rich output (images, HTML, LaTeX) and a live session.
+  (org-babel-jupyter-override-src-block "python")
+
+  ;; Default header args for jupyter-python blocks
+  (setq org-babel-default-header-args:jupyter-python
+        '((:session . "py")
+          (:async . "yes")
+          (:kernel . "python3")
+          (:results . "replace drawer")
+          (:exports . "both")))
+
+  ;; Load our dark-theme prologue into jupyter-python as well
+  (add-to-list 'org-babel-default-header-args:jupyter-python
+               '(:prologue . "exec(open('C:/Users/Bapti/.emacs.d/header.py').read())"))
+
+  ;; Directory for auto-generated images from Jupyter blocks
+  (setq org-babel-jupyter-resource-directory "./.jupyter-resources/")
+
+  ;; Enable client-side request queuing (prevents kernel overload)
+  (setq jupyter-org-queue-requests t))
+
+;; ── Jupyter REPL configuration ─────────────────────────────────────────
+(after! jupyter-repl
+  ;; Truncate REPL buffer to prevent memory bloat
+  (setq jupyter-repl-maximum-size 1000)
+  ;; Allow RET to insert newlines when kernel is busy
+  (setq jupyter-repl-allow-RET-when-busy t))
+#+end_src
 
 * Org-Roam
 (after! org-roam
@@ -90,14 +135,12 @@
            :unnarrowed t)))
   (org-roam-db-autosync-mode +1))
 
-** Org-roam bindings
-(map! :leader
-      (:prefix ("n" . "notes")
-       :desc "Find node" "f" #'org-roam-node-find
-       :desc "Insert link" "i" #'org-roam-node-insert
-       :desc "Capture" "c" #'org-roam-capture
-       :desc "Show backlinks" "b" #'org-roam-buffer-toggle
-       :desc "Today's daily" "d" #'org-roam-dailies-capture-today))
+;; Doom's default +evil-bindings already provide org-roam under SPC n r:
+;;   SPC n r f = org-roam-node-find
+;;   SPC n r i = org-roam-node-insert
+;;   SPC n r n = org-roam-capture
+;;   SPC n r r = org-roam-buffer-toggle
+;;   SPC n r n (under dailies) = org-roam-dailies-capture-today
 
 * Literature & Research
 ** Org-ref
@@ -118,11 +161,18 @@
   (setq org-ql-search-directories-files-recursive t))
 
 ** Elfeed
-(after! elfeed
+(use-package! elfeed
+  :commands elfeed
+  :config
   (setq elfeed-feeds
         '(("https://arxiv.org/rss/cs.AI" ai)
           ("https://arxiv.org/rss/cs.LG" ml)
           ("https://arxiv.org/rss/eess.SP" signal))))
+
+** Elfeed keybinding — add to Doom's open prefix
+(map! :leader
+      (:prefix ("o" . "open")
+       :desc "Elfeed RSS" "E" #'elfeed))
 
 * Diagramming
 ** Graphviz
@@ -137,34 +187,160 @@
   (setq org-inline-anim-max-size 10485760))  ; 10 MB
 
 * AI Assistants
-** gptel
-(setq gptel-model "claude-sonnet-4-20250514"
-      gptel-backend (gptel-make-openai "Anthropic"
-                      :host "api.anthropic.com"
-                      :endpoint "/v1/messages"
-                      :stream t
-                      :key (lambda () (auth-source-pick-first-password
-                                       :host "api.anthropic.com"))))
+** Multi-Provider Setup — gptel
+Register all your LLM backends here.  Each reads its API key from auth-source
+(~/.authinfo or ~/.authinfo.gpg) using its host name.
 
-** Keybindings
-(map! :leader
-      (:prefix ("a" . "ai")
-       :desc "GPTel chat" "c" #'gptel
-       :desc "GPTel send region" "s" #'gptel-send
-       :desc "GPTel menu" "m" #'gptel-menu))
+#+begin_src emacs-lisp
+;; ── Helper: fetch key from auth-source by host ─────────────────────────
+(defun my/gptel-key (host)
+  "Return the API key for HOST from auth-source."
+  (lambda ()
+    (or (auth-source-pick-first-password :host host)
+        (error "No auth-source entry for host: %s" host))))
+
+;; ── 1. Anthropic (Claude) — default fallback ────────────────────────────
+(setq gptel-model 'claude-sonnet-4-20250514)
+(setq gptel-backend
+      (gptel-make-anthropic "Anthropic"
+        :host "api.anthropic.com"
+        :endpoint "/v1/messages"
+        :stream t
+        :key (my/gptel-key "api.anthropic.com")))
+
+;; ── 2. MiniMax Coding Plan API ──────────────────────────────────────────
+;; Docs: https://platform.minimaxi.com/  |  Key host: api.minimax.chat
+;; NOTE: If your plan uses a different host (e.g. api.minimaxi.com),
+;;       change :host below and add the matching auth-source entry.
+(gptel-make-openai "MiniMax"
+  :host "api.minimax.chat"
+  :endpoint "/v1/chat/completions"
+  :protocol "https"
+  :stream t
+  :key (my/gptel-key "api.minimax.chat")
+  :models '(MiniMax-Text-01            ; <- fill in your plan's model names
+            MiniMax-M1-Dev
+            abab6.5s-chat))
+
+;; ── 3. Opencode Go plan API ─────────────────────────────────────────────
+;; If your "Opencode Go plan" is an OpenAI-compatible endpoint, fill in
+;; the :host.  Common possibilities:
+;;   • OpenRouter via Opencode  ->  "openrouter.ai"
+;;   • Custom Opencode gateway  ->  "your-gateway.opencode.ai"
+;; Change :host, :endpoint and :models to match your plan details.
+(gptel-make-openai "Opencode"
+  :host "openrouter.ai"               ; <-- CHANGE ME to your real host
+  :endpoint "/api/v1/chat/completions"
+  :protocol "https"
+  :stream t
+  :key (my/gptel-key "openrouter.ai") ; <-- auth-source host must match
+  :models '(gpt-4o                    ; <-- fill in models your plan includes
+            claude-sonnet-4-20250514
+            deepseek-chat))
+
+;; ── 4. Hermes gateway models API ────────────────────────────────────────
+;; Hermes models (Nous Research) are usually served via OpenRouter or a
+;; dedicated inference gateway.  If you have a private gateway, change
+;; :host to your gateway URL (e.g. "hermes.my-org.com").
+(gptel-make-openai "Hermes"
+  :host "openrouter.ai"
+  :endpoint "/api/v1/chat/completions"
+  :protocol "https"
+  :stream t
+  :key (my/gptel-key "openrouter.ai")
+  :models '(nousresearch/hermes-3-llama-3.1-405b
+            nousresearch/hermes-3-llama-3.1-70b
+            nousresearch/hermes-2-pro-llama-3-8b))
+#+end_src
+
+** Backend switcher
+Quickly rotate between the four registered backends.
+
+#+begin_src emacs-lisp
+(defvar my/gptel-backends '("Anthropic" "MiniMax" "Opencode" "Hermes")
+  "Ordered list of registered gptel backend names.")
+
+(defun my/gptel-cycle-backend (&optional arg)
+  "Switch gptel backend to the next one in `my/gptel-backends'.
+With prefix ARG, prompt for a backend directly."
+  (interactive "P")
+  (if arg
+      (let* ((names my/gptel-backends)
+             (choice (completing-read "Backend: " names nil t))
+             (backend (gptel-get-backend choice)))
+        (setq gptel-backend backend)
+        (message "GPTel backend → %s (%s)"
+                 choice (gptel-backend-name backend)))
+    (let* ((current (gptel-backend-name gptel-backend))
+           (idx (cl-position current my/gptel-backends :test #'string=))
+           (next-idx (mod (1+ (or idx -1)) (length my/gptel-backends)))
+           (next-name (nth next-idx my/gptel-backends))
+           (next-backend (gptel-get-backend next-name)))
+      (setq gptel-backend next-backend)
+      (message "GPTel backend → %s (%s)"
+               next-name (gptel-backend-name next-backend)))))
+
+(defun my/gptel-show-backend ()
+  "Display the currently active gptel backend and model."
+  (interactive)
+  (message "Current: %s / %s"
+           (gptel-backend-name gptel-backend)
+           gptel-model))
+#+end_src
 
 ** org-ai
-(after! org-ai
+Org-ai uses its own OpenAI-compatible config.  Here we point it at the
+same auth-source mechanism.
+
+#+begin_src emacs-lisp
+(use-package! org-ai
+  :commands (org-ai-complete-block org-ai-prompt org-ai-summarize org-ai-on-region)
+  :hook (org-mode . org-ai-mode)
+  :config
+  ;; Default to Anthropic for org-ai as well
   (setq org-ai-default-model "claude-sonnet-4-20250514")
   (setq org-ai-openai-api-token
-        (lambda () (auth-source-pick-first-password
-                    :host "api.anthropic.com"))))
+        (lambda () (auth-source-pick-first-password :host "api.anthropic.com"))))
+#+end_src
 
+** AI keybindings — single unified prefix, override Doom default
+#+begin_src emacs-lisp
+(after! evil
+  ;; Doom's default binds SPC a to "applications" (email, irc, rss).
+  ;; We have no :app modules, so reclaim SPC a for AI.
+  (map! :leader
+        "a" nil                       ; clear Doom's default apps prefix
+        (:prefix ("a" . "ai")
+         ;; gptel (chat-centric)
+         :desc "GPTel chat"          "c" #'gptel
+         :desc "GPTel send region"   "s" #'gptel-send
+         :desc "GPTel transient menu" "m" #'gptel-menu
+         ;; backend switching
+         :desc "Cycle AI backend"   "." #'my/gptel-cycle-backend
+         :desc "Show AI backend"    "," #'my/gptel-show-backend
+         ;; org-ai (org-centric)
+         :desc "org-ai complete block" "b" #'org-ai-complete-block
+         :desc "org-ai prompt"        "q" #'org-ai-prompt
+         :desc "org-ai summarize"     "u" #'org-ai-summarize
+         :desc "org-ai on region"     "r" #'org-ai-on-region)))
+#+end_src
+
+* Jupyter Keybindings
+Doom's `+jupyter` module provides `SPC o r` for REPL interaction.
+Here we add extra conveniences under `SPC a` (AI) and `SPC o` (open).
+
+#+begin_src emacs-lisp
 (map! :leader
-      (:prefix ("a" . "ai")
-       :desc "org-ai block" "b" #'org-ai-block
-       :desc "org-ai ask" "q" #'org-ai-prompt
-       :desc "org-ai summarize" "u" #'org-ai-summarize))
+      (:prefix ("o" . "open")
+       :desc "Jupyter REPL" "r" #'jupyter-run-repl))
+
+;; Evil-normal-state bindings inside Jupyter REPL buffers
+(after! jupyter-repl
+  (evil-define-key 'normal jupyter-repl-mode-map
+    (kbd "C-c C-c") #'jupyter-repl-interrupt-kernel
+    (kbd "C-c C-r") #'jupyter-repl-restart-kernel
+    (kbd "C-c C-o") #'jupyter-eval-remove-overlays))
+#+end_src
 
 * Agent-Driven Visualization
 ** Helper: run agent skill from Org
@@ -173,3 +349,12 @@
   (interactive "sPrompt: \nsSkill: ")
   (let ((cmd (format "npx skills run %s --prompt \"%s\"" skill prompt)))
     (shell-command cmd)))
+
+* Org-AI-Search
+** Load the minor mode
+#+begin_src emacs-lisp
+(use-package! org-ai-search
+  :load-path "~/.doom.d/modules/org-ai-search"
+  :after org
+  :hook (org-mode . org-ai-search-mode))
+#+end_src

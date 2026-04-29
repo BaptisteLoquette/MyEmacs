@@ -1,0 +1,88 @@
+#+TITLE: org-ai-search
+#+AUTHOR: You
+
+* Overview
+
+org-ai-search turns ordinary org tables into declarative search queries.
+Write a discovery table with QUERY as the first column, add enrichment
+prompts as additional columns, and press C-c C-s s to execute. Results
+render as a second org table below — tag rows, refresh, and evolve.
+
+* Installation
+
+Add to =~/.doom.d/packages.el=:
+
+#+begin_src elisp
+(package! org-ai-search
+  :recipe (:local-repo "modules/org-ai-search"
+           :files (:defaults "python" "python/**/*")))
+#+end_src
+
+Add to =~/.doom.d/config.org=:
+
+#+begin_src elisp
+(use-package! org-ai-search
+  :after org
+  :hook (org-mode . org-ai-search-mode))
+#+end_src
+
+Run =doom sync=.
+
+* Python Bridge Setup
+
+#+begin_src bash
+cd ~/.doom.d/modules/org-ai-search/python
+pip install -r requirements.txt
+#+end_src
+
+Optional: Set API keys in =~/.authinfo=:
+
+#+begin_example
+machine api.semanticscholar.org password YOUR_S2_KEY
+machine api.github.com password YOUR_GITHUB_TOKEN
+#+end_example
+
+* Usage
+
+Write a discovery table:
+
+#+begin_src org
+,* Research: Neural Architecture Search
+:PROPERTIES:
+:AI_SEARCH_BACKEND: arxiv
+:AI_SEARCH_COUNT: 5
+:END:
+
+| QUERY                        | summary | categories |
+|------------------------------+---------+------------|
+| neural architecture search   | summary | categories |
+| efficient NAS methods        | summary | categories |
+#+end_src
+
+Press C-c C-s s inside the table to execute. An output table appears
+below with results.
+
+* Keybindings
+
+| Key         | Action                          |
+|-------------+---------------------------------|
+| C-c C-s s   | Execute discovery table         |
+| C-c C-s r   | Refresh results                 |
+| C-c C-s t   | Tag current row                 |
+| C-c C-s c   | Clear tags on current row       |
+| C-c C-s d   | Delete rows tagged :stale:      |
+| C-c C-s b   | Cycle default backend           |
+
+* Backends
+
+| Backend          | Type      | Auth Required |
+|------------------+-----------+---------------|
+| semantic-scholar | Academic  | API key (opt) |
+| arxiv            | Preprints | None          |
+| github           | Code/Dev  | Token (opt)   |
+
+* Architecture
+
+- Emacs side: minor mode, table parsing/rendering, keybindings
+- Python side: HTTP API adapters, field mapping, deduplication
+- Communication: JSON over stdin/stdout subprocess
