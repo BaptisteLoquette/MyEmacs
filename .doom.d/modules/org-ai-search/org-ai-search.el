@@ -110,5 +110,70 @@
         (message "Search complete: %d results"
                  (length (cdr (assoc 'rows result))))))))
 
+(defun org-ai-search-tag-row ()
+  "Tag the current output table row."
+  (interactive)
+  (unless (org-at-table-p)
+    (user-error "Not on a table"))
+  (let* ((current (org-table-get-field))
+         (tags (read-string "Tags (e.g. :research:priority:): " current)))
+    (org-table-put (org-table-current-dline) 1 tags)
+    (org-table-align)))
+
+(defun org-ai-search-clear-tags ()
+  "Clear tags on current output table row."
+  (interactive)
+  (unless (org-at-table-p)
+    (user-error "Not on a table"))
+  (org-table-put (org-table-current-dline) 1 "")
+  (org-table-align))
+
+(defvar org-ai-search-backends
+  '("semantic-scholar" "arxiv" "github")
+  "List of available backends.")
+
+(defun org-ai-search-cycle-backend ()
+  "Cycle the default backend for the current heading."
+  (interactive)
+  (org-back-to-heading)
+  (let* ((current (or (org-ai-search--get-property "AI_SEARCH_BACKEND")
+                      (car org-ai-search-backends)))
+         (next (or (cadr (member current org-ai-search-backends))
+                   (car org-ai-search-backends))))
+    (org-ai-search--set-property "AI_SEARCH_BACKEND" next)
+    (message "Backend set to: %s" next)))
+
+(defun org-ai-search-refresh ()
+  "Refresh the search results.
+Re-runs the discovery table and merges tags."
+  (interactive)
+  (save-excursion
+    (org-back-to-heading)
+    (forward-line)
+    (while (and (not (eobp)) (not (org-at-table-p)))
+      (forward-line))
+    (if (org-at-table-p)
+        (org-ai-search-execute)
+      (user-error "No discovery table found"))))
+
+(defun org-ai-search-delete-stale ()
+  "Delete rows tagged :stale: from output table."
+  (interactive)
+  (let ((bounds (org-ai-search--find-output-table)))
+    (unless bounds
+      (user-error "No output table found"))
+    (let ((count 0))
+      (save-excursion
+        (goto-char (car bounds))
+        (forward-line 2) ;; skip header + hline
+        (while (and (< (point) (cdr bounds)) (org-at-table-p))
+          (let ((tags (org-table-get-field)))
+            (if (string-match-p ":stale:" tags)
+                (progn
+                  (org-table-kill-row)
+                  (cl-incf count))
+              (forward-line)))))
+      (message "Deleted %d stale rows" count))))
+
 (provide 'org-ai-search)
 ;;; org-ai-search.el ends here
