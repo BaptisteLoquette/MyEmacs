@@ -43,5 +43,72 @@
   :lighter " OAS"
   :keymap org-ai-search-mode-map)
 
+(defun org-ai-search-execute ()
+  "Execute the discovery table at point."
+  (interactive)
+  (unless (org-at-table-p)
+    (user-error "Not on a table"))
+  (let* ((discovery (org-ai-search--parse-discovery-table))
+         (backend (or (plist-get discovery :backend) "semantic-scholar"))
+         (count (or (plist-get discovery :count) "10"))
+         (headers (plist-get discovery :headers))
+         (rows (plist-get discovery :rows))
+         (json-rows nil))
+    ;; Build JSON rows
+    (dolist (row rows)
+      (let ((query (cdr (assoc "QUERY" row)))
+            (params nil)
+            (row-backend nil)
+            (row-count nil))
+        (dolist (cell row)
+          (let ((k (car cell))
+                (v (cdr cell)))
+            (cond
+             ((equal k "QUERY") nil)
+             ((equal k "Backend") (setq row-backend v))
+             ((equal k "Count") (setq row-count v))
+             ((and v (not (string= v ""))) (push (cons k v) params)))))
+        (push `((query . ,query)
+                (backend . ,(or row-backend backend))
+                (count . ,(or row-count count))
+                (params . ,params)
+                (tags . ""))
+              json-rows)))
+    (let* ((req `((command . "execute")
+                  (default_backend . ,backend)
+                  (default_count . ,(string-to-number count))
+                  (rows . ,(vconcat (nreverse json-rows)))))
+           (json-str (json-encode req))
+           (default-directory org-ai-search-python-module)
+           (process-environment
+            (append
+             (list (format "ORG_AI_S2_KEY=%s"
+                           (or (condition-case nil
+                                   (auth-source-pick-first-password :host "api.semanticscholar.org")
+                                 (error nil))
+                               ""))
+                   (format "ORG_AI_GITHUB_TOKEN=%s"
+                           (or (condition-case nil
+                                   (auth-source-pick-first-password :host "api.github.com")
+                                 (error nil))
+                               "")))
+             process-environment))
+           (output
+            (with-temp-buffer
+              (let ((status
+                     (call-process-region json-str nil
+                                          org-ai-search-python-executable
+                                          nil t nil
+                                          "-m" "org_ai_search")))
+                (if (eq status 0)
+                    (buffer-string)
+                  (error "Python bridge failed: %s" (buffer-string))))))
+           (result (json-read-from-string output)))
+      (if (assoc 'error result)
+          (message "org-ai-search error: %s" (cdr (assoc 'error result)))
+        (org-ai-search--render-output-table result)
+        (message "Search complete: %d results"
+                 (length (cdr (assoc 'rows result))))))))
+
 (provide 'org-ai-search)
 ;;; org-ai-search.el ends here
