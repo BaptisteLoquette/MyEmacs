@@ -1,0 +1,423 @@
+#+TITLE: Deep FPGA: Physics, Math, Electronics and ML/HPC Acceleration
+#+DATE: 2026-05-04
+#+AUTHOR: Curriculum Architect
+#+PROPERTY: CONCEPT_IDS C001..C030
+
+* Deep FPGA: Physics, Math, Electronics and ML/HPC Acceleration
+
+A frontier-level, dependency-aware curriculum for engineers and researchers who want to master FPGA internals from semiconductor physics through board-level electronics, mathematical foundations, Verilog RTL, data structures, prototyping tools (Python / Julia / MATLAB), and culminating in ML/AI acceleration and HPC architectures.
+
+** Prerequisites assumed
+- Bachelor-level digital logic and programming.
+- This curriculum assumes Python proficiency; MATLAB access is helpful but not required.
+
+** How to use this plan
+- Each leaf heading is an atomic concept designed for 20–40 minutes of focused study.
+- Follow the order; concepts depend on earlier ones.
+- For each concept, read the Theory source first, then attempt the Hands-on exercise.
+
+* Module 1 — Foundations (No Prerequisites)
+
+** C001 — Semiconductor Device Physics (MOSFETs, CMOS Fabrication)
+   :PROPERTIES:
+   :CONCEPT_ID: C001
+   :DOMAIN:   Physics
+   :TIME:     30 min
+   :END:
+
+- Theory :: MIT 6.012 Microelectronic Devices and Circuits, Lectures 9–15 ([[https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/pages/lecture-notes/][MIT OCW]])
+- Hands-on :: CMOS Fabrication Process Explained video, 0:00–13:00 ([[https://www.youtube.com/watch?v=sV2xT-WCSSI][YouTube]])
+
+** C002 — FPGA Fabric Architecture (LUTs, CLBs, DSP, BRAM, Routing)
+   :PROPERTIES:
+   :CONCEPT_ID: C002
+   :DOMAIN:   FPGA
+   :TIME:     25 min
+   :END:
+
+- Theory :: Brown et al., "Architecture of FPGAs and CPLDs: A Tutorial", Sections 2–4 ([[https://www.eecg.utoronto.ca/~jayar/pubs/brown/survey.pdf][PDF]])
+- Hands-on :: FPGA Architecture Fundamentals interactive floorplan ([[https://www.fpgarelated.com/fpga-fundamentals/fpga-architecture][FPGA Related]])
+
+** C003 — Digital Logic Recap (Boolean Algebra, FSMs, Timing)
+   :PROPERTIES:
+   :CONCEPT_ID: C003
+   :DOMAIN:   Arch
+   :TIME:     20 min
+   :END:
+
+- Theory :: Harris & Harris, /Digital Design and Computer Architecture/, Chapters 2–3 ([[http://www.r-5.org/files/books/computers/hw-layers/hardware/digital-desigh/Digital_Design_and_Computer_Architecture.pdf][PDF]])
+- Hands-on :: HDLBits problem sets: Combinational Logic, Sequential Logic, FSMs ([[https://hdlbits.01xz.net/wiki/Main_Page][HDLBits]])
+
+** C007 — Linear Algebra for Hardware (Matrices, SVD, Systolic Motivation)
+   :PROPERTIES:
+   :CONCEPT_ID: C007
+   :DOMAIN:   Math
+   :TIME:     30 min
+   :END:
+
+- Theory :: MIT 18.06SC Linear Algebra, lectures on matrix multiplication, SVD, subspaces ([[https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/][MIT OCW]])
+- Hands-on :: spcl/gemm_hls — systolic-array GEMM in HLS for Xilinx FPGAs ([[https://github.com/spcl/gemm_hls][GitHub]])
+- Cross-ref :: This repository is also the hands-on resource for C019 (Parallel Algorithms).
+
+** C015 — Python for Algorithm Prototyping (NumPy, SciPy, Signal Processing)
+   :PROPERTIES:
+   :CONCEPT_ID: C015
+   :DOMAIN:   Tools
+   :TIME:     20 min
+   :END:
+
+- Theory :: PySDR: A Guide to SDR and DSP using Python (NumPy/SciPy chapters) ([[https://pysdr.org/][PySDR]])
+- Hands-on :: SciPy Signal Processing Tutorial — filter design, FFT-based processing ([[https://docs.scipy.org/doc/scipy/tutorial/signal.html][SciPy Docs]])
+
+* Module 2 — Physics, Math & RTL Foundations
+
+** C004 — CMOS Switching, Delay and Power Models
+   :PROPERTIES:
+   :CONCEPT_ID: C004
+   :DOMAIN:   Physics
+   :TIME:     35 min
+   :PREREQS:  C001, C002
+   :END:
+
+- Theory :: MIT 6.374 Analysis and Design of Digital Integrated Circuits, lecture notes on switching delay and logical effort ([[https://ocw.mit.edu/courses/6-374-analysis-and-design-of-digital-integrated-circuits-fall-2006/pages/lecture-notes/][MIT OCW]])
+- Hands-on :: Teddy-van-Jerry/ngspice-cmos — SPICE netlists for CMOS inverter delay characterization ([[https://github.com/Teddy-van-Jerry/ngspice-cmos][GitHub]])
+
+** C005 — Signal Integrity and Transmission Line Fundamentals
+   :PROPERTIES:
+   :CONCEPT_ID: C005
+   :DOMAIN:   Electronics
+   :TIME:     30 min
+   :PREREQS:  C001
+   :END:
+
+- Theory :: Keysight Signal Integrity Fundamentals White Paper ([[https://www.keysight.com/us/en/assets/7018-06883/white-papers/5992-4324.pdf][PDF]])
+- Hands-on :: erwanp/transmission-line — Python simulation of signal propagation ([[https://github.com/erwanp/transmission-line][GitHub]])
+
+** C008 — Fixed-Point Arithmetic and Number Representation (Q-format, Overflow)
+   :PROPERTIES:
+   :CONCEPT_ID: C008
+   :DOMAIN:   Math
+   :TIME:     25 min
+   :PREREQS:  C003, C007
+   :END:
+
+- Theory :: TI SPRA109 — Q-format representation, arithmetic, overflow rules ([[https://www.ti.com/lit/an/spra109/spra109.pdf][PDF]])
+- Hands-on :: WangXuan95/FPGA-FixedPoint — Verilog fixed-point library with Q-format ([[https://github.com/WangXuan95/FPGA-FixedPoint][GitHub]])
+
+** C009 — Probability and Statistics for Quantization and Noise
+   :PROPERTIES:
+   :CONCEPT_ID: C009
+   :DOMAIN:   Math
+   :TIME:     25 min
+   :PREREQS:  C007
+   :END:
+
+- Theory :: Widrow, "Statistical Theory of Quantization", IEEE TIM 1996, Sections 2–5 ([[https://isl.stanford.edu/~widrow/papers/j1996statisticaltheory.pdf][PDF]])
+- Hands-on :: makeabilitylab/signals — Jupyter notebook on quantization noise ([[https://github.com/makeabilitylab/signals/blob/master/Tutorials/Signals%20-%20Quantization%20and%20Sampling.ipynb][GitHub Notebook]])
+
+** C011 — Verilog RTL Design (Modules, Blocking/Non-blocking, Generate)
+   :PROPERTIES:
+   :CONCEPT_ID: C011
+   :DOMAIN:   FPGA
+   :TIME:     30 min
+   :PREREQS:  C003
+   :END:
+
+- Theory :: Sutherland et al., /SystemVerilog for Design/, Chapters 3–5 ([[https://link.springer.com/book/10.1007/0-387-36495-1][Springer]])
+- Hands-on :: Obijuan open-fpga-verilog-tutorial — Chapters 1–13 (modules, blocking vs non-blocking, generate) ([[https://github.com/Obijuan/open-fpga-verilog-tutorial][GitHub]])
+- Cross-ref :: HDLBits (C003) also provides excellent Verilog practice problems.
+
+** C017 — MATLAB/Simulink for Hardware Modeling (Fixed-Point Designer, HDL Coder)
+   :PROPERTIES:
+   :CONCEPT_ID: C017
+   :DOMAIN:   Tools
+   :TIME:     40 min
+   :PREREQS:  C008, C015
+   :END:
+
+- Theory :: MathWorks HDL Coder Self-Guided Tutorial (Fixed-Point conversion, HDL Coder workflow) ([[https://www.mathworks.com/matlabcentral/fileexchange/69651-hdl-coder-self-guided-tutorial][MathWorks]])
+- Hands-on :: HDL-Coder-Self-Guided-Tutorial repo — MATLAB scripts, Simulink models, step-by-step ([[https://github.com/mathworks/HDL-Coder-Self-Guided-Tutorial][GitHub]])
+
+** C018 — Hardware-Centric Data Structures (FIFOs, Shift Registers, CAMs, Crossbars)
+   :PROPERTIES:
+   :CONCEPT_ID: C018
+   :DOMAIN:   Algo
+   :TIME:     30 min
+   :PREREQS:  C011
+   :END:
+
+- Theory :: Murray & Betz, IEEE Circuits and Systems Magazine — FPGA Architecture Survey, Sections on on-chip memory hierarchy ([[https://www.eecg.utoronto.ca/~vaughn/papers/casm2021_arch_survey.pdf][PDF]])
+- Hands-on :: Obijuan open-fpga-verilog-tutorial — Chapter 10: Shift Register with Verilog ([[https://github.com/Obijuan/open-fpga-verilog-tutorial/wiki/Chapter-10:-shift-register][GitHub Wiki]])
+
+* Module 3 — Timing, Synthesis, Algorithms, and Numerics
+
+** C006 — Clock Domains, Skew, Jitter and Clock Distribution
+   :PROPERTIES:
+   :CONCEPT_ID: C006
+   :DOMAIN:   Electronics
+   :TIME:     30 min
+   :PREREQS:  C002, C005
+   :END:
+
+- Theory :: CMU 18-322, Lecture 10 — Clock skew, jitter, clock tree, distribution networks ([[https://course.ece.cmu.edu/~ece322/LECTURES/Lecture10/Lecture10.03.pdf][PDF]])
+- Hands-on :: hdl-util/clock-domain-crossing — Verilog CDC synchronizers and gray-code FIFOs ([[https://github.com/hdl-util/clock-domain-crossing][GitHub]])
+
+** C010 — Numerical Analysis for Hardware (Stability, Iterative Methods)
+   :PROPERTIES:
+   :CONCEPT_ID: C010
+   :DOMAIN:   Math
+   :TIME:     35 min
+   :PREREQS:  C007, C008
+   :END:
+
+- Theory :: MIT 18.335 Introduction to Numerical Methods — lecture notes on stability, iterative methods, conditioning ([[https://github.com/mitmath/18335][GitHub]])
+- Hands-on :: Gladdy/numerical-fpga-thesis — hardware implementations of iterative solvers on FPGA ([[https://github.com/Gladdy/numerical-fpga-thesis][GitHub]])
+
+** C012 — Simulation, Testbenches and Verification (SystemVerilog Assertions, cocotb)
+   :PROPERTIES:
+   :CONCEPT_ID: C012
+   :DOMAIN:   FPGA
+   :TIME:     35 min
+   :PREREQS:  C011
+   :END:
+
+- Theory :: Doulos SystemVerilog Assertions Tutorial — Immediate and Concurrent Assertions, SVA Bind ([[https://www.doulos.com/knowhow/systemverilog/systemverilog-tutorials/systemverilog-assertions/][Doulos]])
+- Hands-on :: cocotb — Python-based RTL verification, examples/ directory ([[https://github.com/cocotb/cocotb][GitHub]])
+
+** C013 — Timing Analysis and Constraints (SDC, STA, Multi-cycle Paths)
+   :PROPERTIES:
+   :CONCEPT_ID: C013
+   :DOMAIN:   FPGA
+   :TIME:     30 min
+   :PREREQS:  C006, C011
+   :END:
+
+- Theory :: Gangadharan & Churiwala, /Constraining Designs for Synthesis and Timing Analysis/, Chapters 1–3 ([[https://link.springer.com/book/10.1007/978-1-4614-3269-2][Springer]])
+- Hands-on :: brabect1/sta_basics_course — hands-on STA tutorials with open-source tools ([[https://github.com/brabect1/sta_basics_course][GitHub]])
+
+** C014 — FPGA Synthesis and Place-and-Route Internals
+   :PROPERTIES:
+   :CONCEPT_ID: C014
+   :DOMAIN:   FPGA
+   :TIME:     40 min
+   :PREREQS:  C002, C004, C011
+   :END:
+
+- Theory :: Betz & Rose, "VPR: A New Packing, Placement and Routing Tool for FPGA Research" (FPL 1997) ([[https://www.eecg.toronto.edu/~jayar/pubs/betz/fpl97vpr.pdf][PDF]])
+- Hands-on :: Verilog-to-Routing (VTR) open-source FPGA CAD flow — quickstart and dev tutorials ([[https://github.com/verilog-to-routing/vtr-verilog-to-routing][GitHub]])
+
+** C019 — Parallel Algorithms for Hardware (Systolic Arrays, Dataflow Graphs)
+   :PROPERTIES:
+   :CONCEPT_ID: C019
+   :DOMAIN:   Algo
+   :TIME:     35 min
+   :PREREQS:  C007, C011, C018
+   :END:
+
+- Theory :: H.T. Kung, "Why Systolic Architectures?", IEEE Computer 1982, Sections 1–4 ([[https://dl.acm.org/doi/10.1109/MC.1982.1653825][ACM]])
+- Hands-on :: FPGA Systolic Array walkthrough — step-by-step matrix-multiply systolic array in Verilog ([[https://hackmd.io/@ampheo/how-to-do-systolic-architecture-on-fpga-with-verilog][HackMD]])
+- Cross-ref :: See C007 hands-on (spcl/gemm_hls) for a complementary HLS implementation of systolic GEMM.
+
+** C020 — Memory Hierarchy and Interface Design (AXI, DDR, BRAM/URAM)
+   :PROPERTIES:
+   :CONCEPT_ID: C020
+   :DOMAIN:   FPGA
+   :TIME:     30 min
+   :PREREQS:  C002, C018
+   :END:
+
+- Theory :: Northeastern dissertation — Optimizing Use of Different Memory Types on Modern FPGAs, Chapters 1–3 ([[https://repository.library.northeastern.edu/files/neu:4f248m93w/fulltext.pdf][PDF]])
+- Hands-on :: alexforencich/verilog-axi — axi_ram.v, axi_dma, BRAM/DDR interface modules ([[https://github.com/alexforencich/verilog-axi][GitHub]])
+
+** C021 — DSP Kernels on FPGA (FIR, IIR, FFT Architectures, CORDIC)
+   :PROPERTIES:
+   :CONCEPT_ID: C021
+   :DOMAIN:   FPGA
+   :TIME:     40 min
+   :PREREQS:  C008, C010, C019
+   :END:
+
+- Theory :: FPGA-based Implementation of Signal Processing Systems — chapters on FIR/IIR, FFT, CORDIC ([[https://rfsoc.mit.edu/6S965/_static/F25/textbooks/fpga_signal_processing.pdf][MIT PDF]])
+- Hands-on :: samiyaalizaidi/FIR-Filter — low-pass FIR filter implementation in Verilog HDL ([[https://github.com/samiyaalizaidi/FIR-Filter][GitHub]])
+
+** C022 — Quantization and Pruning for ML on FPGA (INT8 / INT4 / QAT)
+   :PROPERTIES:
+   :CONCEPT_ID: C022
+   :DOMAIN:   ML
+   :TIME:     35 min
+   :PREREQS:  C009, C017
+   :END:
+
+- Theory :: Survey of Quantization-Aware Training (QAT) Applications in Deep Learning, ACM 2026 ([[https://dl.acm.org/doi/10.1145/3776759.3776826][ACM]])
+- Hands-on :: Xilinx/finn-examples — notebooks and build-flow for quantized neural networks on FPGA ([[https://github.com/Xilinx/finn-examples][GitHub]])
+
+** C029 — Reconfigurable Computing and Dynamic Partial Reconfiguration
+   :PROPERTIES:
+   :CONCEPT_ID: C029
+   :DOMAIN:   FPGA
+   :TIME:     30 min
+   :PREREQS:  C014
+   :END:
+
+- Theory :: "Dynamic and Partial Reconfiguration of FPGAs", Springer 2025 ([[https://link.springer.com/rwe/10.1007/978-981-97-9314-3_51][Springer]])
+- Hands-on :: spzeno/PYNQ-dynamic-partial-reconfiguration-Example — partial bitstream loading with PYNQ ([[https://github.com/spzeno/PYNQ-dynamic-partial-reconfiguration-Example][GitHub]])
+
+* Module 4 — ML Acceleration and Advanced HPC
+
+** C023 — CNN Accelerators on FPGA (Winograd, Tiling, Dataflow)
+   :PROPERTIES:
+   :CONCEPT_ID: C023
+   :DOMAIN:   ML
+   :TIME:     40 min
+   :PREREQS:  C019, C020, C022
+   :END:
+
+- Theory :: "FPGA-based Acceleration for Convolutional Neural Networks: A Comprehensive Review", arXiv 2025 ([[https://arxiv.org/abs/2505.13461][arXiv]])
+- Hands-on :: Efficient-FPGA-CNN-Accelerator — src/ and build instructions ([[https://github.com/Mattjesc/Efficient-FPGA-CNN-Accelerator][GitHub]])
+
+** C024 — Transformer Acceleration on FPGA (Attention, Systolic MHSA, Sparsity)
+   :PROPERTIES:
+   :CONCEPT_ID: C024
+   :DOMAIN:   ML
+   :TIME:     40 min
+   :PREREQS:  C019, C022
+   :END:
+
+- Theory :: FAMOUS: Flexible Accelerator for the Attention Mechanism of Transformer on UltraScale+ FPGAs, arXiv 2024 ([[https://arxiv.org/abs/2409.14023][arXiv]])
+- Hands-on :: Buck008/Transformer-Accelerator-Based-on-FPGA — configurable systolic array (16x16) on PYNQ Z1 ([[https://github.com/Buck008/Transformer-Accelerator-Based-on-FPGA][GitHub]])
+
+** C025 — Sparse and Irregular Computation on FPGA (CSR, Load Balancing)
+   :PROPERTIES:
+   :CONCEPT_ID: C025
+   :DOMAIN:   HPC
+   :TIME:     35 min
+   :PREREQS:  C019
+   :END:
+
+- Theory :: "FPGA-Based Sparse Matrix Multiplication Accelerators: From Architectures to Applications", ACM 2024 ([[https://dl.acm.org/doi/10.1145/3687480][ACM]])
+- Hands-on :: SFU-HiAccel/HiSpMV — Vitis HLS source for imbalanced sparse matrix-vector multiplication ([[https://github.com/SFU-HiAccel/HiSpMV][GitHub]])
+
+** C026 — Network-on-Chip for Multi-FPGA HPC Systems
+   :PROPERTIES:
+   :CONCEPT_ID: C026
+   :DOMAIN:   HPC
+   :TIME:     35 min
+   :PREREQS:  C018, C025
+   :END:
+
+- Theory :: "Demystifying FPGA Hard NoC Performance", arXiv 2025 ([[https://arxiv.org/abs/2503.10861][arXiv]])
+- Hands-on :: xuanz20/Network-on-Chip-Verilog — 2D mesh NoC with 5-stage pipelined router on Artix-7 ([[https://github.com/xuanz20/Network-on-Chip-Verilog][GitHub]])
+
+** C027 — FPGA Emulation and Co-simulation (Verilator, QEMU, DPI-C, Python/Julia Bindings)
+   :PROPERTIES:
+   :CONCEPT_ID: C027
+   :DOMAIN:   FPGA
+   :TIME:     35 min
+   :PREREQS:  C012, C015
+   :END:
+
+- Theory :: FERIVer: FPGA-assisted Emulated Framework for RTL Verification of RISC-V Processors, arXiv 2025 ([[https://arxiv.org/abs/2504.05284][arXiv]])
+- Hands-on :: Antmicro blog — Cocotb + Verilator integration, VPI, Python testbench examples ([[https://antmicro.com/blog/2019/06/verilog-with-cocotb-and-verilator][Blog]])
+
+** C028 — Roofline Model and Performance Analysis on FPGA
+   :PROPERTIES:
+   :CONCEPT_ID: C028
+   :DOMAIN:   HPC
+   :TIME:     30 min
+   :PREREQS:  C020, C027
+   :END:
+
+- Theory :: "How to keep pushing ML accelerator performance? Know your rooflines!", arXiv 2025 ([[https://arxiv.org/abs/2505.16346][arXiv]])
+- Hands-on :: LIKWID — Empirical Roofline Model tutorial, step-by-step roofline plotting ([[https://github.com/RRZE-HPC/likwid/wiki/Tutorial:-Empirical-Roofline-Model][GitHub Wiki]])
+
+** C030 — Advanced Board-Level Power Integrity and Thermal Coupling
+   :PROPERTIES:
+   :CONCEPT_ID: C030
+   :DOMAIN:   Electronics
+   :TIME:     30 min
+   :PREREQS:  C005, C006
+   :END:
+
+- Theory :: IEEE APEMC 2022 — PCB-Level Thermal & SI/PI Co-Analysis ([[https://ieeexplore.ieee.org/document/9888294/][IEEE Xplore]])
+- Hands-on :: cranade7/PCB-Simulation-and-Power-Integrity — PCB-level power integrity simulation examples ([[https://github.com/cranade7/PCB-Simulation-and-Power-Integrity][GitHub]])
+
+* Module 5 — Cross-Cutting Tools
+
+** C016 — Julia for Scientific Computing and Hardware-Aware Numerics
+   :PROPERTIES:
+   :CONCEPT_ID: C016
+   :DOMAIN:   Tools
+   :TIME:     35 min
+   :PREREQS:  C010
+   :END:
+
+- Theory :: Benjamin Biggs, "High-level Synthesis using the Julia Language", arXiv:2201.11522, Sections 1–3 ([[https://arxiv.org/pdf/2201.11522][arXiv]])
+- Hands-on :: ENCCS — Julia for High-Performance Scientific Computing, chapters on Arrays, Performance, GPU ([[https://enccs.github.io/julia-for-hpc/][ENCCS Docs]])
+
+* Appendix — Prerequisite Graph (DOT)
+
+#+begin_src dot :file prereq-graph.svg :cmdline -Tsvg
+digraph prereqs {
+  rankdir=TB;
+  node [shape=box style="rounded,filled" fillcolor="#e8f4fd" fontname="Helvetica"];
+  edge [arrowhead=open];
+
+  C001 [label="C001: Semiconductor Device Physics"];
+  C002 [label="C002: FPGA Fabric Architecture"];
+  C003 [label="C003: Digital Logic Recap"];
+  C004 [label="C004: CMOS Switching, Delay & Power"];
+  C005 [label="C005: Signal Integrity / TLines"];
+  C006 [label="C006: Clock Domains, Skew, Jitter"];
+  C007 [label="C007: Linear Algebra for Hardware"];
+  C008 [label="C008: Fixed-Point Arithmetic"];
+  C009 [label="C009: Probability/Stats for Quantization"];
+  C010 [label="C010: Numerical Analysis for HW"];
+  C011 [label="C011: Verilog RTL Design"];
+  C012 [label="C012: Simulation / Verification"];
+  C013 [label="C013: Timing Analysis & Constraints"];
+  C014 [label="C014: Synthesis & P&R Internals"];
+  C015 [label="C015: Python for Prototyping"];
+  C016 [label="C016: Julia for HW Numerics"];
+  C017 [label="C017: MATLAB/Simulink HDL Coder"];
+  C018 [label="C018: HW Data Structures"];
+  C019 [label="C019: Parallel Algorithms / Systolic"];
+  C020 [label="C020: Memory Hierarchy / AXI"];
+  C021 [label="C021: DSP Kernels on FPGA"];
+  C022 [label="C022: Quantization/Pruning for ML"];
+  C023 [label="C023: CNN Accelerators"];
+  C024 [label="C024: Transformer Acceleration"];
+  C025 [label="C025: Sparse Computation"];
+  C026 [label="C026: Network-on-Chip"];
+  C027 [label="C027: Emulation & Co-simulation"];
+  C028 [label="C028: Roofline & Perf Analysis"];
+  C029 [label="C029: Dynamic Partial Reconfiguration"];
+  C030 [label="C030: Board-Level Power Integrity"];
+
+  C001 -> C004;
+  C002 -> C004; C002 -> C006; C002 -> C014; C002 -> C020;
+  C001 -> C005;
+  C005 -> C006; C005 -> C030;
+  C006 -> C013; C006 -> C030;
+  C003 -> C008; C003 -> C011;
+  C007 -> C008; C007 -> C009; C007 -> C019;
+  C008 -> C010; C008 -> C017; C008 -> C021;
+  C009 -> C022;
+  C010 -> C016; C010 -> C021;
+  C011 -> C012; C011 -> C013; C011 -> C014; C011 -> C018;
+  C012 -> C027;
+  C014 -> C029;
+  C015 -> C017; C015 -> C027;
+  C018 -> C019; C018 -> C020; C018 -> C026;
+  C019 -> C021; C019 -> C023; C019 -> C024; C019 -> C025;
+  C020 -> C023; C020 -> C028;
+  C022 -> C023; C022 -> C024;
+  C025 -> C026;
+  C027 -> C028;
+}
+#+end_src
+
+* Notes
+
+- Confidence scores for frontier concepts (C022–C026) range 0.6–0.75, reflecting active research.
+- The curriculum is vendor-agnostic for RTL; whenever specific tools are used (FINN, Vitis), alternatives are noted in the resource repositories.
+- Estimated total self-study time: ~30–40 hours across all 30 atomic concepts.

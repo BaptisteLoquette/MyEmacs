@@ -1,0 +1,23 @@
+;;; custom.el --- user customization file    -*- lexical-binding: t no-byte-compile: t -*-
+;;; Commentary:
+;;; Add or change the configurations in custom.el for Centaur Emacs.
+
+;;; Code:
+
+;; User information
+(setq centaur-full-name "Baptiste Loquette")
+(setq centaur-mail-address "baptiste@email.com")
+
+;; Theme and UI
+(setq centaur-theme 'auto)
+(setq centaur-dashboard t)
+(setq centaur-frame-maximized-on-startup t)
+
+;; LSP configuration
+(setq centaur-lsp 'lsp-mode)
+
+;; Load custom-post files for additional configuration
+(load (expand-file-name "custom-post-data.el" user-emacs-directory) t)
+(load (expand-file-name "custom-post-ai.el" user-emacs-directory) t)
+
+;;; custom.el ends here

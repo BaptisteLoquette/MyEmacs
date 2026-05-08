@@ -1,0 +1,281 @@
+;;; *Messages* dump from Centaur startup
+;;; Timestamp: Sat May  2 00:39:07 2026
+
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/env.el (source)...done
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [9 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [9 times]
+Set package archives to ‘melpa’
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [1064 times]
+Contacting host: raw.githubusercontent.com:443
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [54 times]
+Wrote c:/Users/Bapti/NFM.ttf
+ Successfully downloaded ‘nerd-icons’ fonts to ‘~/’!
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [540 times]
+Waiting for git... [2 times]
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [11 times]
+ad-handle-definition: ‘ibuffer-do-replace-regexp’ got redefined
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [86 times]
+Help (?/h)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [34 times]
+[yas] Prepared just-in-time loading of snippets successfully.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [137 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom-post.el (source)...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [32 times]
+Contacting host: elpa.gnu.org:443
+Package refresh done
+Contacting host: elpa.nongnu.org:443
+Package refresh done [2 times]
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [4 times]
+Contacting host: elpa.gnu.org:443
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+Extracting...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+  INFO     Scraping 2 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [6 times]
+  INFO     Scraping 2 files for loaddefs...done
+  GEN      valign-autoloads.el
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/valign-3.1.1... [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/valign-3.1.1/valign.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/valign-3.1.1/valign.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/valign-3.1.1/valign.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/valign-3.1.1...
+Done (Total of 1 file compiled, 2 skipped)
+Package ‘valign’ installed.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [8 times]
+Contacting host: melpa.org:443
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+Extracting...done
+  INFO     Scraping 2 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [6 times]
+  INFO     Scraping 2 files for loaddefs...done
+  GEN      spice-mode-autoloads.el
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/spice-mode-20220210.1414... [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/spice-mode-20220210.1414/spice-mode.el... (spice-standard-p)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/spice-mode-20220210.1414/spice-mode.el... (spice-section-p)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/spice-mode-20220210.1414/spice-mode.el... (spice-common-menu-tail-entries)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/spice-mode-20220210.1414/spice-mode.el... (spice-mode-syntax-table-init)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [5 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/spice-mode-20220210.1414/spice-mode.el... (spice-set-simulator)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/spice-mode-20220210.1414/spice-mode.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/spice-mode-20220210.1414/spice-mode.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/spice-mode-20220210.1414...
+Done (Total of 1 file compiled, 2 skipped)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [9 times]
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/spice-mode-20220210.1414/spice-mode-pkg.el
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [22 times]
+Failed to run diff: Searching for program: No such file or directory, diff
+Contacting host: melpa.org:443
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+Extracting...done
+  INFO     Scraping 2 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [6 times]
+  INFO     Scraping 2 files for loaddefs...done
+  GEN      ob-spice-autoloads.el
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ob-spice-20221030.217... [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ob-spice-20221030.217/ob-spice.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [79 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ob-spice-20221030.217/ob-spice.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ob-spice-20221030.217/ob-spice.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ob-spice-20221030.217...
+Done (Total of 1 file compiled, 2 skipped)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [8 times]
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ob-spice-20221030.217/ob-spice-pkg.el
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+Failed to run diff: Searching for program: No such file or directory, diff
+Package ‘ob-spice’ installed.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Contacting host: melpa.org:443
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+Extracting...done
+  INFO     Scraping 30 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [51 times]
+  INFO     Scraping 30 files for loaddefs...60% 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [39 times]
+  INFO     Scraping 30 files for loaddefs...done
+  GEN      matlab-mode-autoloads.el
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/company-matlab-shell.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [229 times]
+[EDA] ob-spice not found — use #+begin_src shell for ngspice
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [32 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/company-matlab-shell.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/company-matlab-shell.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/linemark.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [5 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/linemark.el... (linemark-next-in-buffer)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [6 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/linemark.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/linemark.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab--access.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab--access.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab--access.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab--shared.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab--shared.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab--shell-bridge.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab--shell-bridge.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ccount.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ccount.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-cgen.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-cgen.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-cgen.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-compat.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-compat.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-complete.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [4 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-complete.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-complete.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-is-matlab-file.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-is-matlab-file.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740... [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-mode.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-mode.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-mode.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-netshell.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-netshell.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-netshell.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-org.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-org.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-org.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-scan.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-scan.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-scan.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-sections.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-sections.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-sections.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-shell-gud.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [6 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-shell-gud.el... (mlg-del-breakpoint)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-shell-gud.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-shell-gud.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-shell.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [12 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-shell.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-shell.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-syntax.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-syntax.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-syntax.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-topic.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [4 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-topic.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-topic.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ts-grammar-install.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ts-grammar-install.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ts-grammar-install.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ts-mode--builtins.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ts-mode--builtins.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ts-mode--ei.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ts-mode--ei.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ts-mode--ei.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ts-mode.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [9 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ts-mode.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-ts-mode.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [11 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/mlgud.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/mlgud.el... (mlgud-def)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/mlgud.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/mlgud.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/mlint.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [8 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/mlint.el... (mlint-end-of-something)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/mlint.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/mlint.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/semantic-matlab.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [46 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/semantic-matlab.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/semantic-matlab.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/semanticdb-matlab.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [8 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/semanticdb-matlab.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/semanticdb-matlab.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/tlc.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/tlc.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/bin...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/toolbox...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/toolbox/+emacs...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/toolbox/+emacs/@Breakpoints...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/toolbox/+emacs/@EmacsServer...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/toolbox/+emacs/@Stack...
+Done (Total of 29 files compiled, 2 skipped)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [47 times]
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/matlab-mode-20260428.1740/matlab-mode-pkg.el
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [3 times]
+Failed to run diff: Searching for program: No such file or directory, diff
+Package ‘matlab-mode’ installed.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [2 times]
+Contacting host: elpa.gnu.org:443
+Package refresh done
+Contacting host: elpa.nongnu.org:443
+Package refresh done [2 times]
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [2 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom-post.el (source)...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [4 times]
+[custom.el] apheleia disabled: diff.exe not on Windows
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [17 times]
+Centaur diagnostics saved to: c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [10 times]
+Mark set [2 times]
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [32 times]
+File mode specification error: (file-missing Cannot open load file No such file or directory org-pretty-table)
+Mark set [2 times]
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-003752.log [13 times]
+
+;;; END OF MESSAGES DUMP

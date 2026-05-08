@@ -1,0 +1,242 @@
+[
+  {
+    "concept_id": "C001",
+    "name": "Semiconductor Device Physics",
+    "domain": "Physics",
+    "prerequisites": ["None"],
+    "confidence": 0.95,
+    "notes": "Focus on MOSFET I-V characteristics and CMOS fabrication steps relevant to FPGA process nodes."
+  },
+  {
+    "concept_id": "C002",
+    "name": "FPGA Fabric Architecture",
+    "domain": "FPGA",
+    "prerequisites": ["None"],
+    "confidence": 0.95,
+    "notes": "Vendor-agnostic but use Xilinx/AMD and Intel references for concrete slice diagrams."
+  },
+  {
+    "concept_id": "C003",
+    "name": "Digital Logic Recap",
+    "domain": "Arch",
+    "prerequisites": ["None"],
+    "confidence": 1.0,
+    "notes": "Recap for working engineers; emphasize metastability and clock-domain crossing intuition."
+  },
+  {
+    "concept_id": "C004",
+    "name": "CMOS Switching, Delay and Power Models",
+    "domain": "Physics",
+    "prerequisites": ["C001", "C002"],
+    "confidence": 0.9,
+    "notes": "Logical effort, RC delay networks, and their impact on FPGA critical path estimation."
+  },
+  {
+    "concept_id": "C005",
+    "name": "Signal Integrity and Transmission Line Fundamentals",
+    "domain": "Electronics",
+    "prerequisites": ["C001"],
+    "confidence": 0.9,
+    "notes": "Impedance control, reflection coefficient, crosstalk modeling in high-speed FPGA interfaces."
+  },
+  {
+    "concept_id": "C006",
+    "name": "Clock Domains, Skew, Jitter and Clock Distribution",
+    "domain": "Electronics",
+    "prerequisites": ["C002", "C005"],
+    "confidence": 0.9,
+    "notes": "PLL/DLL principles, global vs regional clock buffers in modern FPGAs."
+  },
+  {
+    "concept_id": "C007",
+    "name": "Linear Algebra for Hardware",
+    "domain": "Math",
+    "prerequisites": ["None"],
+    "confidence": 1.0,
+    "notes": "Matrix ops, SVD, and how they map to systolic array layouts."
+  },
+  {
+    "concept_id": "C008",
+    "name": "Fixed-Point Arithmetic and Number Representation",
+    "domain": "Math",
+    "prerequisites": ["C003", "C007"],
+    "confidence": 0.95,
+    "notes": "Qm.n format, overflow/saturation, guard bits for DSP accumulators."
+  },
+  {
+    "concept_id": "C009",
+    "name": "Probability and Statistics for Quantization and Noise",
+    "domain": "Math",
+    "prerequisites": ["C007"],
+    "confidence": 0.9,
+    "notes": "SQNR derivation, uniform quantization error distribution, entropy coding basics."
+  },
+  {
+    "concept_id": "C010",
+    "name": "Numerical Analysis for Hardware",
+    "domain": "Math",
+    "prerequisites": ["C007", "C008"],
+    "confidence": 0.85,
+    "notes": "Stability of iterative methods, truncation vs round-off, condition number relevance."
+  },
+  {
+    "concept_id": "C011",
+    "name": "Verilog RTL Design",
+    "domain": "FPGA",
+    "prerequisites": ["C003"],
+    "confidence": 0.95,
+    "notes": "Blocking vs nonblocking, generate blocks, parameterization; use IEEE 1364-2005 / SystemVerilog subset."
+  },
+  {
+    "concept_id": "C012",
+    "name": "Simulation, Testbenches and Verification",
+    "domain": "FPGA",
+    "prerequisites": ["C011"],
+    "confidence": 0.9,
+    "notes": "Self-checking testbenches, cocotb with Python, basic SystemVerilog assertions."
+  },
+  {
+    "concept_id": "C013",
+    "name": "Timing Analysis and Constraints",
+    "domain": "FPGA",
+    "prerequisites": ["C006", "C011"],
+    "confidence": 0.9,
+    "notes": "SDC commands, setup/hold slack, false paths, multi-cycle path definitions."
+  },
+  {
+    "concept_id": "C014",
+    "name": "FPGA Synthesis and Place-and-Route Internals",
+    "domain": "FPGA",
+    "prerequisites": ["C002", "C004", "C011"],
+    "confidence": 0.75,
+    "notes": "Academic algorithms: technology mapping, simulated annealing placement, pathfinder routing."
+  },
+  {
+    "concept_id": "C015",
+    "name": "Python for Algorithm Prototyping",
+    "domain": "Tools",
+    "prerequisites": ["None"],
+    "confidence": 1.0,
+    "notes": "NumPy/SciPy DSP modeling, bit-true golden reference generation."
+  },
+  {
+    "concept_id": "C016",
+    "name": "Julia for Scientific Computing and Hardware-Aware Numerics",
+    "domain": "Tools",
+    "prerequisites": ["C010"],
+    "confidence": 0.8,
+    "notes": "Tullio, LoopVectorization, and writing fixed-point simulations in Julia."
+  },
+  {
+    "concept_id": "C017",
+    "name": "MATLAB/Simulink for Hardware Modeling",
+    "domain": "Tools",
+    "prerequisites": ["C008", "C015"],
+    "confidence": 0.85,
+    "notes": "Fixed-Point Designer settings, HDL Coder workflow, ModelSim cosimulation."
+  },
+  {
+    "concept_id": "C018",
+    "name": "Hardware-Centric Data Structures",
+    "domain": "Algo",
+    "prerequisites": ["C011"],
+    "confidence": 0.9,
+    "notes": "Synchronous FIFO (dual-port RAM based), CAM, LFSR, crossbar arbitration."
+  },
+  {
+    "concept_id": "C019",
+    "name": "Parallel Algorithms for Hardware",
+    "domain": "Algo",
+    "prerequisites": ["C007", "C011", "C018"],
+    "confidence": 0.85,
+    "notes": "Systolic array design, dataflow graph scheduling, throughput/latency trade-offs."
+  },
+  {
+    "concept_id": "C020",
+    "name": "Memory Hierarchy and Interface Design",
+    "domain": "FPGA",
+    "prerequisites": ["C002", "C018"],
+    "confidence": 0.85,
+    "notes": "AXI4 / AXI-Stream, BRAM vs URAM, DDR/HBM controller basics."
+  },
+  {
+    "concept_id": "C021",
+    "name": "DSP Kernels on FPGA",
+    "domain": "FPGA",
+    "prerequisites": ["C008", "C010", "C019"],
+    "confidence": 0.85,
+    "notes": "FIR / IIR filter architectures, pipelined FFT (Radix-2/4), CORDIC in Verilog."
+  },
+  {
+    "concept_id": "C022",
+    "name": "Quantization and Pruning for ML on FPGA",
+    "domain": "ML",
+    "prerequisites": ["C009", "C017"],
+    "confidence": 0.7,
+    "notes": "INT8/INT4/ternary, PTQ vs QAT, AdaRound and BRECQ fundamentals for HW."
+  },
+  {
+    "concept_id": "C023",
+    "name": "CNN Accelerators on FPGA",
+    "domain": "ML",
+    "prerequisites": ["C019", "C020", "C022"],
+    "confidence": 0.75,
+    "notes": "Loop tiling/unrolling, Winograd, dataflow mapping (row-stationary), NVDLA-style architectures."
+  },
+  {
+    "concept_id": "C024",
+    "name": "Transformer Acceleration on FPGA",
+    "domain": "ML",
+    "prerequisites": ["C019", "C022"],
+    "confidence": 0.6,
+    "notes": "MHSA systolic mapping, linear attention approximations, KV-cache memory management; frontier topic."
+  },
+  {
+    "concept_id": "C025",
+    "name": "Sparse and Irregular Computation on FPGA",
+    "domain": "HPC",
+    "prerequisites": ["C019"],
+    "confidence": 0.65,
+    "notes": "Sparse matrix formats, SpMV hardware units, load-balancing and scheduling."
+  },
+  {
+    "concept_id": "C026",
+    "name": "Network-on-Chip for Multi-FPGA HPC",
+    "domain": "HPC",
+    "prerequisites": ["C018", "C025"],
+    "confidence": 0.65,
+    "notes": "Mesh/torus, wormhole switching, deadlock-free routing for FPGA clusters."
+  },
+  {
+    "concept_id": "C027",
+    "name": "FPGA Emulation and Co-simulation",
+    "domain": "FPGA",
+    "prerequisites": ["C012", "C015"],
+    "confidence": 0.7,
+    "notes": "Verilator DPI-C, cocotb, QEMU SoC emulation; Python/Julia cosimulation bindings."
+  },
+  {
+    "concept_id": "C028",
+    "name": "Roofline Model and Performance Analysis on FPGA",
+    "domain": "HPC",
+    "prerequisites": ["C020", "C027"],
+    "confidence": 0.75,
+    "notes": "Operational intensity metrics, AXI bandwidth profiling, roofline plotting for FPGA designs."
+  },
+  {
+    "concept_id": "C029",
+    "name": "Reconfigurable Computing and Dynamic Partial Reconfiguration",
+    "domain": "FPGA",
+    "prerequisites": ["C014"],
+    "confidence": 0.6,
+    "notes": "Partial reconfiguration region design, ICAP/PCAP, adaptive compute on modern Xilinx/AMD parts."
+  },
+  {
+    "concept_id": "C030",
+    "name": "Advanced Board-Level Power Integrity and Thermal Coupling",
+    "domain": "Electronics",
+    "prerequisites": ["C005", "C006"],
+    "confidence": 0.75,
+    "notes": "PDN design, decoupling capacitors, SSN (ground bounce), thermal via design."
+  }
+]

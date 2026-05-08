@@ -1,0 +1,258 @@
+#+TITLE: Deep FPGA: Physics, Math, Electronics and ML/HPC Acceleration
+#+DATE: 2026-05-04
+#+AUTHOR: Curriculum Architect
+
+* Deep FPGA: Physics, Math, Electronics and ML/HPC Acceleration
+
+A frontier-level, dependency-aware curriculum for engineers and researchers who want to master FPGA internals from semiconductor physics through board-level electronics, mathematical foundations, Verilog RTL, data structures, prototyping tools (Python / Julia / MATLAB), and culminating in ML/AI acceleration and HPC architectures.
+
+** Physics & Semiconductor Foundations
+*** Semiconductor Device Physics (MOSFETs, CMOS Fabrication)
+    :PROPERTIES:
+    :CONCEPT_ID: C001
+    :DOMAIN:   Physics
+    :PREREQS:  None
+    :END:
+    Structure, operation, and fabrication of MOSFETs; CMOS inverter; process nodes; lithography limits.
+
+*** CMOS Switching, Delay, and Power Models
+    :PROPERTIES:
+    :CONCEPT_ID: C004
+    :DOMAIN:   Physics
+    :PREREQS:  C001, C002
+    :END:
+    RC delay models, logical effort, dynamic vs static power, voltage/frequency scaling fundamentals.
+
+** FPGA Fabric & Digital Logic
+*** FPGA Fabric Architecture (LUTs, CLBs, DSP, BRAM, Routing)
+    :PROPERTIES:
+    :CONCEPT_ID: C002
+    :DOMAIN:   FPGA
+    :PREREQS:  None
+    :END:
+    Xilinx/AMD Versal vs Intel Agilex fabric; LUT6, CLB structure, dedicated carry chains, DSP48 slices.
+
+*** Digital Logic Recap (Boolean Algebra, FSMs, Timing)
+    :PROPERTIES:
+    :CONCEPT_ID: C003
+    :DOMAIN:   Arch
+    :PREREQS:  None
+    :END:
+    Combinational / sequential logic, K-maps, Mealy/Moore machines, metastability basics.
+
+** Board-Level Electronics & Clocking
+*** Signal Integrity and Transmission Line Fundamentals
+    :PROPERTIES:
+    :CONCEPT_ID: C005
+    :DOMAIN:   Electronics
+    :PREREQS:  C001
+    :END:
+    Impedance matching, reflections, crosstalk, PCB trace modeling, eye diagrams, TDR concepts.
+
+*** Clock Domains, Skew, Jitter and Clock Distribution
+    :PROPERTIES:
+    :CONCEPT_ID: C006
+    :DOMAIN:   Electronics
+    :PREREQS:  C002, C005
+    :END:
+    PLLs / DLLs, clock tree synthesis, global vs regional clocks, source-synchronous interfaces.
+
+*** Advanced Board-Level Power Integrity and Thermal Coupling
+    :PROPERTIES:
+    :CONCEPT_ID: C030
+    :DOMAIN:   Electronics
+    :PREREQS:  C005, C006
+    :END:
+    PDN impedance, decoupling strategy, SSN (ground bounce), thermal via design.
+
+** Mathematical Foundations for Hardware
+*** Linear Algebra for Hardware (Matrices, SVD, Systolic Motivation)
+    :PROPERTIES:
+    :CONCEPT_ID: C007
+    :DOMAIN:   Math
+    :PREREQS:  None
+    :END:
+    Matrix multiplication complexity, SVD for dimensionality reduction, motivation for systolic arrays.
+
+*** Fixed-Point Arithmetic and Number Representation (Q-format, Overflow)
+    :PROPERTIES:
+    :CONCEPT_ID: C008
+    :DOMAIN:   Math
+    :PREREQS:  C003, C007
+    :END:
+    Two's complement, Qm.n format, saturation vs wrap-around, guard bits.
+
+*** Probability and Statistics for Quantization and Noise
+    :PROPERTIES:
+    :CONCEPT_ID: C009
+    :DOMAIN:   Math
+    :PREREQS:  C007
+    :END:
+    SQNR modeling, uniform / Gaussian quantization, entropy basics for compression.
+
+*** Numerical Analysis for Hardware (Stability, Iterative Methods)
+    :PROPERTIES:
+    :CONCEPT_ID: C010
+    :DOMAIN:   Math
+    :PREREQS:  C007, C008
+    :END:
+    Truncation vs round-off, CORDIC convergence, condition number, iterative solvers.
+
+** Verilog RTL & FPGA Development
+*** Verilog RTL Design (Modules, Blocking/Non-blocking, Generate)
+    :PROPERTIES:
+    :CONCEPT_ID: C011
+    :DOMAIN:   FPGA
+    :PREREQS:  C003
+    :END:
+    Structural vs behavioral modeling, blocking vs non-blocking assignments, parameterization, generate blocks.
+
+*** Simulation, Testbenches and Verification (SystemVerilog Assertions, cocotb)
+    :PROPERTIES:
+    :CONCEPT_ID: C012
+    :DOMAIN:   FPGA
+    :PREREQS:  C011
+    :END:
+    Self-checking testbenches, constrained random verification basics, cocotb Python bindings.
+
+*** Timing Analysis and Constraints (SDC, STA, Multi-cycle Paths)
+    :PROPERTIES:
+    :CONCEPT_ID: C013
+    :DOMAIN:   FPGA
+    :PREREQS:  C006, C011
+    :END:
+    SDC commands, setup / hold slack, report_timing, false paths, multi-cycle path analysis.
+
+*** FPGA Synthesis and Place-and-Route Internals
+    :PROPERTIES:
+    :CONCEPT_ID: C014
+    :DOMAIN:   FPGA
+    :PREREQS:  C002, C004, C011
+    :END:
+    Technology mapping to LUTs, packing into CLBs, simulated annealing placement, pathfinder routing.
+
+** Algorithms & Data Structures for Hardware
+*** Hardware-Centric Data Structures (FIFOs, Shift Registers, CAMs, Crossbars)
+    :PROPERTIES:
+    :CONCEPT_ID: C018
+    :DOMAIN:   Algo
+    :PREREQS:  C011
+    :END:
+    Synchronous FIFO (full/empty logic), LFSR, content-addressable memory, crossbar arbitration.
+
+*** Parallel Algorithms for Hardware (Systolic Arrays, Dataflow Graphs)
+    :PROPERTIES:
+    :CONCEPT_ID: C019
+    :DOMAIN:   Algo
+    :PREREQS:  C007, C011, C018
+    :END:
+    Systolic array design methodology, dataflow graph scheduling, pipeline balancing, throughput vs latency.
+
+*** Memory Hierarchy and Interface Design (AXI, DDR, BRAM/URAM)
+    :PROPERTIES:
+    :CONCEPT_ID: C020
+    :DOMAIN:   FPGA
+    :PREREQS:  C002, C018
+    :END:
+    AXI4/AXI-Stream handshake, BRAM vs URAM trade-offs, DDR/HBM controller basics, burst transactions.
+
+** Prototyping & Analysis Tools (Python / Julia / MATLAB)
+*** Python for Algorithm Prototyping (NumPy, SciPy, Signal Processing)
+    :PROPERTIES:
+    :CONCEPT_ID: C015
+    :DOMAIN:   Tools
+    :PREREQS:  None
+    :END:
+    NumPy / SciPy DSP functions, matplotlib visualizations, bit-true golden model creation.
+
+*** MATLAB/Simulink for Hardware Modeling (Fixed-Point Designer, HDL Coder)
+    :PROPERTIES:
+    :CONCEPT_ID: C017
+    :DOMAIN:   Tools
+    :PREREQS:  C008, C015
+    :END:
+    Simulink fixed-point settings, HDL Coder workflow from model to RTL, cosimulation with ModelSim.
+
+*** Julia for Scientific Computing and Hardware-Aware Numerics
+    :PROPERTIES:
+    :CONCEPT_ID: C016
+    :DOMAIN:   Tools
+    :PREREQS:  C010
+    :END:
+    Tullio for tensor expressions, LoopVectorization, fixed-point emulation, writing bit-true simulations.
+
+** DSP & Signal Processing Accelerators
+*** DSP Kernels on FPGA (FIR, IIR, FFT Architectures, CORDIC)
+    :PROPERTIES:
+    :CONCEPT_ID: C021
+    :DOMAIN:   FPGA
+    :PREREQS:  C008, C010, C019
+    :END:
+    Transposed / systolic FIR, pipelined Radix-2/4 FFT butterflies, CORDIC iterations in Verilog.
+
+** Machine Learning Acceleration on FPGA
+*** Quantization and Pruning for ML on FPGA (INT8 / INT4 / QAT)
+    :PROPERTIES:
+    :CONCEPT_ID: C022
+    :DOMAIN:   ML
+    :PREREQS:  C009, C017
+    :END:
+    Post-training quantization (PTQ), quantization-aware training (QAT), AdaRound/BRECQ basics for hardware.
+
+*** CNN Accelerators on FPGA (Winograd, Tiling, Dataflow)
+    :PROPERTIES:
+    :CONCEPT_ID: C023
+    :DOMAIN:   ML
+    :PREREQS:  C019, C020, C022
+    :END:
+    Loop unrolling / tiling, im2col vs Winograd, row-stationary / output-stationary dataflows, NVDLA-style designs.
+
+*** Transformer Acceleration on FPGA (Attention, Systolic MHSA, Sparsity)
+    :PROPERTIES:
+    :CONCEPT_ID: C024
+    :DOMAIN:   ML
+    :PREREQS:  C019, C022
+    :END:
+    Multi-head self-attention (MHSA) mapping to systolic arrays, linear attention approximations, KV-cache offloading.
+
+** High-Performance Computing & Advanced Architectures
+*** Sparse and Irregular Computation on FPGA (CSR, Load Balancing)
+    :PROPERTIES:
+    :CONCEPT_ID: C025
+    :DOMAIN:   HPC
+    :PREREQS:  C019
+    :END:
+    Sparse matrix formats (CSR/CSC/COO), sparse matrix-vector multiply hardware, load-balancing strategies.
+
+*** Network-on-Chip (NoC) for Multi-FPGA HPC Systems
+    :PROPERTIES:
+    :CONCEPT_ID: C026
+    :DOMAIN:   HPC
+    :PREREQS:  C018, C025
+    :END:
+    Mesh / torus topology, wormhole switching, deterministic vs adaptive routing, deadlock-free turn models.
+
+*** Reconfigurable Computing and Dynamic Partial Reconfiguration
+    :PROPERTIES:
+    :CONCEPT_ID: C029
+    :DOMAIN:   FPGA
+    :PREREQS:  C014
+    :END:
+    Partial reconfiguration (PR) region design, bitstream manipulation, ICAP/PCAP interfaces, adaptive compute.
+
+** Synthesis, Emulation & Performance Analysis
+*** FPGA Emulation and Co-simulation (Verilator, QEMU, DPI-C, Python/Julia Bindings)
+    :PROPERTIES:
+    :CONCEPT_ID: C027
+    :DOMAIN:   FPGA
+    :PREREQS:  C012, C015
+    :END:
+    Verilator C++ model generation, DPI-C for linking Python/Julia, QEMU SoC emulation basics, cosimulation workflows.
+
+*** Roofline Model and Performance Analysis on FPGA
+    :PROPERTIES:
+    :CONCEPT_ID: C028
+    :DOMAIN:   HPC
+    :PREREQS:  C020, C027
+    :END:
+    Operational intensity, bandwidth walls, compute vs memory bound, AXI bandwidth profiling, achievable FLOP/s.

@@ -1,0 +1,464 @@
+;;; *Messages* dump from Centaur startup
+;;; Timestamp: Sun May  3 21:04:19 2026
+
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/env.el (source)...done
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [9 times]
+[custom.el] Lockfiles disabled for Windows stability
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [9 times]
+Set package archives to ‘melpa’
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [1081 times]
+Contacting host: raw.githubusercontent.com:443
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [54 times]
+Wrote c:/Users/Bapti/NFM.ttf
+ Successfully downloaded ‘nerd-icons’ fonts to ‘~/’!
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [540 times]
+Waiting for git... [2 times]
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [11 times]
+ad-handle-definition: ‘ibuffer-do-replace-regexp’ got redefined
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [122 times]
+Help (?/h)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [32 times]
+[yas] Prepared just-in-time loading of snippets successfully.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [105 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom-post.el (source)...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [43 times]
+Contacting host: melpa.org:443
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Extracting...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+  INFO     Scraping 2 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [6 times]
+  INFO     Scraping 2 files for loaddefs...done
+  GEN      verilog-ts-mode-autoloads.el
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ts-mode-20260429.1857... [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ts-mode-20260429.1857/verilog-ts-mode.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [6 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ts-mode-20260429.1857/verilog-ts-mode.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ts-mode-20260429.1857/verilog-ts-mode.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ts-mode-20260429.1857...
+Done (Total of 1 file compiled, 2 skipped)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [8 times]
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ts-mode-20260429.1857/verilog-ts-mode-pkg.el
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [22 times]
+Failed to run diff: Searching for program: No such file or directory, diff
+Package ‘verilog-ts-mode’ installed.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Contacting host: melpa.org:443
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Extracting...done
+  INFO     Scraping 3 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [9 times]
+  INFO     Scraping 3 files for loaddefs...done
+  GEN      flycheck-autoloads.el
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/flycheck-20260320.1715... [4 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/flycheck-20260320.1715/flycheck.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [14 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/flycheck-20260320.1715/flycheck.el... (flycheck-add-next-checker)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/flycheck-20260320.1715/flycheck.el... (flycheck-verify-command-checker)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/flycheck-20260320.1715/flycheck.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/flycheck-20260320.1715/flycheck.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/flycheck-20260320.1715...
+Done (Total of 1 file compiled, 3 skipped)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [8 times]
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/flycheck-20260320.1715/flycheck-pkg.el
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Failed to run diff: Searching for program: No such file or directory, diff
+Contacting host: melpa.org:443
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Extracting...done
+  INFO     Scraping 2 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [6 times]
+  INFO     Scraping 2 files for loaddefs...done
+  GEN      ripgrep-autoloads.el
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ripgrep-20220520.1410... [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ripgrep-20220520.1410/ripgrep.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [4 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ripgrep-20220520.1410/ripgrep.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ripgrep-20220520.1410/ripgrep.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ripgrep-20220520.1410...
+Done (Total of 1 file compiled, 2 skipped)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [8 times]
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ripgrep-20220520.1410/ripgrep-pkg.el
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Failed to run diff: Searching for program: No such file or directory, diff
+Contacting host: melpa.org:443
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Extracting...done
+  INFO     Scraping 2 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [6 times]
+  INFO     Scraping 2 files for loaddefs...done
+  GEN      ag-autoloads.el
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ag-20201031.2202... [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ag-20201031.2202/ag.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [7 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ag-20201031.2202/ag.el... (ag/replace-first)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ag-20201031.2202/ag.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ag-20201031.2202/ag.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ag-20201031.2202...
+Done (Total of 1 file compiled, 2 skipped)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [8 times]
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/ag-20201031.2202/ag-pkg.el
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Failed to run diff: Searching for program: No such file or directory, diff
+Contacting host: melpa.org:443
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Extracting...done
+  INFO     Scraping 25 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [39 times]
+  INFO     Scraping 25 files for loaddefs...56% 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [36 times]
+  INFO     Scraping 25 files for loaddefs...done
+  GEN      verilog-ext-autoloads.el
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021... [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-beautify.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [26 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-beautify.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-beautify.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-block-end-comments.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-block-end-comments.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-block-end-comments.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-capf.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [4 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-capf.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-capf.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-compile.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [4 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-compile.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-compile.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-eglot.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [34 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-eglot.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-eglot.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-flycheck.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [11 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-flycheck.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-flycheck.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-font-lock.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-font-lock.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-font-lock.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-formatter.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-formatter.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-formatter.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-hierarchy.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [9 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-hierarchy.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-hierarchy.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-hs.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-hs.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-hs.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-imenu.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-imenu.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-imenu.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-lsp-bridge.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-lsp-bridge.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-lsp-bridge.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-lsp.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [278 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-lsp.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-lsp.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-lspce.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-lspce.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-lspce.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-nav.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [4 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-nav.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-nav.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021... [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-ports.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-ports.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-ports.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-tags.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-tags.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-tags.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-template.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [4 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-template.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-template.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-time-stamp.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-time-stamp.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-typedef.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-typedef.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-typedef.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-utils.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-utils.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-utils.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-which-func.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-which-func.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-which-func.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-xref.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-xref.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext-xref.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext.el... (verilog-ext-when-feature)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/verilog-ext.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/langserver...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/snippets...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/snippets/makefile-mode...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/snippets/uvm_agent...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/verilog-ext-20260430.1021/snippets/verilog-mode...
+Done (Total of 24 files compiled, 2 skipped)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [11 times]
+Package ‘verilog-ext’ installed.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Contacting host: melpa.org:443
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Extracting...done
+  INFO     Scraping 2 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [6 times]
+  INFO     Scraping 2 files for loaddefs...done
+  GEN      vhdl-ts-mode-autoloads.el
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ts-mode-20251008.2052... [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ts-mode-20251008.2052/vhdl-ts-mode.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [6 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ts-mode-20251008.2052/vhdl-ts-mode.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ts-mode-20251008.2052/vhdl-ts-mode.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ts-mode-20251008.2052...
+Done (Total of 1 file compiled, 2 skipped)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [8 times]
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ts-mode-20251008.2052/vhdl-ts-mode-pkg.el
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Failed to run diff: Searching for program: No such file or directory, diff
+Package ‘vhdl-ts-mode’ installed.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Contacting host: melpa.org:443
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Extracting...done
+  INFO     Scraping 22 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [42 times]
+  INFO     Scraping 22 files for loaddefs...68% 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [24 times]
+  INFO     Scraping 22 files for loaddefs...done
+  GEN      vhdl-ext-autoloads.el
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340... [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-beautify.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [10 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-beautify.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-beautify.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-capf.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [4 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-capf.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-capf.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-compile.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-compile.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-compile.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-eglot.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-eglot.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-eglot.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-flycheck.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-flycheck.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-flycheck.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-font-lock.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-font-lock.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-font-lock.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-hierarchy.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [5 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-hierarchy.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-hierarchy.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-hs.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-hs.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-hs.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-imenu.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-imenu.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-imenu.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-lsp-bridge.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-lsp-bridge.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-lsp-bridge.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-lsp.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [4 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-lsp.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-lsp.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-lspce.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-lspce.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-lspce.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-nav.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [4 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-nav.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-nav.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340... [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-ports.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-ports.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-ports.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-tags.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-tags.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-tags.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-template.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-template.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-template.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-time-stamp.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-time-stamp.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-time-stamp.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-utils.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-utils.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-utils.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-which-func.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-which-func.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-which-func.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-xref.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-xref.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext-xref.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext.el... (vhdl-ext-when-feature)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/vhdl-ext.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/langserver...
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/vhdl-ext-20251118.1340/snippets...
+Done (Total of 21 files compiled, 2 skipped)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [10 times]
+Package ‘vhdl-ext’ installed.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Contacting host: melpa.org:443
+Parsing tar file...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Extracting...done
+  INFO     Scraping 10 files for loaddefs... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [30 times]
+  INFO     Scraping 10 files for loaddefs...done
+  GEN      fpga-autoloads.el
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-altera.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-altera.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-altera.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246... [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-cadence.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-cadence.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-cadence.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-lattice.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-lattice.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-lattice.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246... [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-siemens.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-siemens.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-siemens.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-synopsys.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-synopsys.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-synopsys.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-utils.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [2 times]
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-utils.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-utils.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-xilinx.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-xilinx.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-xilinx.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-yosys.el...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-yosys.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-yosys.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246...
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga.el... (fpga-when-feature)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Compiling c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga.el...done
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga.elc
+Checking c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246...
+Done (Total of 9 files compiled, 2 skipped)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [9 times]
+Wrote c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/fpga-20260407.1246/fpga-pkg.el
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [3 times]
+Failed to run diff: Searching for program: No such file or directory, diff
+Package ‘fpga’ installed.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [9 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom-post.el (source)...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [4 times]
+[custom.el] apheleia disabled: diff.exe not on Windows
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [13 times]
+Centaur diagnostics saved to: c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260503-210251.log [11 times]
+‘popper-tab-line-mode’ is incompatible with ‘popper-echo-mode’.  Disabling ‘popper-echo-mode’.
+
+;;; END OF MESSAGES DUMP

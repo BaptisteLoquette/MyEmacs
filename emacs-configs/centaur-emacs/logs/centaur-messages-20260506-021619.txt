@@ -1,0 +1,47 @@
+;;; *Messages* dump from Centaur startup
+;;; Timestamp: Wed May  6 02:16:37 2026
+
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/env.el (source)...
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [9 times]
+[custom.el] Lockfiles disabled for Windows stability
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [9 times]
+Set package archives to ‘melpa’
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [1096 times]
+Contacting host: raw.githubusercontent.com:443
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [54 times]
+Wrote c:/Users/Bapti/NFM.ttf
+ Successfully downloaded ‘nerd-icons’ fonts to ‘~/’!
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [540 times]
+Waiting for git... [2 times]
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [11 times]
+ad-handle-definition: ‘ibuffer-do-replace-regexp’ got redefined
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [122 times]
+Help (?/h)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [32 times]
+[yas] Prepared just-in-time loading of snippets successfully.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [105 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom-post.el (source)...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [47 times]
+[diagram] custom-post-diagram.el loaded — C-c d ? for status
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [8 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom-post.el (source)...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [4 times]
+[custom.el] apheleia disabled: diff.exe not on Windows
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [13 times]
+Centaur diagnostics saved to: c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [331 times]
+[babel] ob-vhdl loaded
+[babel] mermaid loaded (mmdc found)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [4 times]
+[ob-mermaid] CLI found: c:/Users/Bapti/AppData/Roaming/npm/mmdc.cmd
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [10 times]
+[diagram] PlantUML jar: c:/Users/Bapti/tools/plantuml.jar
+[diagram] Mermaid CLI found: c:/Users/Bapti/AppData/Roaming/npm/mmdc.cmd
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [418 times]
+Clearing removed files...done
+Processing modified files...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260506-021619.log [6 times]
+
+;;; END OF MESSAGES DUMP

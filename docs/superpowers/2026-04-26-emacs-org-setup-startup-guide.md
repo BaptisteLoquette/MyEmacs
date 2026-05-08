@@ -82,25 +82,28 @@ You're in **hybrid mode**. That means:
 
 ## Day 1: Taking Your First Note
 
+Doom provides org-roam under `SPC n r` (notes → roam):
+
 ```
-SPC n c                    # Org-roam capture
-  → "Today's note"         # Type your note title  
+SPC n r n                  # Org-roam capture
+  → "Today's note"         # Type your note title
   → C-c C-c                # Confirm
 ```
 
 Now type your note. To link to another note:
 
 ```
-SPC n i                    # Insert a link to another note
+SPC n r i                  # Insert a link to another note
   → Start typing...        # Search for existing note
   → Enter                  # Insert the link
-SPC n b                    # See which notes link to this one
+SPC n r r                  # Toggle roam buffer (see backlinks)
 ```
 
 ### Daily journal
 
 ```
-SPC n d                    # Create/open today's journal entry
+SPC n r d n                # Capture today's journal entry
+SPC n r d t                # Go to today's journal entry
 ```
 
 Your journals live in `~/org/daily/`. They're full Org-mode documents.
@@ -109,10 +112,12 @@ Your journals live in `~/org/daily/`. They're full Org-mode documents.
 
 ## Day 1: Your First Literate Computing Block
 
-In any Org file:
+Your setup uses **emacs-jupyter** for Python blocks, giving you a live Jupyter kernel session with rich output (images, HTML, LaTeX, Pandas tables) right inside Org.
+
+### Quick example
 
 ```
-#+begin_src python :results file :file myplot.png
+#+begin_src python :session py :results replace drawer
   fig, ax = newfig()                    # Dark theme auto-applied
   ax.plot([1,2,3,4], [1,4,9,16], color=COLORS['NMOS'])
   ax.set_title("My First Plot", color=COLORS['text'])
@@ -122,19 +127,60 @@ In any Org file:
 #+end_src
 ```
 
-`C-c C-c` on the block → executes → PNG appears inline.
+`C-c C-c` on the block → executes via the Jupyter kernel → PNG appears inline.
 
 **Pre-loaded for you:** `newfig()`, `COLORS`, `pl` (Polars as `pl`), `np`, `plt`, `mpatches`. No imports needed.
+
+### Why Jupyter blocks are better than plain ob-python
+
+| Feature | Plain ob-python | Jupyter (your setup) |
+|---|---|---|
+| Session persistence | No — each block is fresh | Yes — variables persist across blocks |
+| Rich output | PNG only | PNG, SVG, HTML, LaTeX, Pandas tables |
+| Async execution | No | Yes — `C-c C-c` returns immediately |
+| Completion | No | Yes — `TAB` completes inside blocks |
+| Inspection | No | Yes — `M-i` shows docs for symbol at point |
+| REPL interaction | No | Yes — live REPL buffer linked to session |
+
+### Jupyter sessions explained
+
+The `:session py` parameter links all blocks with the same session name to one running Python kernel.
+
+```
+Block 1                           Block 2 (same session)
+#+begin_src python :session py    #+begin_src python :session py
+  x = 42                            x * 2
+#+end_src                         #+end_src
+  → x = 42 stored in kernel       → Result: 84
+```
+
+Start a fresh session by changing the session name (e.g. `:session py2`) or restart the kernel with `C-c C-r` in the REPL.
+
+### Start a Jupyter REPL manually
+
+```
+SPC o r                    # Start Jupyter REPL
+  → Choose kernel: python3
+  → REPL buffer opens
+  → Type Python interactively
+```
+
+In the REPL:
+- `S-RET` — send current cell
+- `M-n` / `M-p` — navigate history
+- `C-c C-c` — interrupt kernel
+- `C-c C-r` — restart kernel
+- `M-i` — inspect symbol at point
 
 ---
 
 ## Day 1: Reading a Paper
 
 ```
-SPC a f                  # Elfeed (paper feeds)
+SPC o E                    # Elfeed (RSS feeds)
   → Browse arXiv feeds
-  → Enter on a paper    # Read abstract
-  → o                   # Open in browser
+  → Enter on a paper       # Read abstract
+  → o                      # Open in browser
   → Download PDF
 ```
 
@@ -143,7 +189,7 @@ To annotate a PDF:
 ```
 SPC f f → ~/org/literature/some-paper.pdf
   → pdf-tools opens the PDF
-SPC n c l                # Create a literature note
+SPC n r n                  # Create a literature note
   → Takes you to a new Org-roam note linked to this paper
   → org-noter syncs PDF position with your note
 ```
@@ -155,10 +201,10 @@ SPC n c l                # Create a literature note
 ### Quick capture (capture ideas instantly)
 
 ```
-SPC x                    # Org-capture menu
-  → t                    # Todo item
+SPC X                      # Org-capture menu (capital X)
+  → t                      # Todo item
   → Type your thought
-  → C-c C-c              # Done — saved to inbox.org
+  → C-c C-c                # Done — saved to inbox.org
 ```
 
 Even if Emacs isn't running, you can capture:
@@ -169,9 +215,9 @@ emacsclient -e "(+popup/buffer)"   # Opens a capture frame
 ### Search everything you've written
 
 ```
-SPC n f                             # Find any Org-roam note by title
-SPC s p                             # Project-wide text search
-  → "feedback"                      # Finds every mention in every file
+SPC n r f                  # Find any Org-roam note by title
+SPC s p                    # Project-wide text search
+  → "feedback"             # Finds every mention in every file
 ```
 
 ### Query your knowledge base
@@ -231,6 +277,29 @@ SPC a b                    # Insert org-ai block
 
 ## Day 3-7: AI Assistants
 
+### Configure your API keys (one-time setup)
+
+Your AI backends read keys from `~/.authinfo` (or `~/.authinfo.gpg` for encryption).
+A template was created at `~/.authinfo.template`. Copy it and fill in your keys:
+
+```powershell
+copy ~/.authinfo.template ~/.authinfo
+notepad ~/.authinfo
+```
+
+Replace `YOUR_..._API_KEY_HERE` with real keys.  Four providers are pre-configured:
+
+| Provider | Auth-source host | Where to get a key |
+|---|---|---|
+| Anthropic (Claude) | `api.anthropic.com` | https://console.anthropic.com/ |
+| MiniMax Coding Plan | `api.minimax.chat` | https://platform.minimaxi.com/ |
+| Opencode Go plan | `openrouter.ai` *(default)* | Your Opencode plan dashboard |
+| Hermes gateway | `openrouter.ai` *(default)* | OpenRouter or your private gateway |
+
+> **If your Opencode or Hermes plan uses a different host** (e.g. `gateway.my-org.com`), edit `~/.doom.d/config.org` → search for `:host "openrouter.ai"` under the Opencode/Hermes sections and change it to your real host.  Add a matching `machine <host>` line in `~/.authinfo`.
+
+After editing authinfo, restart Emacs or run `M-x auth-source-forget-all-cached`.
+
 ### Chat with AI
 
 ```
@@ -238,10 +307,22 @@ SPC a c                              # Open gptel chat
   → "Explain how a differential pair works"
 ```
 
+### Switch AI backend on the fly
+
+Four backends are registered.  Cycle through them instantly:
+
+```
+SPC a .                    # Switch to next backend (Anthropic → MiniMax → Opencode → Hermes)
+C-u SPC a .                # Pick a specific backend from the list
+SPC a ,                    # Show which backend is currently active
+```
+
+Each backend carries its own model list.  After switching, the transient menu (`SPC a m`) shows the models available on that backend.
+
 ### AI inside your notes
 
 ```
-SPC a b                              # Insert org-ai block
+SPC a b                              # Insert org-ai block (or <A TAB)
   → "Summarize the key claims
      in the three linked papers above"
   → C-c C-c                          # AI reads context, generates summary
@@ -277,12 +358,49 @@ SPC a b
 | `C-c [` | Add file tag |
 | `C-c ,` | Insert citation (org-ref) |
 
+### Org-roam (under SPC n r)
+
+| Keys | Action |
+|---|---|
+| `SPC n r f` | Find node |
+| `SPC n r i` | Insert node link |
+| `SPC n r n` | Capture to node |
+| `SPC n r r` | Toggle roam buffer |
+| `SPC n r d n` | Capture today's journal |
+| `SPC n r d t` | Goto today's journal |
+
+### Jupyter (inside Org source blocks)
+
+| Keys | Action |
+|---|---|
+| `C-c C-c` | Execute block via Jupyter kernel |
+| `TAB` | Code completion (when inside a block) |
+| `M-i` | Inspect symbol at point (show docs) |
+| `C-c '` | Edit block in dedicated buffer (with completion) |
+| `C-c C-r` | Restart kernel (in REPL buffer) |
+| `C-c C-c` | Interrupt kernel (in REPL buffer) |
+
+### AI (under SPC a)
+
+| Keys | Action |
+|---|---|
+| `SPC a c` | GPTel chat |
+| `SPC a s` | GPTel send region |
+| `SPC a m` | GPTel menu (transient) — set model, temperature, system prompt |
+| `SPC a .` | Cycle to next AI backend (Anthropic → MiniMax → Opencode → Hermes) |
+| `C-u SPC a .` | Pick a specific backend |
+| `SPC a ,` | Show current backend & model |
+| `SPC a b` | org-ai complete block |
+| `SPC a q` | org-ai prompt |
+| `SPC a u` | org-ai summarize |
+| `SPC a r` | org-ai on region |
+
 ### Reading/Annotating PDFs
 
 | Keys | Action |
 |---|---|
 | `j/k` | Scroll down/up |
-| `SPC n c` | Create linked note |
+| `SPC n r n` | Create linked note |
 | `m` | Place annotation marker |
 | `C-c C-c` | Open the linked note |
 
@@ -319,18 +437,18 @@ SPC a b
 
 **Morning:**
 1. `emacs`
-2. `SPC n d` — open today's journal
+2. `SPC n r d t` — open today's journal
 3. Write what you plan to do
 
 **During the day:**
-1. `SPC x t` — quick capture ideas
-2. `SPC a f` — check arXiv for new papers
+1. `SPC X t` — quick capture ideas (capital X)
+2. `SPC o E` — check arXiv feeds in Elfeed
 3. `SPC a c` — ask AI when stuck
 
 **Evening:**
 1. Review inbox.org — refile items into proper notes
 2. `SPC g g` — commit changes to git
-3. `SPC n d` — journal what you learned
+3. `SPC n r d t` — journal what you learned
 
 ---
 
@@ -354,4 +472,4 @@ After your first week:
 2. Explore the viz examples in `docs/superpowers/viz-framework/org/examples/`
 3. Read the design spec for the full vision: `docs/superpowers/specs/2026-04-26-emacs-org-setup-design.md`
 4. Install **Stage 3** frameworks (Streamlit, Remotion) when you need dashboards
-5. Configure **gptel API keys** when ready for AI features
+5. Customize the **model lists** in `~/.doom.d/config.org` if your plan includes different model names than the defaults

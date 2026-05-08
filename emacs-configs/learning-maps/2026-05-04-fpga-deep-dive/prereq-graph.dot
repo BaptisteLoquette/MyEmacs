@@ -1,0 +1,112 @@
+digraph prereqs {
+  rankdir=TB;
+  node [shape=box style="rounded,filled" fillcolor="#e8f4fd" fontname="Helvetica"];
+  edge [arrowhead=open];
+
+  /* Foundation nodes */
+  C001 [label="C001: Semiconductor Device Physics"];
+  C002 [label="C002: FPGA Fabric Architecture"];
+  C003 [label="C003: Digital Logic Recap"];
+  C005 [label="C005: Signal Integrity / TLines"];
+  C007 [label="C007: Linear Algebra for Hardware"];
+  C015 [label="C015: Python for Prototyping"];
+
+  /* Physics / Electronics */
+  C004 [label="C004: CMOS Switching, Delay & Power"];
+  C006 [label="C006: Clock Domains, Skew, Jitter"];
+  C030 [label="C030: Board-Level Power Integrity"];
+
+  /* Math */
+  C008 [label="C008: Fixed-Point Arithmetic"];
+  C009 [label="C009: Probability/Stats for Quantization"];
+  C010 [label="C010: Numerical Analysis for HW"];
+
+  /* RTL / FPGA Dev */
+  C011 [label="C011: Verilog RTL Design"];
+  C012 [label="C012: Simulation / Verification"];
+  C013 [label="C013: Timing Analysis & Constraints"];
+  C014 [label="C014: Synthesis & P&R Internals"];
+
+  /* Algo / Data Structures */
+  C018 [label="C018: HW Data Structures"];
+  C019 [label="C019: Parallel Algorithms / Systolic"];
+  C020 [label="C020: Memory Hierarchy / AXI"];
+
+  /* Tools */
+  C016 [label="C016: Julia for HW Numerics"];
+  C017 [label="C017: MATLAB/Simulink HDL Coder"];
+
+  /* DSP / ML */
+  C021 [label="C021: DSP Kernels on FPGA"];
+  C022 [label="C022: Quantization/Pruning for ML"];
+  C023 [label="C023: CNN Accelerators"];
+  C024 [label="C024: Transformer Acceleration"];
+
+  /* HPC */
+  C025 [label="C025: Sparse Computation"];
+  C026 [label="C026: Network-on-Chip"];
+  C029 [label="C029: Dynamic Partial Reconfiguration"];
+
+  /* Emulation / Analysis */
+  C027 [label="C027: Emulation & Co-simulation"];
+  C028 [label="C028: Roofline & Perf Analysis"];
+
+  /* Edges */
+  C001 -> C004;
+  C002 -> C004;
+  C002 -> C006;
+  C002 -> C014;
+  C002 -> C020;
+
+  C001 -> C005;
+  C005 -> C006;
+  C005 -> C030;
+  C006 -> C013;
+  C006 -> C030;
+
+  C003 -> C008;
+  C003 -> C011;
+
+  C007 -> C008;
+  C007 -> C009;
+  C007 -> C019;
+
+  C008 -> C010;
+  C008 -> C017;
+  C008 -> C021;
+  C009 -> C022;
+
+  C010 -> C016;
+  C010 -> C021;
+
+  C011 -> C012;
+  C011 -> C013;
+  C011 -> C014;
+  C011 -> C018;
+
+  C012 -> C027;
+
+  C014 -> C029;
+
+  C015 -> C017;
+  C015 -> C027;
+
+  C018 -> C019;
+  C018 -> C020;
+  C018 -> C026;
+
+  C019 -> C021;
+  C019 -> C023;
+  C019 -> C024;
+  C019 -> C025;
+
+  C020 -> C023;
+  C020 -> C028;
+
+  C022 -> C023;
+  C022 -> C024;
+
+  C025 -> C026;
+
+  C027 -> C028;
+}

@@ -48,6 +48,8 @@ C:/Users/Bapti/
 │   │       └── logs/                 # Doom/Emacs error logs
 │   └── header.py                     # Shared dark theme + COLORS for Org-babel Python
 │
+│   .jupyter-resources/               # Auto-generated images from Jupyter blocks
+│
 ├── org/                              # Your PKM knowledge base
 │   ├── daily/                        # Daily journals (C-c n d)
 │   ├── literature/                   # One Org-roam node per paper
@@ -87,10 +89,10 @@ C:/Users/Bapti/
 ### Dependency between files
 
 ```
-init.el    ──defines modules──▶  Doom loads packages
+init.el    ──defines modules──▶  Doom loads packages (+jupyter → jupyter pkg)
 config.org ──configures them──▶  Your settings apply
 packages.el──adds extras──────▶  MELPA packages installed
-header.py  ──used by─────────▶  ob-python blocks via :prologue
+header.py  ──used by─────────▶  ob-python / jupyter-python blocks via :prologue
 ```
 
 ---
@@ -121,6 +123,21 @@ Org buffer with #+begin_src python
   └─ #+RESULTS: [[file:fig.png]]      → inline preview
 ```
 
+### Jupyter kernel pipeline
+
+```
+Org file with #+begin_src python :session py
+  │
+  ├─ Doom's +jupyter module loads ob-jupyter
+  ├─ (org-babel-jupyter-override-src-block "python")
+  │     → all `python' blocks now use jupyter-python kernel
+  ├─ :session py links block to a live kernel
+  ├─ :async yes → non-blocking execution
+  ├─ C-c C-c sends code to kernel via ZMQ
+  │     → kernel executes and returns rich MIME bundle
+  └─ emacs-jupyter inserts result (PNG/SVG/HTML/LaTeX) into Org
+```
+
 ### Agent-driven visualization pipeline
 
 ```
@@ -141,12 +158,77 @@ Elfeed (arXiv feeds)
        └─ org-noter (annotation) → literature/ note
             └─ org-roam-bibtex (link bibliography)
                  └─ Synthesize → notes/ concept note
-                      └─ org-ql (query across all notes)
+                       └─ org-ql (query across all notes)
+```
+
+### AI multi-provider data flow
+
+```
+~/.authinfo (encrypted API keys)
+  │
+  ├─ machine api.anthropic.com ──┐
+  ├─ machine api.minimax.chat ────┤
+  ├─ machine openrouter.ai ───────┤──► auth-source ──► gptel backend
+  │    (Opencode + Hermes)        │
+  │                               │
+  config.org ──registers 4 backends──► gptel-make-openai / gptel-make-anthropic
+         │
+         ├── Anthropic (default)
+         ├── MiniMax
+         ├── Opencode
+         └── Hermes
+                │
+                └── SPC a .  (cycle) ──► switch active backend on the fly
 ```
 
 ---
 
-## 3. Update Procedures
+## 3. AI Provider Management
+
+### Adding a new provider
+
+1. **Find the API endpoint.**  Most modern LLM APIs are OpenAI-compatible.
+   - Base URL: e.g. `https://api.example.com`
+   - Endpoint: usually `/v1/chat/completions`
+
+2. **Register the backend** in `~/.doom.d/config.org`:
+   ```elisp
+   (gptel-make-openai "MyProvider"
+     :host "api.example.com"
+     :endpoint "/v1/chat/completions"
+     :stream t
+     :key (my/gptel-key "api.example.com")
+     :models '(model-1 model-2))
+   ```
+
+3. **Add the API key** to `~/.authinfo`:
+   ```
+   machine api.example.com login apikey password sk-xxxxxxxx
+   ```
+
+4. **Add to the cycle list** so `SPC a .` includes it:
+   ```elisp
+   (setq my/gptel-backends '("Anthropic" "MiniMax" "Opencode" "Hermes" "MyProvider"))
+   ```
+
+5. Run `doom sync` and restart Emacs.
+
+### Changing model names
+
+If your plan uses different model names than the defaults (e.g. MiniMax calls its coding model `MiniMax-Coder` instead of `MiniMax-Text-01`), edit `~/.doom.d/config.org` and change the `:models` list for that provider.  No other changes needed.
+
+### Auth-source quick reference
+
+| What | Where |
+|---|---|
+| Plain-text credentials | `~/.authinfo` |
+| Encrypted credentials (recommended) | `~/.authinfo.gpg` — encrypt with `gpg -c ~/.authinfo` then rename |
+| Reload after editing | `M-x auth-source-forget-all-cached` or restart Emacs |
+| Test a key retrieval | `M-x auth-source-search`, enter host name |
+
+---
+
+## 4. Update Procedures
 
 ### When to update what
 
@@ -158,7 +240,7 @@ Elfeed (arXiv feeds)
 | Python frameworks | When needed | Low | `pip install --upgrade <pkg>` |
 | Agent skills | Weekly | Low | `npx skills update` |
 
-### 3.1 Update Doom Emacs
+### 4.1 Update Doom Emacs
 
 ```powershell
 # 1. Update Doom core
@@ -171,9 +253,9 @@ Elfeed (arXiv feeds)
 & "$env:USERPROFILE\.emacs.d\bin\doom.ps1" doctor
 ```
 
-**If upgrade breaks:** See [Section 7: Recovery Procedures](#7-recovery-procedures).
+**If upgrade breaks:** See [Section 8: Recovery Procedures](#8-recovery-procedures).
 
-### 3.2 Update Emacs itself
+### 4.2 Update Emacs itself
 
 ```powershell
 # Check current version
@@ -188,7 +270,7 @@ winget upgrade GNU.Emacs
 
 **Note:** New Emacs major versions may break packages. Wait 1-2 weeks after a release before upgrading, and check Doom's issue tracker.
 
-### 3.3 Update Python frameworks
+### 4.3 Update Python frameworks
 
 ```powershell
 # Update all installed frameworks
@@ -198,7 +280,7 @@ pip install --upgrade matplotlib seaborn plotly polars schemdraw altair manim py
 python C:/Users/Bapti/docs/superpowers/viz-framework/install/verify-install.py
 ```
 
-### 3.4 Update agent skills
+### 4.4 Update agent skills
 
 ```bash
 # Check for updates
@@ -208,13 +290,13 @@ npx skills check
 npx skills update
 ```
 
-### 3.5 Add a new Doom module
+### 4.5 Add a new Doom module
 
 1. Edit `~/.doom.d/init.el` — add the module to the appropriate section
 2. Run `doom sync`
 3. Add any configuration to `~/.doom.d/config.org`
 
-### 3.6 Add a new MELPA package
+### 4.6 Add a new MELPA package
 
 1. Add to `~/.doom.d/packages.el`:
    ```elisp
@@ -231,9 +313,9 @@ npx skills update
 
 ---
 
-## 4. Troubleshooting
+## 5. Troubleshooting
 
-### 4.1 Emacs won't start
+### 5.1 Emacs won't start
 
 ```powershell
 # 1. Check Emacs is on PATH
@@ -249,7 +331,7 @@ emacs --no-init-file
 Get-Content "C:/Users/Bapti/.emacs.d/.local/state/logs/" -Recurse | Select-String "Error" | Select-Object -Last 20
 ```
 
-### 4.2 Package build errors (like evil-anzu)
+### 5.2 Package build errors (like evil-anzu)
 
 ```powershell
 # Remove the broken package repo and re-sync
@@ -257,7 +339,7 @@ Remove-Item -Recurse -Force "C:/Users/Bapti/.emacs.d/.local/straight/repos/<pack
 & "$env:USERPROFILE\.emacs.d\bin\doom.ps1" sync -u
 ```
 
-### 4.3 Doom sync hangs or times out
+### 5.3 Doom sync hangs or times out
 
 ```powershell
 # Kill any lingering Emacs processes
@@ -270,7 +352,7 @@ Remove-Item -Recurse -Force "C:/Users/Bapti/.emacs.d/.local/straight/build"
 & "$env:USERPROFILE\.emacs.d\bin\doom.ps1" sync --rebuild
 ```
 
-### 4.4 Org-babel blocks don't execute
+### 5.4 Org-babel blocks don't execute
 
 ```powershell
 # 1. Verify header.py exists and loads
@@ -287,7 +369,39 @@ python -c "exec(open('C:/Users/Bapti/.emacs.d/header.py').read()); print('header
 # C-c C-c → should print "test"
 ```
 
-### 4.5 Python blocks fail with import errors
+### 5.5 Jupyter kernel won't start
+
+```powershell
+# 1. Verify Jupyter is installed and on PATH
+python -m jupyter --version
+
+# 2. List available kernels
+python -m jupyter kernelspec list
+
+# 3. If no python3 kernel, install it
+pip install ipykernel
+python -m ipykernel install --user --name python3 --display-name "Python 3"
+
+# 4. In Emacs, check the kernel is detected
+# M-: (jupyter-available-kernelspecs) RET
+
+# 5. If zmq errors appear, the emacs-zmq module may need rebuilding
+# Remove the build and let Doom rebuild:
+Remove-Item -Recurse -Force "C:/Users/Bapti/.emacs.d/.local/straight/build/zmq"
+& "$env:USERPROFILE\.emacs.d\bin\doom.ps1" sync
+```
+
+**Common Jupyter issues:**
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `No kernel found` | Kernel not installed | `python -m ipykernel install --user` |
+| `zmq module not found` | emacs-zmq not built | Delete `straight/build/zmq`, `doom sync` |
+| Kernel starts but blocks hang | Session name mismatch | Ensure `:session` is identical across related blocks |
+| Images don't appear | Missing image support in Emacs | Install Emacs with `librsvg2` support |
+| REPL doesn't open | Kernel crash on start | Check kernel logs: `jupyter py --debug` |
+
+### 5.5 Python blocks fail with import errors
 
 ```powershell
 # Check which Python Emacs is using
@@ -302,7 +416,7 @@ pip install <missing-package>
 # (setq doom-python-conda-env "my-env")
 ```
 
-### 4.6 Diagrams (Mermaid/Graphviz) don't render
+### 5.6 Diagrams (Mermaid/Graphviz) don't render
 
 ```powershell
 # Mermaid: install mmdc
@@ -314,7 +428,7 @@ winget install Graphviz.Graphviz
 dot -V
 ```
 
-### 4.7 Fonts not rendering (icons showing as boxes)
+### 5.7 Fonts not rendering (icons showing as boxes)
 
 Install the required fonts:
 1. Download JetBrains Mono: https://www.jetbrains.com/lp/mono/
@@ -324,7 +438,7 @@ Install the required fonts:
    # In Emacs: M-x all-the-icons-install-fonts
    ```
 
-### 4.8 Emacs PATH doesn't include tool directories
+### 5.8 Emacs PATH doesn't include tool directories
 
 ```powershell
 # Permanently add Emacs to user PATH
@@ -337,7 +451,7 @@ Install the required fonts:
 
 ---
 
-## 5. Backup & Restore
+## 6. Backup & Restore
 
 ### What to back up (small, critical configs)
 
@@ -391,41 +505,41 @@ npx skills add markdown-viewer/skills@graphviz -g -y
 
 ---
 
-## 6. Known Issues
+## 7. Known Issues
 
-### 6.1 JavaScript inline rendering
+### 7.1 JavaScript inline rendering
 **Problem:** Plotly, D3.js, Three.js outputs (HTML) cannot render inline in Org.
 **Workaround:** Open `.html` files in browser. Org is the orchestrator, not the renderer.
 
-### 6.2 WSL2 electronics tools
+### 7.2 WSL2 electronics tools
 **Problem:** Xschem, Magic, Netgen require WSL2 (Linux-native).
 **Workaround:** Install WSL2 (`wsl --install`), then install tools inside WSL. Use `wsl.exe ngspice` from Emacs on Windows.
 
-### 6.3 First launch is slow
+### 7.3 First launch is slow
 **Problem:** First `emacs` launch after sync compiles many `.elc` files.
 **Workaround:** This only happens once. Subsequent launches are fast (~2-3 seconds with Doom daemon).
 
-### 6.4 evil-anzu package build failure
+### 7.4 evil-anzu package build failure
 **Problem:** `evil-anzu` sometimes fails to clone during `doom sync` (git HEAD resolution).
 **Impact:** Cosmetic only — the `anzu` package shows search match counts. Non-critical.
 **Fix:** `Remove-Item -Recurse -Force ~/.emacs.d/.local/straight/repos/evil-anzu` then `doom sync`.
 
-### 6.5 Windows PATH with PowerShell
+### 7.5 Windows PATH with PowerShell
 **Problem:** Emacs may not be on PATH in some PowerShell sessions.
 **Fix:** The installer adds it permanently to User PATH. If missing, run:
 ```powershell
 $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
 ```
 
-### 6.6 Org-babel plots show but don't update
+### 7.6 Org-babel plots show but don't update
 **Problem:** Cached inline images in Org buffers.
 **Fix:** `C-c C-c` on the block re-renders. Or `M-x org-redisplay-inline-images`.
 
 ---
 
-## 7. Recovery Procedures
+## 8. Recovery Procedures
 
-### 7.1 Full Doom reset (nuclear option)
+### 8.1 Full Doom reset (nuclear option)
 
 ```powershell
 # 1. Backup your config
@@ -441,7 +555,7 @@ Remove-Item -Recurse -Force C:/Users/Bapti/.emacs.d/.local
 & "$env:USERPROFILE\.emacs.d\bin\doom.ps1" sync
 ```
 
-### 7.2 Reset a specific package
+### 8.2 Reset a specific package
 
 ```powershell
 # Remove the package and rebuild
@@ -450,7 +564,7 @@ Remove-Item -Recurse -Force "C:/Users/Bapti/.emacs.d/.local/straight/build/<pack
 & "$env:USERPROFILE\.emacs.d\bin\doom.ps1" sync
 ```
 
-### 7.3 Emacs won't start at all
+### 8.3 Emacs won't start at all
 
 ```powershell
 # Try with vanilla config
@@ -463,7 +577,7 @@ emacs --debug-init
 # Check the \*Messages\* buffer for errors
 ```
 
-### 7.4 Rollback a bad config change
+### 8.4 Rollback a bad config change
 
 ```powershell
 # Use git to revert
@@ -474,7 +588,7 @@ git -C C:/Users/Bapti checkout <commit-hash> -- .doom.d/config.org
 
 ---
 
-## 8. Useful Commands Cheatsheet
+## 9. Useful Commands Cheatsheet
 
 ### Doom CLI
 
@@ -518,10 +632,12 @@ SPC f r           Recent files
 SPC b b           Switch buffer
 SPC /             Project search (ripgrep)
 SPC g g           Magit status
-SPC n f           Org-roam find node
-SPC n c           Org-roam capture
-SPC n b           Org-roam backlinks
+SPC n r f         Org-roam find node
+SPC n r n         Org-roam capture
+SPC n r r         Org-roam backlinks
 SPC a c           gptel chat
+SPC a .           Cycle AI backend
+SPC a ,           Show current AI backend
 SPC a b           org-ai block
 SPC t e           Toggle evil-mode
 C-c C-p           Graphviz preview (in .dot file)

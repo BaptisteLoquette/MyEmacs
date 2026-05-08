@@ -1,0 +1,34 @@
+;;; *Messages* dump from Centaur startup
+;;; Timestamp: Mon May  4 10:44:19 2026
+
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/env.el (source)...done
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [9 times]
+[custom.el] Lockfiles disabled for Windows stability
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [9 times]
+Set package archives to ‘melpa’
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [1097 times]
+Contacting host: raw.githubusercontent.com:443
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [54 times]
+Wrote c:/Users/Bapti/NFM.ttf
+ Successfully downloaded ‘nerd-icons’ fonts to ‘~/’!
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [540 times]
+Waiting for git... [2 times]
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [11 times]
+ad-handle-definition: ‘ibuffer-do-replace-regexp’ got redefined
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [122 times]
+Help (?/h)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [32 times]
+[yas] Prepared just-in-time loading of snippets successfully.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [105 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom-post.el (source)...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [55 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom-post.el (source)...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [4 times]
+[custom.el] apheleia disabled: diff.exe not on Windows
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [13 times]
+Centaur diagnostics saved to: c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260504-104402.log [10 times]
+
+;;; END OF MESSAGES DUMP

@@ -1,0 +1,38 @@
+;; -*- no-byte-compile: t; -*-
+;;; lisp/packages.el
+
+;; doom.el
+(package! auto-minor-mode
+  :pin "17cfa1b54800fdef2975c0c0531dad34846a5065")
+(package! compat
+  :recipe (:host github :repo "emacs-compat/compat")
+  :pin "38df650dce9f862c6b523de5b683573df590ab85")
+(unless (fboundp 'igc-info)
+  (package! gcmh
+    :pin "0089f9c3a6d4e9a310d0791cf6fa8f35642ecfd9"))
+
+;; doom-packages.el
+(package! straight
+  :type 'core
+  :recipe `(:host github
+            :repo "radian-software/straight.el"
+            :branch "develop"
+            :local-repo "straight.el"
+            :files ("straight*.el"))
+  :pin "09b789a8596cacca6bbff866500373541a85ffa2")
+
+;; doom-ui.el
+(package! nerd-icons :pin "1db0b0b9203cf293b38ac278273efcfc3581a05f")
+(package! hide-mode-line :pin "ddd154f1e04d666cd004bf8212ead8684429350d")
+
+;; doom-editor.el
+(package! better-jumper :pin "b1bf7a3c8cb820d942a0305e0e6412ef369f819c")
+(package! smartparens :pin "82d2cf084a19b0c2c3812e0550721f8a61996056")
+
+;; doom-projects.el
+(package! projectile :pin "f8be23b266aec7108fb4b80410623cd50ba8ded9")
+(package! project :pin "041a69d062a5442e2b0fee125c3228225f894ce1")
+
+;; doom-keybinds.el
+(package! general :pin "a48768f85a655fe77b5f45c2880b420da1b1b9c3")
+(package! which-key :pin "38d4308d1143b61e4004b6e7a940686784e51500")

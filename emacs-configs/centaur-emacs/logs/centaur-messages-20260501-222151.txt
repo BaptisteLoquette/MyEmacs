@@ -1,0 +1,45 @@
+;;; *Messages* dump from Centaur startup
+;;; Timestamp: Fri May  1 22:22:31 2026
+
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/env.el (source)...done
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...
+emacs-configs/centaur-emacs/lisp/init-diagnostics.el: Warning: ‘defadvice’ is an obsolete macro (as of 30.1); use ‘advice-add’ or ‘define-advice’ [2 times]
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [9 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [9 times]
+Set package archives to ‘melpa’
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [106 times]
+Error loading autoloads: (file-missing Cannot open load file No such file or directory c:/Users/Bapti/emacs-configs/centaur-emacs/elpa/all/orb-autoloads)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [958 times]
+Contacting host: raw.githubusercontent.com:443
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [54 times]
+Wrote c:/Users/Bapti/NFM.ttf
+ Successfully downloaded ‘nerd-icons’ fonts to ‘~/’!
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [539 times]
+Waiting for git... [2 times]
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [11 times]
+ad-handle-definition: ‘ibuffer-do-replace-regexp’ got redefined
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [86 times]
+Help (?/h)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [32 times]
+[yas] Prepared just-in-time loading of snippets successfully.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [137 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom-post.el (source)...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [54 times]
+Centaur diagnostics saved to: c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [10 times]
+custom-initialize-reset: Invalid read syntax: ")", 46, 73
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [749 times]
+Clearing removed files...done
+Processing modified files... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [16 times]
+Processing modified files...25% 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [10 times]
+Processing modified files...50% 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [10 times]
+Processing modified files...75% 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [10 times]
+Processing modified files...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260501-222151.log [6 times]
+
+;;; END OF MESSAGES DUMP

@@ -1,0 +1,602 @@
+[
+  {
+    "resource_id": "R001",
+    "title": "MIT 6.012 Microelectronic Devices and Circuits — Lecture Notes (MOSFETs & CMOS)",
+    "url": "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2005/pages/lecture-notes/",
+    "type": "docs",
+    "segments": ["Lectures 9–15: MOSFET I-V, MOS Caps, CMOS Fabrication Process"],
+    "covers_concepts": ["C001"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R002",
+    "title": "CMOS Fabrication Process Explained (Step-by-Step IC Manufacturing)",
+    "url": "https://www.youtube.com/watch?v=sV2xT-WCSSI",
+    "type": "video",
+    "segments": ["0:00–13:00 (full video walkthrough of fabrication steps)"],
+    "covers_concepts": ["C001"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R003",
+    "title": "MIT 6.374 Analysis and Design of Digital Integrated Circuits — Lecture Notes (Delay & Power)",
+    "url": "https://ocw.mit.edu/courses/6-374-analysis-and-design-of-digital-integrated-circuits-fall-2006/pages/lecture-notes/",
+    "type": "docs",
+    "segments": ["Lecture series covering switching delay, power models, logical effort, sizing"],
+    "covers_concepts": ["C004"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R004",
+    "title": "Teddy-van-Jerry/ngspice-cmos — NGSPICE Simulation of CMOS Circuits",
+    "url": "https://github.com/Teddy-van-Jerry/ngspice-cmos",
+    "type": "repo",
+    "segments": ["Full repo with SPICE netlists for CMOS inverter switching and delay characterization"],
+    "covers_concepts": ["C004"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R005",
+    "title": "Keysight Signal Integrity Fundamentals White Paper",
+    "url": "https://www.keysight.com/us/en/assets/7018-06883/white-papers/5992-4324.pdf",
+    "type": "paper",
+    "segments": ["Full white paper: transmission lines, S-parameters, channel SI"],
+    "covers_concepts": ["C005"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R006",
+    "title": "erwanp/transmission-line — Simulate a Signal Propagating Along a Transmission Line",
+    "url": "https://github.com/erwanp/transmission-line",
+    "type": "repo",
+    "segments": ["Python simulation code for transmission line signal propagation"],
+    "covers_concepts": ["C005"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R007",
+    "title": "CMU 18-322 Timing Issues and Clock Distribution Lecture Notes",
+    "url": "https://course.ece.cmu.edu/~ece322/LECTURES/Lecture10/Lecture10.03.pdf",
+    "type": "docs",
+    "segments": ["Lecture 10: clock skew, jitter, clock tree, distribution networks"],
+    "covers_concepts": ["C006"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R008",
+    "title": "hdl-util/clock-domain-crossing — Utilities for Clock-Domain Crossing with an FPGA",
+    "url": "https://github.com/hdl-util/clock-domain-crossing",
+    "type": "repo",
+    "segments": ["Verilog/SystemVerilog modules for CDC synchronizers, gray-code FIFOs"],
+    "covers_concepts": ["C006"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R009",
+    "title": "IEEE Xplore — PCB-Level Thermal & SI/PI Co-Analysis: Progress and Directions",
+    "url": "https://ieeexplore.ieee.org/document/9888294/",
+    "type": "paper",
+    "segments": ["APEMC 2022; Sections on thermal coupling, dielectric properties, high-speed PCB transmission"],
+    "covers_concepts": ["C030"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R010",
+    "title": "cranade7/PCB-Simulation-and-Power-Integrity",
+    "url": "https://github.com/cranade7/PCB-Simulation-and-Power-Integrity",
+    "type": "repo",
+    "segments": ["PCB-level power integrity simulation examples and analysis scripts"],
+    "covers_concepts": ["C030"],
+    "quality_score": 3,
+    "verified": true
+  },
+  {
+    "resource_id": "R011",
+    "title": "MIT 18.06SC Linear Algebra — Lecture Videos & Notes (Matrices, SVD)",
+    "url": "https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/",
+    "type": "docs",
+    "segments": ["Lectures on matrix multiplication, SVD, least squares, subspaces"],
+    "covers_concepts": ["C007"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R012",
+    "title": "spcl/gemm_hls — Scalable Systolic Array-Based Matrix-Matrix Multiplication in HLS",
+    "url": "https://github.com/spcl/gemm_hls",
+    "type": "repo",
+    "segments": ["HLS C++ implementation of systolic-array GEMM for Xilinx FPGAs"],
+    "covers_concepts": ["C007", "C019"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R013",
+    "title": "Texas Instruments SPRA109 — Q-Values in the Watch Window (Fixed-Point Q-Format)",
+    "url": "https://www.ti.com/lit/an/spra109/spra109.pdf",
+    "type": "docs",
+    "segments": ["Application report: Q-format representation, arithmetic, overflow rules for DSPs"],
+    "covers_concepts": ["C008"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R014",
+    "title": "WangXuan95/FPGA-FixedPoint — Verilog Fixed-Point Library with Q-Format",
+    "url": "https://github.com/WangXuan95/FPGA-FixedPoint",
+    "type": "repo",
+    "segments": ["Verilog modules for custom bit-width fixed-point arithmetic, Q-format conversion, overflow"],
+    "covers_concepts": ["C008"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R015",
+    "title": "Stanford — Widrow, Statistical Theory of Quantization (IEEE TIM 1996)",
+    "url": "https://isl.stanford.edu/~widrow/papers/j1996statisticaltheory.pdf",
+    "type": "paper",
+    "segments": ["Sections 2–5: quantization noise PDFs, moments, characteristic functions, uniform quantization"],
+    "covers_concepts": ["C009"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R016",
+    "title": "makeabilitylab/signals — Quantization and Sampling Jupyter Notebook",
+    "url": "https://github.com/makeabilitylab/signals/blob/master/Tutorials/Signals%20-%20Quantization%20and%20Sampling.ipynb",
+    "type": "notebook",
+    "segments": ["Interactive Python notebook simulating quantization noise and sampling effects"],
+    "covers_concepts": ["C009"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R017",
+    "title": "MIT 18.335 Introduction to Numerical Methods — Course Notes & Notebooks",
+    "url": "https://github.com/mitmath/18335",
+    "type": "docs",
+    "segments": ["Lecture notes on stability, iterative methods, conditioning, floating/fixed-point considerations"],
+    "covers_concepts": ["C010"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R018",
+    "title": "Gladdy/numerical-fpga-thesis — Numerical Mathematics on FPGAs using CλaSH",
+    "url": "https://github.com/Gladdy/numerical-fpga-thesis",
+    "type": "repo",
+    "segments": ["Thesis code: hardware implementations of iterative solvers on FPGA with stability analysis"],
+    "covers_concepts": ["C010"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R019",
+    "title": "Architecture of FPGAs and CPLDs: A Tutorial",
+    "url": "https://www.eecg.utoronto.ca/~jayar/pubs/brown/survey.pdf",
+    "type": "paper",
+    "segments": ["Full paper (Sections 2–4 on FPGA architecture: LUTs, CLBs, routing, DSP)"],
+    "covers_concepts": ["C002"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R020",
+    "title": "FPGA Architecture Fundamentals on FPGA Related",
+    "url": "https://www.fpgarelated.com/fpga-fundamentals/fpga-architecture",
+    "type": "blog",
+    "segments": ["Interactive zoomable floorplan tutorial"],
+    "covers_concepts": ["C002"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R021",
+    "title": "Digital Design and Computer Architecture (Harris & Harris) — Chapters 2–3",
+    "url": "http://www.r-5.org/files/books/computers/hw-layers/hardware/digital-desigh/Digital_Design_and_Computer_Architecture.pdf",
+    "type": "docs",
+    "segments": ["Chapters 2 (Combinational Logic) and 3 (Sequential Logic Design)"],
+    "covers_concepts": ["C003"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R022",
+    "title": "HDLBits — Verilog Practice",
+    "url": "https://hdlbits.01xz.net/wiki/Main_Page",
+    "type": "docs",
+    "segments": ["Problem sets: Combinational Logic, Sequential Logic, Finite State Machines"],
+    "covers_concepts": ["C003", "C011"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R023",
+    "title": "SystemVerilog for Design: A Guide to Using SystemVerilog for Hardware Design (Sutherland et al.)",
+    "url": "https://link.springer.com/book/10.1007/0-387-36495-1",
+    "type": "docs",
+    "segments": ["Chapters 3–5 (RTL modeling, blocking vs. non-blocking, generate constructs)"],
+    "covers_concepts": ["C011"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R024",
+    "title": "Open FPGA Verilog Tutorial by Obijuan (GitHub)",
+    "url": "https://github.com/Obijuan/open-fpga-verilog-tutorial",
+    "type": "repo",
+    "segments": ["Chapters 1–13 covering modules, registers, shift registers, blocking vs. non-blocking"],
+    "covers_concepts": ["C011"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R025",
+    "title": "SystemVerilog Assertions Tutorial — Doulos",
+    "url": "https://www.doulos.com/knowhow/systemverilog/systemverilog-tutorials/systemverilog-assertions/",
+    "type": "video",
+    "segments": ["Immediate and Concurrent Assertions, assume/assert/cover properties, SVA Bind"],
+    "covers_concepts": ["C012"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R026",
+    "title": "cocotb — Python-based Chip (RTL) Verification (GitHub)",
+    "url": "https://github.com/cocotb/cocotb",
+    "type": "repo",
+    "segments": ["examples/ directory (endian_swapper, adder, mixed-language testbenches)"],
+    "covers_concepts": ["C012"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R027",
+    "title": "Constraining Designs for Synthesis and Timing Analysis: A Practical Guide to SDC",
+    "url": "https://link.springer.com/book/10.1007/978-1-4614-3269-2",
+    "type": "docs",
+    "segments": ["Chapters 1–3 (SDC basics, clock definitions, multi-cycle and false paths)"],
+    "covers_concepts": ["C013"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R028",
+    "title": "STA Basics Course — brabect1/sta_basics_course (GitHub)",
+    "url": "https://github.com/brabect1/sta_basics_course",
+    "type": "repo",
+    "segments": ["doc/sta_basics_course.rst (hands-on tutorials for STA with open-source tools)"],
+    "covers_concepts": ["C013"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R029",
+    "title": "VPR: A New Packing, Placement and Routing Tool for FPGA Research (Betz & Rose, FPL 1997)",
+    "url": "https://www.eecg.toronto.edu/~jayar/pubs/betz/fpl97vpr.pdf",
+    "type": "paper",
+    "segments": ["Full paper (sections on annealing-based placement, negotiated routing)"],
+    "covers_concepts": ["C014"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R030",
+    "title": "Verilog-to-Routing (VTR) Open Source FPGA CAD Flow (GitHub)",
+    "url": "https://github.com/verilog-to-routing/vtr-verilog-to-routing",
+    "type": "repo",
+    "segments": ["doc/src/quickstart/ and doc/src/dev/tutorials/ (architecture files, benchmarks, VPR runs)"],
+    "covers_concepts": ["C014"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R031",
+    "title": "PySDR: A Guide to SDR and DSP using Python (Marc Lichtman)",
+    "url": "https://pysdr.org/",
+    "type": "docs",
+    "segments": ["Chapters on Frequency Domain, Digital Filtering, Synchronization (NumPy/SciPy-based)"],
+    "covers_concepts": ["C015"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R032",
+    "title": "SciPy Signal Processing Tutorial — Official Documentation",
+    "url": "https://docs.scipy.org/doc/scipy/tutorial/signal.html",
+    "type": "docs",
+    "segments": ["Full tutorial (filter design, B-spline interpolation, FFT-based processing)"],
+    "covers_concepts": ["C015"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R033",
+    "title": "High-level Synthesis using the Julia Language (Benjamin Biggs, arXiv:2201.11522)",
+    "url": "https://arxiv.org/pdf/2201.11522",
+    "type": "paper",
+    "segments": ["Sections 1–3 (Julia-based HLS for FPGA, hardware-aware type system)"],
+    "covers_concepts": ["C016"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R034",
+    "title": "Julia for High-Performance Scientific Computing — ENCCS",
+    "url": "https://enccs.github.io/julia-for-hpc/",
+    "type": "docs",
+    "segments": ["Chapters on Arrays, Performance, GPU programming, and exercises"],
+    "covers_concepts": ["C016"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R035",
+    "title": "HDL Coder Self-Guided Tutorial (MathWorks)",
+    "url": "https://www.mathworks.com/matlabcentral/fileexchange/69651-hdl-coder-self-guided-tutorial",
+    "type": "video",
+    "segments": ["Sections: Fixed-Point conversion, HDL code generation, FPGA workflow"],
+    "covers_concepts": ["C017"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R036",
+    "title": "HDL Coder Self-Guided Tutorial GitHub Repository (mathworks)",
+    "url": "https://github.com/mathworks/HDL-Coder-Self-Guided-Tutorial",
+    "type": "repo",
+    "segments": ["Full repo with MATLAB scripts, Simulink models, and step-by-step exercises"],
+    "covers_concepts": ["C017"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R037",
+    "title": "IEEE Circuits and Systems Magazine — FPGA Architecture Survey (Murray & Betz)",
+    "url": "https://www.eecg.utoronto.ca/~vaughn/papers/casm2021_arch_survey.pdf",
+    "type": "paper",
+    "segments": ["Sections on BRAM, DSP blocks, on-chip memory hierarchy"],
+    "covers_concepts": ["C018", "C002"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R038",
+    "title": "Open FPGA Verilog Tutorial — Chapter 10: Shift Register (Obijuan, GitHub Wiki)",
+    "url": "https://github.com/Obijuan/open-fpga-verilog-tutorial/wiki/Chapter-10:-shift-register",
+    "type": "blog",
+    "segments": ["Chapter 10 with complete Verilog code and open-source synthesis steps"],
+    "covers_concepts": ["C018"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R039",
+    "title": "Why Systolic Architectures? (H.T. Kung, IEEE Computer, 1982)",
+    "url": "https://dl.acm.org/doi/10.1109/MC.1982.1653825",
+    "type": "paper",
+    "segments": ["Full paper (Sections 1–4 on systolic principles, dataflow, and applications)"],
+    "covers_concepts": ["C019"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R040",
+    "title": "FPGA Systolic Array — HackMD Walkthrough with Verilog",
+    "url": "https://hackmd.io/@ampheo/how-to-do-systolic-architecture-on-fpga-with-verilog",
+    "type": "blog",
+    "segments": ["Step-by-step matrix-multiply systolic array implementation with Verilog code"],
+    "covers_concepts": ["C019"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R041",
+    "title": "Optimizing the Use of Different Memory Types on Modern FPGAs (Northeastern dissertation)",
+    "url": "https://repository.library.northeastern.edu/files/neu:4f248m93w/fulltext.pdf",
+    "type": "paper",
+    "segments": ["Chapters 1–3 (BRAM, URAM, DDR comparison, bandwidth, latency trade-offs)"],
+    "covers_concepts": ["C020"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R042",
+    "title": "Verilog AXI Components for FPGA (alexforencich/verilog-axi GitHub)",
+    "url": "https://github.com/alexforencich/verilog-axi",
+    "type": "repo",
+    "segments": ["rtl/ directory (axi_ram.v, axi_dma, BRAM and DDR interface modules)"],
+    "covers_concepts": ["C020"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R043",
+    "title": "FPGA-based Implementation of Signal Processing Systems",
+    "url": "https://rfsoc.mit.edu/6S965/_static/F25/textbooks/fpga_signal_processing.pdf",
+    "type": "docs",
+    "segments": ["Chapters on FIR/IIR filter architectures, FFT implementations, and CORDIC-based designs"],
+    "covers_concepts": ["C021"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R044",
+    "title": "FIR-Filter: Low-pass FIR filter implementation in Verilog HDL",
+    "url": "https://github.com/samiyaalizaidi/FIR-Filter",
+    "type": "repo",
+    "segments": ["README, FIR filter Verilog source files"],
+    "covers_concepts": ["C021"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R045",
+    "title": "Survey of Quantization-Aware Training (QAT) Applications in Deep Learning",
+    "url": "https://dl.acm.org/doi/10.1145/3776759.3776826",
+    "type": "paper",
+    "segments": ["Sections covering INT8/INT4 quantization schemes and QAT methodologies for edge and FPGA deployment"],
+    "covers_concepts": ["C022"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R046",
+    "title": "FINN Examples: Dataflow QNN inference accelerator examples on FPGAs",
+    "url": "https://github.com/Xilinx/finn-examples",
+    "type": "repo",
+    "segments": ["notebooks/, build-flow/, and example designs for quantized neural network deployment"],
+    "covers_concepts": ["C022"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R047",
+    "title": "FPGA-based Acceleration for Convolutional Neural Networks: A Comprehensive Review",
+    "url": "https://arxiv.org/abs/2505.13461",
+    "type": "paper",
+    "segments": ["Sections on Winograd transformation, tiling strategies, dataflow optimization, and hardware-software co-design"],
+    "covers_concepts": ["C023"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R048",
+    "title": "Efficient FPGA-Based Accelerator for Convolutional Neural Networks",
+    "url": "https://github.com/Mattjesc/Efficient-FPGA-CNN-Accelerator",
+    "type": "repo",
+    "segments": ["src/, README with architecture description and build instructions"],
+    "covers_concepts": ["C023"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R049",
+    "title": "FAMOUS: Flexible Accelerator for the Attention Mechanism of Transformer on UltraScale+ FPGAs",
+    "url": "https://arxiv.org/abs/2409.14023",
+    "type": "paper",
+    "segments": ["Sections on dense multi-head attention tiling, systolic array utilization, and embedding dimension scaling"],
+    "covers_concepts": ["C024"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R050",
+    "title": "Transformer Accelerator Based on FPGA (PYNQ Z1)",
+    "url": "https://github.com/Buck008/Transformer-Accelerator-Based-on-FPGA",
+    "type": "repo",
+    "segments": ["Verilog/, Vivado configuration, C SDK test code, configurable systolic array (16x16)"],
+    "covers_concepts": ["C024"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R051",
+    "title": "FPGA-Based Sparse Matrix Multiplication Accelerators: From Architectures to Applications",
+    "url": "https://dl.acm.org/doi/10.1145/3687480",
+    "type": "paper",
+    "segments": ["Sections on CSR/COO formats, load balancing strategies, and SpMM/SpMV acceleration on FPGAs"],
+    "covers_concepts": ["C025"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R052",
+    "title": "HiSpMV: FPGA Accelerator for Imbalanced SpMV using HLS",
+    "url": "https://github.com/SFU-HiAccel/HiSpMV",
+    "type": "repo",
+    "segments": ["src/, README, Vitis HLS source code for sparse matrix-vector multiplication"],
+    "covers_concepts": ["C025"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R053",
+    "title": "Demystifying FPGA Hard NoC Performance",
+    "url": "https://arxiv.org/abs/2503.10861",
+    "type": "paper",
+    "segments": ["Sections on hard NoC characterization, routing algorithms, and multi-FPGA interconnect implications"],
+    "covers_concepts": ["C026"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R054",
+    "title": "Network-on-Chip-Verilog: 2D mesh NoC with 5-stage pipelined router on Artix-7",
+    "url": "https://github.com/xuanz20/Network-on-Chip-Verilog",
+    "type": "repo",
+    "segments": ["Verilog router modules, mesh topology implementation, testbench files"],
+    "covers_concepts": ["C026"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R055",
+    "title": "FERIVer: An FPGA-assisted Emulated Framework for RTL Verification of RISC-V Processors",
+    "url": "https://arxiv.org/abs/2504.05284",
+    "type": "paper",
+    "segments": ["Sections on FPGA-assisted emulation, cross-verification methodology, and co-simulation speedup analysis"],
+    "covers_concepts": ["C027"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R056",
+    "title": "Open source Verilog simulation with Cocotb and Verilator",
+    "url": "https://antmicro.com/blog/2019/06/verilog-with-cocotb-and-verilator",
+    "type": "blog",
+    "segments": ["Cocotb + Verilator integration walkthrough, VPI usage, Python testbench examples, trace dumping"],
+    "covers_concepts": ["C027"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R057",
+    "title": "How to keep pushing ML accelerator performance? Know your rooflines!",
+    "url": "https://arxiv.org/abs/2505.16346",
+    "type": "paper",
+    "segments": ["Sections on enhanced roofline model for ML accelerators, memory/compute bounds, and FPGA applicability"],
+    "covers_concepts": ["C028"],
+    "quality_score": 5,
+    "verified": true
+  },
+  {
+    "resource_id": "R058",
+    "title": "Tutorial: Empirical Roofline Model (LIKWID)",
+    "url": "https://github.com/RRZE-HPC/likwid/wiki/Tutorial:-Empirical-Roofline-Model",
+    "type": "docs",
+    "segments": ["Step-by-step guide to generating empirical roofline plots, performance counters, and bottleneck identification"],
+    "covers_concepts": ["C028"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R059",
+    "title": "Dynamic and Partial Reconfiguration of FPGAs",
+    "url": "https://link.springer.com/rwe/10.1007/978-981-97-9314-3_51",
+    "type": "paper",
+    "segments": ["Sections on DPR methodologies, reconfiguration management, and runtime adaptivity"],
+    "covers_concepts": ["C029"],
+    "quality_score": 4,
+    "verified": true
+  },
+  {
+    "resource_id": "R060",
+    "title": "PYNQ Dynamic Partial Reconfiguration Example",
+    "url": "https://github.com/spzeno/PYNQ-dynamic-partial-reconfiguration-Example",
+    "type": "repo",
+    "segments": ["Partial bitstream loading examples, PYNQ overlay class usage, Python notebooks"],
+    "covers_concepts": ["C029"],
+    "quality_score": 4,
+    "verified": true
+  }
+]

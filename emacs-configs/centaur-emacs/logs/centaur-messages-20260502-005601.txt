@@ -1,0 +1,44 @@
+;;; *Messages* dump from Centaur startup
+;;; Timestamp: Sat May  2 00:56:19 2026
+
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/env.el (source)...done
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [9 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom.el (source)...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [9 times]
+Set package archives to ‘melpa’
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [1072 times]
+Contacting host: raw.githubusercontent.com:443
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [54 times]
+Wrote c:/Users/Bapti/NFM.ttf
+ Successfully downloaded ‘nerd-icons’ fonts to ‘~/’!
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [540 times]
+Waiting for git... [2 times]
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [11 times]
+ad-handle-definition: ‘ibuffer-do-replace-regexp’ got redefined
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [122 times]
+Help (?/h)
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [32 times]
+[yas] Prepared just-in-time loading of snippets successfully.
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [105 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom-post.el (source)...
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [42 times]
+Loading c:/Users/Bapti/emacs-configs/centaur-emacs/custom-post.el (source)...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [4 times]
+[custom.el] apheleia disabled: diff.exe not on Windows
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [13 times]
+Centaur diagnostics saved to: c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [341 times]
+[EDA] ob-spice not found — use #+begin_src shell for ngspice
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [418 times]
+Clearing removed files...done
+Processing modified files... 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [16 times]
+Processing modified files...50% 
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log
+Unlocking file: Invalid argument, c:/Users/Bapti/org/roam/daily/2026-05-01.org, ignored
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [3 times]
+Processing modified files...done
+Added to c:/Users/Bapti/emacs-configs/centaur-emacs/logs/centaur-startup-20260502-005601.log [6 times]
+
+;;; END OF MESSAGES DUMP
